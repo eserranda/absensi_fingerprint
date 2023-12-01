@@ -26,4 +26,5 @@ Route::get('/data_guru', function () {
 Route::controller(DataSiswaController::class)->group(function () {
     Route::get('/data_siswa', 'index');
     Route::POST('/simpan_data_siswa', 'store')->name("simpan_data_siswa");
+    Route::get('/data_siswa/edit/{id}', 'edit')->name("simpan_data_siswa");
 });

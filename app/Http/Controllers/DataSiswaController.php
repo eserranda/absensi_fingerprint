@@ -30,10 +30,9 @@ class DataSiswaController extends Controller
      */
     public function store(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string',
-            'nisn' => 'required|numeric',
+            'nisn' => 'required|numeric|unique:data_siswas',
             'tempat_lahir' => 'required|string',
             'tanggal_lahir' => 'required|string',
             'jenis_kelamin' => 'required|string',
@@ -89,11 +88,11 @@ class DataSiswaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(DataSiswa $dataSiswa)
+    public function edit($id)
     {
-        //
+        $data = DataSiswa::find($id);
+        return response()->json(['data' => $data]);
     }
-
     /**
      * Update the specified resource in storage.
      */

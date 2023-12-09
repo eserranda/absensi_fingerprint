@@ -5,6 +5,14 @@
 <script src="{{ asset('assets') }}/dist/js/demo.min.js?1692870487" defer></script>
 <script src="{{ asset('assets') }}/dist/libs/tom-select/dist/js/tom-select.base.min.js?1692870487" defer></script>
 
+<script src="{{ asset('assets') }}/dist/libs/list.js/dist/list.min.js?1692870487" defer></script>
+
+{{-- sweetalert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.all.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.min.css" rel="stylesheet">
+
+{{-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> --}}
+
 @stack('script')
 </body>
 

@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\DataGuruController;
 use App\Http\Controllers\DataSiswaController;
+use App\Http\Controllers\JadwalPelajaranController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,13 +20,27 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/data_guru', function () {
-    return view('data_guru.data');
+
+
+Route::controller(DataGuruController::class)->group(function () {
+    Route::get('/data_guru', 'index')->name("data_guru.data");
+    Route::POST('/simpan_data_guru', 'store')->name("simpan_data_guru");
+    Route::get('/data_guru/getID/{id}', 'getID')->name("getid_data_guru");
+    Route::POST('/update_data_guru', 'update')->name("update_data_guru");
+    Route::delete('/data_guru/delete/{id}', 'destroy')->name("hapus_data_guru");
 });
 
-
 Route::controller(DataSiswaController::class)->group(function () {
-    Route::get('/data_siswa', 'index');
+    Route::get('/data_siswa', 'index')->name("data_siswa.data");
+    Route::get('/data_siswa_tes', 'tes');
     Route::POST('/simpan_data_siswa', 'store')->name("simpan_data_siswa");
+    Route::POST('/update_data_siswa', 'update')->name("update_data_siswa");
     Route::get('/data_siswa/edit/{id}', 'edit')->name("simpan_data_siswa");
+    Route::get('/data_siswa/getid/{id}', 'getID')->name("getid_data_siswa");
+    Route::delete('/data_siswa/delete/{id}', 'destroy')->name("hapus_data_siswa");
+});
+Route::controller(JadwalPelajaranController::class)->group(function () {
+    Route::get('/jadwal_pelajaran', 'index')->name("jadwal_pelajaran.data");
+    // Route::POST('/simpan_data_siswa', 'store')->name("simpan_data_siswa");
+    // Route::get('/data_siswa/edit/{id}', 'edit')->name("simpan_data_siswa");
 });

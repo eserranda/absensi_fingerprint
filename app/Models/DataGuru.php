@@ -8,4 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class DataGuru extends Model
 {
     use HasFactory;
+
+    protected $fillable =  [
+        'nama',
+        'nuptk',
+        'jenis_kelamin',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'nip',
+        'status_pegawai',
+        'jenis_ptk',
+        'agama',
+        'alamat',
+    ];
 }

@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('jadwal_pelajarans', function (Blueprint $table) {
             $table->id();
+            $table->string('hari');
+            $table->string('matpel');
+            $table->string('jam_mulai');
+            $table->string('jam_selesai');
+            $table->unsignedBigInteger('id_guru');
+            $table->foreign('id_guru')->references('id')->on('data_gurus');
+            $table->string('kelas');
+            $table->string('ruangan');
             $table->timestamps();
         });
     }

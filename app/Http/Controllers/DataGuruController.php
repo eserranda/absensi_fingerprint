@@ -15,7 +15,13 @@ class DataGuruController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = DataGuru::all();
+            $dataPegawai = $request->input('status_pegawai');
+            $query = DataGuru::query();
+            if ($dataPegawai) {
+                $query->where('status_pegawai', $dataPegawai);
+            }
+
+            $data = $query->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -53,6 +59,25 @@ class DataGuruController extends Controller
     public function create()
     {
         //
+    }
+    public function getDataGuru(Request $request)
+    {
+
+        // $data = DataGuru::where('nama', 'LIKE', '%' . request('q') . '%')
+        //     ->orWhere('nuptk', 'LIKE', '%' . request('q') . '%')
+        //     ->get();
+
+        // return response()->json(['data' => $data]);
+
+        $data = [];
+
+        if ($request->filled('q')) {
+            $data = DataGuru::select("nama", "id")
+                ->where('nama', 'LIKE', '%' . $request->get('q') . '%')
+                ->get();
+        }
+
+        return response()->json($data);
     }
 
     public function getID($id)

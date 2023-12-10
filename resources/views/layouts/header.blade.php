@@ -18,9 +18,7 @@
     <link href="{{ asset('assets') }}/dist/css/demo.min.css?1692870487" rel="stylesheet" />
     <script src="{{ asset('assets') }}/dist/libs/tom-select/dist/js/tom-select.base.min.js?1692870487" defer></script>
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-
-
+    {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css" rel="stylesheet"> --}}
     <style>
         @import url('https://rsms.me/inter/inter.css');
 

@@ -8,14 +8,23 @@
 @section('content')
     <div class="col-12">
         <div class="card">
-            <div class="card-header bg-white">
-                <h3 class="card-title mx-1">Jenis PTK : </h3>
-                <div class="mx-2 btn-actions">
-                    <select class="form-select">
-                        <option>PNS</option>
-                        <option>PPK</option>
+            <div class="card-header">
+                <div class="btn-actions">
+                    <select class="form-select" id="filterPegawai">
+                        <option value="PNS">PNS</option>
+                        <option value="PPPK">PPPK</option>
+                        <option value="Honor Sekolah">Honor Sekolah</option>
+                        <option value="Honor Daerah">Honor Daerah</option>
                     </select>
                 </div>
+                <button class="btn btn-info btn-icon mx-2" id="reload"> <svg xmlns="http://www.w3.org/2000/svg"
+                        class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                        <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                    </svg>
+                </button>
 
                 <div class="card-actions">
                     <a href="#" class="btn btn-success">
@@ -26,6 +35,7 @@
                     </a>
                 </div>
             </div>
+
             <div class="card-body border-bottom py-3">
                 <div class="table-responsive">
                     <table class="table card-table table-vcenter text-nowrap datatable">
@@ -59,10 +69,8 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-
                     <h5 class="modal-title">Tambah Data </h5>
                     <button type="button" class="btn-close" onclick="closeModalAdd()"></button>
-
                 </div>
                 <form action="" method="POST" id="form_data_guru">
                     @csrf
@@ -130,7 +138,11 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Jenis PTK</label>
-                                    <input type="text" class="form-control" id="jenis_ptk" name="jenis_ptk">
+                                    <select class="form-select" id="jenis_ptk" name="jenis_ptk">
+                                        <option value="">- Pilih Jenis PTK -</option>
+                                        <option value="Guru Mapel">Guru Mapel</option>
+                                        <option value="Guru Kelas">Guru Kelas</option>
+                                    </select>
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -242,7 +254,7 @@
                                     <select class="form-select" id="edit_status_pegawai" name="edit_status_pegawai">
                                         <option value=" ">Pilih Status Pegawai</option>
                                         <option value="PNS">PNS</option>
-                                        <option value="PNS">PPPK</option>
+                                        <option value="PPPK">PPPK</option>
                                         <option value="Honor Sekolah">Honor Sekolah</option>
                                         <option value="Honor Daerah">Honor Daerah</option>
                                     </select>
@@ -263,8 +275,11 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Jenis PTK</label>
-                                    <input type="text" class="form-control" id="edit_jenis_ptk"
-                                        name="edit_jenis_ptk">
+                                    <select class="form-select" id="edit_jenis_ptk" name="edit_jenis_ptk">
+                                        <option value=" ">- Pilih Jenis PTK -</option>
+                                        <option value="Guru Mapel">Guru Mapel</option>
+                                        <option value="Guru Kelas">Guru Kelas</option>
+                                    </select>
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -366,8 +381,6 @@
                     }
                 });
             }
-
-
 
             async function edit(id) {
                 try {
@@ -496,12 +509,7 @@
                 $('#modal_add_data').modal('hide');
             }
 
-            // function add() {
-            //     $('#modal_add_data').modal('show');
-            // }
-
             document.addEventListener('DOMContentLoaded', function() {
-
                 document.getElementById('add_data').addEventListener('click', function() {
                     $('#modal_add_data').modal('show');
                 });
@@ -574,13 +582,10 @@
                         });
                     }
                 }
-
-
             });
 
-            $(function() {
-                var table = $('.datatable').DataTable({
-
+            $(document).ready(function() {
+                const myDataTable = $('.datatable').DataTable({
                     processing: true,
                     serverSide: true,
 
@@ -638,6 +643,17 @@
                         },
                     ]
                 });
+
+                $('#filterPegawai').on('change', function() {
+                    const selectedPegawai = $(this).val();
+                    myDataTable.ajax.url('{{ route('data_guru.data') }}?status_pegawai=' + selectedPegawai)
+                        .load();
+                });
+
+                $('#reload').on('click', function() {
+                    myDataTable.ajax.url('{{ route('data_guru.data') }}').load();
+                });
+
             });
         </script>
     @endpush

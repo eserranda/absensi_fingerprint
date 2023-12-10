@@ -10,18 +10,16 @@
 @section('content')
     <div class="col-12">
         <div class="card">
-            <div class="card-header bg-white">
-                <h3 class="card-title mx-1">Kelas : </h3>
-                <div class="mx-2 btn-actions">
+            <div class="card-header">
+                {{-- <h3 class="card-title mx-1">Kelas : </h3> --}}
+                <div class="btn-actions">
                     <select class="form-select" id="filterKelas">
-                        <option value="XI MIPA 1">XI MIPA 1</option>
-                        <option value="X IPS 1">X IPS 1</option>
-                        <option value="XII IPS 1">XII IPS 1</option>
+                        <option value="XI MIPA 1">XI MIPA 1</option>
+                        <option value="X IPS 1">X IPS 1</option>
+                        <option value="XII IPS 1">XII IPS 1</option>
                     </select>
                 </div>
-
-                <button class="btn btn-success" id="reload">Reload</button>
-
+                <button class="btn btn-success mx-2 " id="reload">Reload</button>
                 <div class="card-actions">
                     <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_data">
                         Tambah Data
@@ -553,7 +551,7 @@
 
             // async function getData() {
             //     try {
-            //         const data = fetch('/data_siswa').then(response => response.json())
+            //         const data = fetch('/get_data_guru').then(response => response.json())
 
             //     } catch (error) {
             //         return error

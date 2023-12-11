@@ -1,10 +1,13 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DataGuruController;
-use App\Http\Controllers\DataSiswaController;
-use App\Http\Controllers\JadwalPelajaranController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\DataGuruController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DataSiswaController;
+use App\Http\Controllers\DataAbsensiGuruController;
+use App\Http\Controllers\JadwalPelajaranController;
+use App\Http\Controllers\DataAbsensiSiswaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,11 +20,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
+
+Route::controller(DataAbsensiSiswaController::class)->group(function () {
+    Route::get('data_absensi_siswa', 'index')->name("data_absensi_siswa.data");
+});
+
+Route::controller(DataAbsensiGuruController::class)->group(function () {
+    Route::get('/data_absensi_guru', 'index')->name("data_absensi_guru.data");
+});
+
+Route::controller(AbsensiController::class)->group(function () {
+    Route::get('/absensi', 'index')->name("absensi.data");
+    // Route::get('/dashboard/count_data', 'count_data')->name("dashboard.count_data");
 });
 
 Route::controller(DashboardController::class)->group(function () {
+    Route::get('/', 'index')->name("dashboard.data");
     Route::get('/dashboard', 'index')->name("dashboard.data");
     Route::get('/dashboard/count_data', 'count_data')->name("dashboard.count_data");
 });

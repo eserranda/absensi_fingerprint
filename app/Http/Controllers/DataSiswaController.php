@@ -105,22 +105,40 @@ class DataSiswaController extends Controller
      */
     public function update(Request $request, DataSiswa $dataSiswa)
     {
-        $id = $request->input('id');
+        $id = $request->input('edit_id');
+        $nama = $request->input('edit_nama');
+        $nisn = $request->input('edit_nisn');
+        $tempat_lahir = $request->input('edit_tempat_lahir');
+        $tanggal_lahir = $request->input('edit_tanggal_lahir');
+        $jenis_kelamin = $request->input('edit_jenis_kelamin');
+        $agama = $request->input('edit_agama');
+        $kelas = $request->input('edit_kelas');
+        $alamat = $request->input('edit_alamat');
+
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string',
-            'nisn' => 'required|numeric',
-            'tempat_lahir' => 'required|string',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required| string',
-            'agama' => 'required|string',
-            'kelas' => 'required|string',
-            'alamat' => 'required|string',
+            'edit_nama' => 'required|string',
+            'edit_nisn' => 'required|numeric',
+            'edit_tempat_lahir' => 'required|string',
+            'edit_tanggal_lahir' => 'required|date',
+            'edit_jenis_kelamin' => 'required| string',
+            'edit_agama' => 'required|string',
+            'edit_kelas' => 'required|string',
+            'edit_alamat' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        $dataSiswa->find($id)->update($request->all());
+        $dataSiswa->find($id)->update([
+            'nisn' => $nisn,
+            'nama' => $nama,
+            'tempat_lahir' => $tempat_lahir,
+            'tanggal_lahir' => $tanggal_lahir,
+            'jenis_kelamin' => $jenis_kelamin,
+            'agama' => $agama,
+            'kelas' => $kelas,
+            'alamat' => $alamat
+        ]);
 
         return response()->json(['message' => 'Data siswa berhasil diperbarui'], 200);
     }

@@ -66,8 +66,8 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Nama</label>
-                                    <input type="hidden" class="form-control" id="id" name="id">
-                                    <input type="text" class="form-control" id="nama" name="nama">
+                                    <input type="hidden" class="form-control" id="edit_id" name="edit_id">
+                                    <input type="text" class="form-control" id="edit_nama" name="edit_nama">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">NISN</label>
-                                    <input type="text" class="form-control" id="nisn" name="nisn">
+                                    <input type="text" class="form-control" id="edit_nisn" name="edit_nisn">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -85,7 +85,8 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Tempat Lahir</label>
-                                    <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir">
+                                    <input type="text" class="form-control" id="edit_tempat_lahir"
+                                        name="edit_tempat_lahir">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -93,7 +94,8 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Tanggal Lahir</label>
-                                    <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir">
+                                    <input type="date" class="form-control" id="edit_tanggal_lahir"
+                                        name="edit_tanggal_lahir">
                                     <div class="invalid-feedback"></div>
 
                                 </div>
@@ -103,7 +105,7 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <label class="form-label">Jenis Kelamin</label>
-                                <select class="form-select" id="jenis_kelamin" name="jenis_kelamin">
+                                <select class="form-select" id="edit_jenis_kelamin" name="edit_jenis_kelamin">
                                     <option value="L">Laki-Laki</option>
                                     <option value="P">Perempuan</option>
                                 </select>
@@ -113,8 +115,14 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Agama</label>
-                                    <input type="text" class="form-control" id="agama" name="agama">
-                                    <div class="invalid-feedback"></div>
+                                    <select class="form-select" id="edit_agama" name="edit_agama">
+                                        <option value="">Pilih Agama</option>
+                                        <option value="Kristen">Kristen</option>
+                                        <option value="Kristen Katolik">Kristen Katolik</option>
+                                        <option value="Islam">Islam</option>
+                                        <option value="Hindu">Hindu</option>
+                                        <option value="Buddha">Buddha</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -122,25 +130,25 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <label class="form-label">Kelas</label>
-                                <select class="form-select" id="kelas" name="kelas">
-                                    <option value="XI MIPA 1">XI MIPA 1</option>
-                                    <option value="X IPS 1">X IPS 1</option>
-                                    <option value="XII IPS 1">XII IPS 1</option>
+                                <select class="form-select" id="edit_kelas" name="edit_kelas">
+                                    <option value="XI MIPA 1">XI MIPA 1</option>
+                                    <option value="X IPS 1">X IPS 1</option>
+                                    <option value="XII IPS 1">XII IPS 1</option>
                                 </select>
                                 <div class="invalid-feedback"></div>
                             </div>
 
                             <div class="col-lg-6">
                                 <label class="form-label">Alamat</label>
-                                <textarea class="form-control" name="alamat" rows="2" id="alamat" placeholder="Masukkan Alamat"></textarea>
+                                <textarea class="form-control" name="edit_alamat" rows="2" id="edit_alamat" placeholder="Masukkan Alamat"></textarea>
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                        {{-- <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
                             Cancel
-                        </a>
+                        </a> --}}
                         <button type="button" tabindex="2" class="btn btn-primary"
                             onclick="updateData()">Update</button>
                     </div>
@@ -215,6 +223,7 @@
                                     <select class="form-select" id="agama" name="agama">
                                         <option value="">Pilih Agama</option>
                                         <option value="Kristen">Kristen</option>
+                                        <option value="Kristen Katolik">Kristen Katolik</option>
                                         <option value="Islam">Islam</option>
                                         <option value="Hindu">Hindu</option>
                                         <option value="Buddha">Buddha</option>
@@ -230,9 +239,9 @@
                                     <label class="form-label">Kelas</label>
                                     <select class="form-select" id="kelas" name="kelas">
                                         <option value="">Pilih Kelas</option>
-                                        <option value="XI MIPA 1">XI MIPA 1</option>
-                                        <option value="X IPS 1">X IPS 1</option>
-                                        <option value="XII IPS 1">XII IPS 1</option>
+                                        <option value="XI MIPA 1">XI MIPA 1</option>
+                                        <option value="X IPS 1">X IPS 1</option>
+                                        <option value="XII IPS 1">XII IPS 1</option>
                                     </select>
                                     <div class="invalid-feedback"></div>
                                 </div>
@@ -478,18 +487,18 @@
                     })
                     .then(data => {
                         const form = document.getElementById('edit_data_siswa');
-                        form.elements['id'].value = data.data.id;
-                        form.elements['nama'].value = data.data.nama;
-                        form.elements['nisn'].value = data.data.nisn;
-                        form.elements['tempat_lahir'].value = data.data
+                        form.elements['edit_id'].value = data.data.id;
+                        form.elements['edit_nama'].value = data.data.nama;
+                        form.elements['edit_nisn'].value = data.data.nisn;
+                        form.elements['edit_tempat_lahir'].value = data.data
                             .tempat_lahir;
-                        form.elements['tanggal_lahir'].value = data.data
+                        form.elements['edit_tanggal_lahir'].value = data.data
                             .tanggal_lahir;
-                        form.elements['jenis_kelamin'].value = data.data
+                        form.elements['edit_jenis_kelamin'].value = data.data
                             .jenis_kelamin;
-                        form.elements['agama'].value = data.data.agama;
-                        form.elements['kelas'].value = data.data.kelas;
-                        form.elements['alamat'].value = data.data.alamat;
+                        form.elements['edit_agama'].value = data.data.agama;
+                        form.elements['edit_kelas'].value = data.data.kelas;
+                        form.elements['edit_alamat'].value = data.data.alamat;
                         $('#modal_edit_data').modal('show');
                     })
             }

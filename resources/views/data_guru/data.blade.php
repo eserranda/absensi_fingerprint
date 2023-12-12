@@ -186,7 +186,6 @@
                     </div>
 
                     <div class="modal-footer">
-
                         <button href="#" class="btn btn-primary ms-auto" type="submit">
                             Simpan
                         </button>
@@ -289,6 +288,7 @@
                                     <select class="form-select" id="edit_agama" name="edit_agama">
                                         <option value="">Pilih Agama</option>
                                         <option value="Kristen">Kristen</option>
+                                        <option value="Kristen Katolik">Kristen Katolik</option>
                                         <option value="Islam">Islam</option>
                                         <option value="Hindu">Hindu</option>
                                         <option value="Buddha">Buddha</option>

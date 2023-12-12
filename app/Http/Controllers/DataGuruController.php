@@ -21,7 +21,7 @@ class DataGuruController extends Controller
                 $query->where('status_pegawai', $dataPegawai);
             }
 
-            $data = $query->get();
+            $data = $query->latest('created_at')->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {

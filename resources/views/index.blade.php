@@ -7,7 +7,6 @@
                 <h3 class="card-title">Card with action</h3>
                 <div class="card-actions">
                     <a href="#" class="btn btn-primary">
-
                         Add new
                     </a>
                 </div>

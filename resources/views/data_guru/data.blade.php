@@ -509,80 +509,80 @@
                 $('#modal_add_data').modal('hide');
             }
 
-            document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById('add_data').addEventListener('click', function() {
-                    $('#modal_add_data').modal('show');
-                });
+            // document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('add_data').addEventListener('click', function() {
+                $('#modal_add_data').modal('show');
+            });
 
-                document.getElementById('form_data_guru').addEventListener('submit', async function(event) {
-                    event.preventDefault();
-                    try {
-                        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                        const response = await fetch('/simpan_data_guru', {
-                            method: 'POST',
-                            body: new FormData(this),
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken,
-                            },
-                        }).then(response => response.json());
+            document.getElementById('form_data_guru').addEventListener('submit', async function(event) {
+                event.preventDefault();
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                    const response = await fetch('/simpan_data_guru', {
+                        method: 'POST',
+                        body: new FormData(this),
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                    }).then(response => response.json());
 
-                        if (!response.status) {
-                            handleValidationErrors(response.errors);
-                        } else {
-                            console.log(response);
-                            // Cari semua elemen input dengan kelas "is-invalid"
-                            const invalidInputs = document.querySelectorAll('.is-invalid');
-                            // Iterasi melalui setiap elemen input
-                            invalidInputs.forEach(invalidInput => {
-                                // Kosongkan nilai elemen input
-                                invalidInput.value = '';
-                                // Hapus kelas "is-invalid" dari elemen input
-                                invalidInput.classList.remove('is-invalid');
-                                // Kosongkan pesan kesalahan di sebelah input (jika ada)
-                                const errorNextSibling = invalidInput.nextElementSibling;
-                                if (errorNextSibling && errorNextSibling.classList.contains(
-                                        'invalid-feedback')) {
-                                    errorNextSibling.textContent = '';
-                                }
-                            });
-                            // Close modal
-                            $('#modal_add_data').modal('hide');
-                            const form = document.getElementById('form_data_guru');
-                            form.reset();
-                            $('#modal_add_data').modal('hide');
-                            Swal.fire(
-                                'Tersimpan!',
-                                'Data siswa berhasil diupdate.',
-                                'success'
-                            )
-                            $('.datatable').DataTable().ajax.reload();
-                        }
-                    } catch (error) {
-                        console.error('Terjadi kesalahan:', error);
-                        throw error;
-                    }
-                });
-
-                function handleValidationErrors(errors) {
-                    if (errors && typeof errors === 'object') {
-                        Object.keys(errors).forEach(fieldName => {
-                            const inputField = document.getElementById(fieldName);
-                            inputField.classList.add('is-invalid');
-                            inputField.nextElementSibling.textContent = errors[fieldName][0];
-                        });
-
-                        // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
-                        const validFields = document.querySelectorAll('.is-invalid');
-                        validFields.forEach(validField => {
-                            const fieldName = validField.id;
-                            if (!errors[fieldName]) {
-                                validField.classList.remove('is-invalid');
-                                validField.nextElementSibling.textContent = '';
+                    if (!response.status) {
+                        handleValidationErrors(response.errors);
+                    } else {
+                        console.log(response);
+                        // Cari semua elemen input dengan kelas "is-invalid"
+                        const invalidInputs = document.querySelectorAll('.is-invalid');
+                        // Iterasi melalui setiap elemen input
+                        invalidInputs.forEach(invalidInput => {
+                            // Kosongkan nilai elemen input
+                            invalidInput.value = '';
+                            // Hapus kelas "is-invalid" dari elemen input
+                            invalidInput.classList.remove('is-invalid');
+                            // Kosongkan pesan kesalahan di sebelah input (jika ada)
+                            const errorNextSibling = invalidInput.nextElementSibling;
+                            if (errorNextSibling && errorNextSibling.classList.contains(
+                                    'invalid-feedback')) {
+                                errorNextSibling.textContent = '';
                             }
                         });
+                        // Close modal
+                        $('#modal_add_data').modal('hide');
+                        const form = document.getElementById('form_data_guru');
+                        form.reset();
+                        $('#modal_add_data').modal('hide');
+                        Swal.fire(
+                            'Tersimpan!',
+                            'Data siswa berhasil diupdate.',
+                            'success'
+                        )
+                        $('.datatable').DataTable().ajax.reload();
                     }
+                } catch (error) {
+                    console.error('Terjadi kesalahan:', error);
+                    throw error;
                 }
             });
+
+            function handleValidationErrors(errors) {
+                if (errors && typeof errors === 'object') {
+                    Object.keys(errors).forEach(fieldName => {
+                        const inputField = document.getElementById(fieldName);
+                        inputField.classList.add('is-invalid');
+                        inputField.nextElementSibling.textContent = errors[fieldName][0];
+                    });
+
+                    // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
+                    const validFields = document.querySelectorAll('.is-invalid');
+                    validFields.forEach(validField => {
+                        const fieldName = validField.id;
+                        if (!errors[fieldName]) {
+                            validField.classList.remove('is-invalid');
+                            validField.nextElementSibling.textContent = '';
+                        }
+                    });
+                }
+            }
+            // });
 
             $(document).ready(function() {
                 const myDataTable = $('.datatable').DataTable({

@@ -138,6 +138,7 @@ class DataGuruController extends Controller
         $jenis_kelamin = $request->input('edit_jenis_kelamin');
         $tempat_lahir = $request->input('edit_tempat_lahir');
         $tanggal_lahir = $request->input('edit_tanggal_lahir');
+        $nip = $request->input('edit_nip');
         $status_pegawai = $request->input('edit_status_pegawai');
         $jenis_ptk = $request->input('edit_jenis_ptk');
         $agama = $request->input('edit_agama');
@@ -176,13 +177,14 @@ class DataGuruController extends Controller
             'jenis_kelamin' => $jenis_kelamin,
             'tempat_lahir' => $tempat_lahir,
             'tanggal_lahir' => $tanggal_lahir,
+            'nip' => $nip,
             'status_pegawai' => $status_pegawai,
             'jenis_ptk' => $jenis_ptk,
             'agama' => $agama,
             'alamat' => $alamat,
         ]);
 
-        return response()->json(['status' => true, 'message' => 'Data Guru berhasil diperbarui'], 200);
+        return response()->json(['status' => true, 'message' => 'Data Guru berhasil diperbarui', $dataGuru], 200);
     }
 
     /**

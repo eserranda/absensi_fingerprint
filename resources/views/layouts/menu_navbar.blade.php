@@ -83,17 +83,17 @@
                                 </svg>
                             </span>
                             <span class="nav-link-title">
-                                Data Absensi
+                                Rekap Absensi
                             </span>
                         </a>
                         <div class="dropdown-menu">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
                                     <a class="dropdown-item" href="/data_absensi_guru">
-                                        Absensi Pegawai/Guru
+                                        Rekap Pegawai/Guru
                                     </a>
                                     <a class="dropdown-item" href="/data_absensi_siswa">
-                                        Absensi Peserta Didik
+                                        Rekap Peserta Didik
                                     </a>
 
                                 </div>

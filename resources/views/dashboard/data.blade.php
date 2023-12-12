@@ -25,7 +25,7 @@
                 <div class="row align-items-center">
                     <div class="col-10">
                         <h2 class="card-title mb-2">
-                            SISTEM MONITORING ABSENSI, SMAN 1 SUMARORONG TEST
+                            SISTEM MONITORING ABSENSI, SMAN 1 SUMARORONG TEST 2
                         </h2>
                         <div class="markdown text-secondary">
                             <h3>Hallo Admin, Selamat datang</h3>

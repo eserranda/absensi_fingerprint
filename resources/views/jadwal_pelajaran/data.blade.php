@@ -28,7 +28,8 @@
                     {{-- <button type="button" class="btn btn-primary" onclick="addData()" id="add_data">
                         Tambah Jadwal Add
                     </button> --}}
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_data">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#modal_add_jadwal">
                         Tambah Jadwal
                     </button>
                 </div>
@@ -58,7 +59,7 @@
     </div>
 
     {{-- Modal add data --}}
-    <div class="modal  modal-blur fade" id="modal_add_data" role="dialog" aria-hidden="true">
+    <div class="modal  modal-blur fade" id="modal_add_jadwal" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -66,7 +67,7 @@
                     <button type="button" class="btn-close" onclick="closeModalAdd()"></button>
 
                 </div>
-                <form action="" method="POST" id="form_data_siswa">
+                <form action="" method="POST" id="form_add_jadwal">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
@@ -177,10 +178,10 @@
                     }
                 });
 
-                $('#modal_add_data').modal('hide');
-                const form = document.getElementById('form_data_guru');
+                $('#modal_add_jadwal').modal('hide');
+                const form = document.getElementById('form_add_jadwal');
                 form.reset();
-                $('#modal_add_data').modal('hide');
+                $('#modal_add_jadwal').modal('hide');
             }
 
             function hapus(id) {
@@ -231,17 +232,17 @@
                 });
             }
             // function addData() {
-            //     $('#modal_add_data').modal('show');
+            //     $('#modal_add_jadwal').modal('show');
             // }
 
             $(document).ready(function() {
 
-                $('#modal_add_data').on('shown.bs.modal', function() {
+                $('#modal_add_jadwal').on('shown.bs.modal', function() {
                     $("#id_guru").select2({
                         theme: "bootstrap-5",
                         placeholder: "Pilih guru",
                         minimumInputLength: 1,
-                        dropdownParent: $("#modal_add_data"),
+                        dropdownParent: $("#modal_add_jadwal"),
                         ajax: {
                             url: '/get_data_guru',
                             dataType: 'json',
@@ -264,67 +265,67 @@
                             },
                         }
                     });
-
-                    const form = document.getElementById('form_data_siswa');
-                    form.addEventListener('submit', function(event) {
-                        event.preventDefault();
-
-                        const formData = new FormData(form);
-
-                        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                        fetch('/simpan_jadwal_pelajaran', {
-                                method: 'POST',
-                                body: formData,
-                                headers: {
-                                    'X-CSRF-TOKEN': csrfToken,
-                                },
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log(data.message);
-                                if (data.errors) {
-                                    Object.keys(data.errors).forEach(fieldName => {
-                                        const inputField = document.getElementById(
-                                            fieldName);
-                                        inputField.classList.add('is-invalid');
-                                        inputField.nextElementSibling.textContent = data
-                                            .errors[
-                                                fieldName][0];
-                                    });
-
-                                    // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
-                                    const validFields = form.querySelectorAll('.is-invalid');
-                                    validFields.forEach(validField => {
-                                        const fieldName = validField.id;
-                                        if (!data.errors[fieldName]) {
-                                            validField.classList.remove('is-invalid');
-                                            validField.nextElementSibling.textContent = '';
-                                        }
-                                    });
-                                } else {
-                                    console.log(data.message);
-                                    form.reset();
-                                    $('#modal_add_data').modal('hide');
-                                    Swal.fire(
-                                        'Tersimpan!',
-                                        'Jadwal pelajaran berhasil ditambahkan.',
-                                        'success'
-                                    );
-                                    $('.datatable').DataTable().ajax.reload();
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                Swal.fire(
-                                    'Gagal!',
-                                    'Terjadi kesalahan saat menambahkan  jadwal pelajaran.',
-                                    'error'
-                                );
-                            });
-                    });
-
                 });
+
+                const form = document.getElementById('form_add_jadwal');
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    const formData = new FormData(form);
+
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                    fetch('/simpan_jadwal_pelajaran', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data.message);
+                            if (data.errors) {
+                                Object.keys(data.errors).forEach(fieldName => {
+                                    const inputField = document.getElementById(
+                                        fieldName);
+                                    inputField.classList.add('is-invalid');
+                                    inputField.nextElementSibling.textContent = data
+                                        .errors[
+                                            fieldName][0];
+                                });
+
+                                // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
+                                const validFields = form.querySelectorAll('.is-invalid');
+                                validFields.forEach(validField => {
+                                    const fieldName = validField.id;
+                                    if (!data.errors[fieldName]) {
+                                        validField.classList.remove('is-invalid');
+                                        validField.nextElementSibling.textContent = '';
+                                    }
+                                });
+                            } else {
+                                console.log(data.message);
+                                form.reset();
+                                $('#modal_add_jadwal').modal('hide');
+                                Swal.fire(
+                                    'Tersimpan!',
+                                    'Jadwal pelajaran berhasil ditambahkan.',
+                                    'success'
+                                );
+                                $('.datatable').DataTable().ajax.reload();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan saat menambahkan  jadwal pelajaran.',
+                                'error'
+                            );
+                        });
+                });
+
             });
+
 
             $(document).ready(function() {
                 const selectedKelas = $('#filterKelas').val();

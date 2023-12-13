@@ -171,8 +171,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title">Tambah Data Siswa</h5>
                     {{-- <button type="button" class="btn-close" onclick="close_add_data()"></button> --}}
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" tabindex="2"
-                        id="closeModalButton"></button>
+                    <button type="button" class="btn-close" onclick="closeModalAdd()"></button>
                 </div>
                 <form action="/simpan_data_siswa" method="POST" id="form_data_siswa">
                     @csrf
@@ -271,6 +270,24 @@
 
     @push('script')
         <script type="text/javascript">
+            function closeModalAdd() {
+                const invalidInputs = document.querySelectorAll('.is-invalid');
+                invalidInputs.forEach(invalidInput => {
+                    invalidInput.value = '';
+                    invalidInput.classList.remove('is-invalid');
+                    const errorNextSibling = invalidInput.nextElementSibling;
+                    if (errorNextSibling && errorNextSibling.classList.contains(
+                            'invalid-feedback')) {
+                        errorNextSibling.textContent = '';
+                    }
+                });
+
+                $('#modal_add_data').modal('hide');
+                const form = document.getElementById('form_data_guru');
+                form.reset();
+                $('#modal_add_data').modal('hide');
+            }
+
             function deleteSiswa(id) {
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
@@ -406,7 +423,6 @@
                 const form = document.getElementById('form_data_siswa');
                 form.addEventListener('submit', function(event) {
                     event.preventDefault();
-
                     const formData = new FormData(form);
 
                     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
@@ -562,15 +578,6 @@
 
             }
 
-            // async function getData() {
-            //     try {
-            //         const data = fetch('/get_data_guru').then(response => response.json())
-
-            //     } catch (error) {
-            //         return error
-            //     }
-            // }
-
             async function getData() {
                 try {
                     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
@@ -598,3 +605,12 @@
         </script>
     @endpush
 @endsection
+
+// async function getData() {
+// try {
+// const data = fetch('/get_data_guru').then(response => response.json())
+
+// } catch (error) {
+// return error
+// }
+// }

@@ -142,6 +142,8 @@
                                         <option value="">- Pilih Jenis PTK -</option>
                                         <option value="Guru Mapel">Guru Mapel</option>
                                         <option value="Guru Kelas">Guru Kelas</option>
+                                        <option value="Kepala Sekolah">Kepala Sekolah</option>
+                                        <option value="Tenaga Administrasi">Tenaga Administrasi</option>
                                     </select>
                                     <div class="invalid-feedback"></div>
                                 </div>

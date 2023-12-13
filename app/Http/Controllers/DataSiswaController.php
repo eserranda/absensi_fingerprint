@@ -24,7 +24,7 @@ class DataSiswaController extends Controller
                 $query->where('kelas', $kelasFilter);
             }
 
-            $data = $query->get();
+            $data = $query->latest('created_at')->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {

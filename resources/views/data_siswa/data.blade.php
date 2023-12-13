@@ -19,7 +19,14 @@
                         <option value="XII IPS 1">XII IPS 1</option>
                     </select>
                 </div>
-                <button class="btn btn-success mx-2 " id="reload">Reload</button>
+                <button class="btn btn-icon mx-2" id="reload"> <svg xmlns="http://www.w3.org/2000/svg" class="icon"
+                        width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                        <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                    </svg>
+                </button>
                 <div class="card-actions">
                     <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_data">
                         Tambah Data
@@ -202,19 +209,20 @@
                                     <label class="form-label">Tanggal Lahir</label>
                                     <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir">
                                     <div class="invalid-feedback"></div>
-
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-lg-6">
-                                <label class="form-label">Jenis Kelamin</label>
-                                <select class="form-select" id="jenis_kelamin" name="jenis_kelamin">
-                                    <option value="L">Laki-Laki</option>
-                                    <option value="P">Perempuan</option>
-                                </select>
-                                <div class="invalid-feedback"></div>
+                                <div class="mb-3">
+                                    <label class="form-label">Jenis Kelamin</label>
+                                    <select class="form-select" id="jenis_kelamin" name="jenis_kelamin">
+                                        <option value="L">Laki-Laki</option>
+                                        <option value="P">Perempuan</option>
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
                             </div>
 
                             <div class="col-lg-6">
@@ -235,29 +243,25 @@
 
                         <div class="row">
                             <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Kelas</label>
-                                    <select class="form-select" id="kelas" name="kelas">
-                                        <option value="">Pilih Kelas</option>
-                                        <option value="XI MIPA 1">XI MIPA 1</option>
-                                        <option value="X IPS 1">X IPS 1</option>
-                                        <option value="XII IPS 1">XII IPS 1</option>
-                                    </select>
-                                    <div class="invalid-feedback"></div>
-                                </div>
+                                <label class="form-label">Kelas</label>
+                                <select class="form-select" id="kelas" name="kelas">
+                                    <option value="">Pilih Kelas</option>
+                                    <option value="XI MIPA 1">XI MIPA 1</option>
+                                    <option value="X IPS 1">X IPS 1</option>
+                                    <option value="XII IPS 1">XII IPS 1</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
                             </div>
 
                             <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Alamat</label>
-                                    <textarea class="form-control" name="alamat" rows="2" id="alamat" placeholder="Masukkan Alamat"></textarea>
-                                    <div class="invalid-feedback"></div>
-                                </div>
+                                <label class="form-label">Alamat</label>
+                                <textarea class="form-control" name="alamat" rows="2" id="alamat" placeholder="Masukkan Alamat"></textarea>
+                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button href="#" class="btn btn-primary " type="submit">
+                        <button href="" class="btn btn-primary " type="submit">
                             Simpan
                         </button>
                 </form>

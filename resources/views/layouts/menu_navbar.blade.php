@@ -371,7 +371,7 @@
                                 Pengaturan
                             </span>
                         </a>
-                        <div class="dropdown-menu">
+                        {{-- <div class="dropdown-menu">
                             <a class="dropdown-item" href="https://tabler.io/docs" target="_blank" rel="noopener">
                                 Documentation
                             </a>
@@ -394,7 +394,7 @@
                                 </svg>
                                 Sponsor project!
                             </a>
-                        </div>
+                        </div> --}}
                     </li>
                 </ul>
             </div>

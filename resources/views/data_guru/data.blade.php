@@ -17,9 +17,9 @@
                         <option value="Honor Daerah">Honor Daerah</option>
                     </select>
                 </div>
-                <button class="btn btn-info btn-icon mx-2" id="reload"> <svg xmlns="http://www.w3.org/2000/svg"
-                        class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <button class="btn btn-icon mx-2" id="reload"> <svg xmlns="http://www.w3.org/2000/svg" class="icon"
+                        width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
                         <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
@@ -160,10 +160,9 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-lg-6">
-                                <div class="mb-3">
+                                <div class="mb-0">
                                     <label class="form-label">Jenis Kelamin</label>
                                     <select class="form-select" id="jenis_kelamin" name="jenis_kelamin">
                                         <option value="">Pilih Gender</option>
@@ -173,20 +172,17 @@
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
-
                             <div class="col-lg-6">
-                                <div class="mb-3">
+                                <div class="mb-0">
                                     <label class="form-label">Alamat</label>
                                     <textarea class="form-control" id="alamat" name="alamat" rows="2" placeholder="Masukkan Alamat"></textarea>
                                     <div class="invalid-feedback"> </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
                     <div class="modal-footer">
-                        <button href="#" class="btn btn-primary ms-auto" type="submit">
+                        <button href="" class="btn btn-primary ms-auto" type="submit">
                             Simpan
                         </button>
                     </div>
@@ -300,7 +296,7 @@
 
                         <div class="row">
                             <div class="col-lg-6">
-                                <div class="mb-3">
+                                <div class="mb-0">
                                     <label class="form-label">Jenis Kelamin</label>
                                     <select class="form-select" id="edit_jenis_kelamin" name="edit_jenis_kelamin">
                                         <option value="">Pilih Gender</option>
@@ -312,18 +308,16 @@
                             </div>
 
                             <div class="col-lg-6">
-                                <div class="mb-3">
+                                <div class="mb-0">
                                     <label class="form-label">Alamat</label>
                                     <textarea class="form-control" id="edit_alamat" name="edit_alamat" rows="2" placeholder="Masukkan Alamat"></textarea>
                                     <div class="invalid-feedback"> </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
                     <div class="modal-footer">
-                        <button href="#" class="btn btn-primary ms-auto" type="submit">
+                        <button href="" class="btn btn-primary ms-auto" type="submit">
                             Update
                         </button>
                     </div>
@@ -337,7 +331,7 @@
             function hapus(id) {
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
-                    text: 'Data siswa akan dihapus permanen!',
+                    text: 'Data akan dihapus permanen!',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
@@ -396,7 +390,7 @@
                     const responseData = await response.json();
 
                     if (!response.status) {
-                        throw new Error('Gagal mengambil data siswa');
+                        throw new Error('Gagal mengambil data');
                     }
                     console.log(response);
                     const form = document.getElementById('form_edit_data_guru');
@@ -552,7 +546,7 @@
                         $('#modal_add_data').modal('hide');
                         Swal.fire(
                             'Tersimpan!',
-                            'Data siswa berhasil diupdate.',
+                            'Data berhasil diupdate.',
                             'success'
                         )
                         $('.datatable').DataTable().ajax.reload();

@@ -578,39 +578,29 @@
 
             }
 
-            async function getData() {
-                try {
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            // async function getData() {
+            //     try {
+            //         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            //         const response = await fetch('/data_siswa_tes', {
+            //             method: 'GET',
+            //             headers: {
+            //                 'X-CSRF-TOKEN': csrfToken,
+            //                 'Content-Type': 'application/json',
+            //             },
+            //         }).then(response => response.json());
 
-                    const response = await fetch('/data_siswa_tes', {
-                        method: 'GET',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Content-Type': 'application/json',
-                        },
-                    }).then(response => response.json());
+            //         if (!response.status) {
+            //             throw new Error('Gagal mengambil data siswa');
+            //         } else {
+            //             console.log(response);
+            //         }
+            //     } catch (error) {
+            //         console.error('Terjadi kesalahan:', error);
+            //         throw error;
+            //     }
+            // }
 
-                    if (!response.status) {
-                        throw new Error('Gagal mengambil data siswa');
-                    } else {
-                        console.log(response);
-                    }
-                } catch (error) {
-                    console.error('Terjadi kesalahan:', error);
-                    throw error;
-                }
-            }
-
-            getData()
+            // getData()
         </script>
     @endpush
 @endsection
-
-// async function getData() {
-// try {
-// const data = fetch('/get_data_guru').then(response => response.json())
-
-// } catch (error) {
-// return error
-// }
-// }

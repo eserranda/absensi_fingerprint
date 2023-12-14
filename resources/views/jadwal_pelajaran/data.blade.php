@@ -236,7 +236,6 @@
             // }
 
             $(document).ready(function() {
-
                 $('#modal_add_jadwal').on('shown.bs.modal', function() {
                     $("#id_guru").select2({
                         theme: "bootstrap-5",

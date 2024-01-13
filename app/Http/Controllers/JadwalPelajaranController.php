@@ -30,6 +30,13 @@ class JadwalPelajaranController extends Controller
                         return '-';
                     }
                 })
+                ->addColumn('id_matpel', function ($row) {
+                    if ($row->id_matpel) {
+                        return $row->data_matpel->nama_matpel;
+                    } else {
+                        return '-';
+                    }
+                })
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
                 <button class="btn btn-sm btn-danger btn-icon" aria-label="Button" onclick="hapus(' . $row->id . ')">
@@ -60,7 +67,7 @@ class JadwalPelajaranController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'hari' => 'required|string',
-            'matpel' => 'required|string',
+            // 'id_matpel' => 'required|string',
             'jam_mulai' => 'required|string',
             'jam_selesai' => 'required|string',
             // 'id_guru' => 'required|string',

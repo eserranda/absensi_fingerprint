@@ -90,8 +90,8 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Matpel</label>
-                                    <input type="text" class="form-control" id="matpel" name="matpel">
-                                    <div class="invalid-feedback"></div>
+                                    <select class="form-select" id="id_matpel" name="id_matpel">
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -264,6 +264,34 @@
                             },
                         }
                     });
+
+                    $("#id_matpel").select2({
+                        theme: "bootstrap-5",
+                        placeholder: "Pilih Matpel",
+                        minimumInputLength: 1,
+                        dropdownParent: $("#modal_add_jadwal"),
+                        ajax: {
+                            url: '/get_data_matpel',
+                            dataType: 'json',
+                            processResults: function(data) {
+                                if (data && data.length > 0) {
+                                    var results = $.map(data, function(item) {
+                                        return {
+                                            id: item.id,
+                                            text: item.nama_matpel
+                                        };
+                                    });
+                                    // results.unshift({
+                                    //     id: '',
+                                    //     text: 'Pilih guru'
+                                    // });
+                                    return {
+                                        results: results
+                                    };
+                                }
+                            },
+                        }
+                    });
                 });
 
                 const form = document.getElementById('form_add_jadwal');
@@ -342,8 +370,8 @@
                             name: 'hari'
                         },
                         {
-                            data: 'matpel',
-                            name: 'matpel'
+                            data: 'id_matpel',
+                            name: 'id_matpel'
                         },
                         {
                             data: null,

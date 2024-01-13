@@ -13,7 +13,7 @@ class JadwalPelajaran extends Model
 
     protected $fillable = [
         'hari',
-        'matpel',
+        'id_matpel',
         'jam_mulai',
         'jam_selesai',
         'id_guru',
@@ -25,6 +25,13 @@ class JadwalPelajaran extends Model
     {
         return $this->belongsTo(DataGuru::class, 'id_guru', 'id');
     }
+
+    public function data_matpel(): BelongsTo
+    {
+        return $this->belongsTo(Matpel::class, 'id_matpel', 'id');
+    }
+
+
     // public function data_guru(): HasMany
     // {
     //     return $this->hasMany(DataGuru::class, 'id', 'id_guru');

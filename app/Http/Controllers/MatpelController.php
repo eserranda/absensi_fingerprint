@@ -76,6 +76,18 @@ class MatpelController extends Controller
         return response()->json(['status' => true, 'data' => $data]);
     }
 
+    function getDataMatpel(Request $request)
+    {
+        $data = [];
+
+        if ($request->filled('q')) {
+            $data = Matpel::select("nama_matpel", "id")
+                ->where('nama_matpel', 'LIKE', '%' . $request->get('q') . '%')
+                ->get();
+        }
+
+        return response()->json($data);
+    }
     /**
      * Display the specified resource.
      */

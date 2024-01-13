@@ -23,6 +23,7 @@ use App\Http\Controllers\MatpelController;
 
 Route::controller(MatpelController::class)->group(function () {
     Route::get('matpel', 'index')->name("data_matpel.data");
+    Route::get('get_data_matpel', 'getDataMatpel')->name("get_data_matpel");
     Route::POST('/simpan_data_matpel', 'store')->name("simpan_data_matpel");
     Route::POST('/update_data_matpel', 'update')->name("update_data_matpel");
     Route::get('/data_matpel/edit/{id}', 'edit')->name("simpan_data_matpel");

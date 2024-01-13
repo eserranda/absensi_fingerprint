@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\DataGuru;
 use App\Models\Dashboard;
 use App\Models\DataSiswa;
+use App\Models\JadwalPelajaran;
+use App\Models\Matpel;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -23,10 +25,14 @@ class DashboardController extends Controller
     {
         $totalGuru = DataGuru::count();
         $totalSiswa = DataSiswa::count();
+        $totalMatpel = Matpel::count();
+        $totalJadwal = JadwalPelajaran::count();
 
         return response()->json([
             'totalGuru' => $totalGuru,
             'totalSiswa' => $totalSiswa,
+            'totalMatpel' => $totalMatpel,
+            'totalJadwal' => $totalJadwal
         ]);
     }
 

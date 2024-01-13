@@ -107,9 +107,27 @@ class MatpelController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Matpel $matpel)
+    public function update(Request $request, Matpel $dataGuru)
     {
-        //
+        $id = $request->input('id');
+        $nama = $request->input('edit_nama_matpel');
+
+        $validator = Validator::make($request->all(), [
+            'edit_nama_matpel' => 'required|string',
+        ]);
+
+        // Set ulang nama atribut
+        $validator->setAttributeNames([
+            'edit_nama_matpel' => 'Nama Matpel',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $dataGuru->find($id)->update([
+            'nama_matpel' => $nama,
+        ]);
+
+        return response()->json(['status' => true, 'message' => 'Data Guru berhasil diperbarui', $dataGuru], 200);
     }
 
     /**

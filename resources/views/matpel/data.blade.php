@@ -1,28 +1,23 @@
 @extends('layouts.master')
-
 @push('headcss')
     <link href="{{ asset('assets') }}/dist/css/dataTables-bootstrap5.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
 @endpush
-
 @section('content')
     <div class="col-12">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title mx-1">Mata Pelajaran</h3>
                 <div class="card-actions">
-                    {{-- <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_data">
-                        Tambah Data
-                    </a> --}}
                     <a href="#" class="btn btn-primary" id="add_data">
                         Tambah Data
                     </a>
                 </div>
             </div>
 
-            <div class="card-body">
+            <div class="card-body border-bottom py-3">
                 <div class="table-responsive">
                     <table class="table card-table table-vcenter text-nowrap datatable">
                         <thead>
@@ -40,15 +35,16 @@
         </div>
     </div>
 
-    {{-- Modal add data --}}
-    <div class="modal  modal-blur fade" id="modal_add_data" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+
+    {{-- Tambah data  --}}
+    <div class="modal modal-blur fade" id="modal_add_data" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data Mata Pelajaran</h5>
+                    <h5 class="modal-title">Tambah Data </h5>
                     <button type="button" class="btn-close" onclick="closeModalAdd()"></button>
                 </div>
-                <form action="/simpan_data_matpel" method="POST" id="form_data_matpel">
+                <form action="" method="POST" id="form_data_matpel">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
@@ -61,16 +57,18 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="modal-footer">
-                        <button href="#" class="btn btn-primary" type="submit">
+                        <button href="" class="btn btn-primary ms-auto" type="submit">
                             Simpan
                         </button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 
-    {{-- Modal edit data --}}
+    {{-- edit data  --}}
     <div class="modal modal-blur fade" id="modal_edit_data" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -104,7 +102,6 @@
         </div>
     </div>
 
-
     @push('script')
         <script type="text/javascript">
             function hapus(id) {
@@ -130,14 +127,14 @@
                                 if (response.status) {
                                     Swal.fire(
                                         'Terhapus!',
-                                        'Data matpel berhasil dihapus.',
+                                        'Data mata pelajaran berhasil dihapus.',
                                         'success'
                                     );
                                     $('.datatable').DataTable().ajax.reload();
                                 } else {
                                     Swal.fire(
                                         'Gagal!',
-                                        'Terjadi kesalahan saat menghapus data matpel.',
+                                        'Terjadi kesalahan saat menghapus data mata pelajaran.',
                                         'error'
                                     );
                                 }
@@ -146,7 +143,7 @@
                                 console.log(error);
                                 Swal.fire(
                                     'Gagal!',
-                                    'Terjadi kesalahan saat menghapus data matpel.',
+                                    'Terjadi kesalahan saat menghapus data mata pelajaran.',
                                     'error'
                                 );
                             }
@@ -228,7 +225,7 @@
                         $('#modal_edit_data').modal('hide');
                         Swal.fire(
                             'Tersimpan!',
-                            'Data guru berhasil diupdate.',
+                            'Data mata pelajaran berhasil diupdate.',
                             'success'
                         )
                         $('.datatable').DataTable().ajax.reload();
@@ -273,6 +270,7 @@
                 $('#modal_add_data').modal('hide');
             }
 
+            // document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('add_data').addEventListener('click', function() {
                 $('#modal_add_data').modal('show');
             });
@@ -362,6 +360,7 @@
                             data: 'nama_matpel',
                             name: 'nama_matpel'
                         },
+
                         {
                             data: 'action',
                             name: 'action',
@@ -370,6 +369,9 @@
                         },
                     ]
                 });
+
+
+
             });
         </script>
     @endpush

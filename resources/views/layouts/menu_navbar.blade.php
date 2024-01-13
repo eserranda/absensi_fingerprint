@@ -414,7 +414,7 @@
                                 </svg>
                             </span>
                             <span class="nav-link-title">
-                                MatPel
+                                Mata Pelajaran
                             </span>
                         </a>
                     </li>

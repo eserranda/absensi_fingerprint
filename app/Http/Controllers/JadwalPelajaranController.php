@@ -24,7 +24,11 @@ class JadwalPelajaranController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('id_guru', function ($row) {
-                    return $row->data_guru->nama;
+                    if ($row->id_guru) {
+                        return $row->data_guru->nama;
+                    } else {
+                        return '-';
+                    }
                 })
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
@@ -60,8 +64,8 @@ class JadwalPelajaranController extends Controller
             'jam_mulai' => 'required|string',
             'jam_selesai' => 'required|string',
             // 'id_guru' => 'required|string',
-            'kelas' => 'required|string',
-            'ruangan' => 'required|string',
+            // 'kelas' => 'required|string',
+            // 'ruangan' => 'required|string',
         ]);
 
         if ($validator->fails()) {

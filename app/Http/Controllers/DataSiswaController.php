@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\DataSiswa;
-use Dflydev\DotAccessData\Data;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;

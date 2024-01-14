@@ -26,7 +26,9 @@ class DashboardController extends Controller
         $totalGuru = DataGuru::count();
         $totalSiswa = DataSiswa::count();
         $totalMatpel = Matpel::count();
-        $totalJadwal = JadwalPelajaran::count();
+        // $totalJadwal = JadwalPelajaran::count();
+        $totalJadwal = JadwalPelajaran::where('id_matpel', '!=', 28)->count();
+
 
         return response()->json([
             'totalGuru' => $totalGuru,

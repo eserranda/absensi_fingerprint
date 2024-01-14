@@ -359,6 +359,7 @@
                 const myDataTable = $('.datatable').DataTable({
                     processing: true,
                     serverSide: true,
+                    pageLength: 50,
                     ajax: `{{ route('jadwal_pelajaran.data') }}?kelas=${selectedKelas}`,
                     columns: [{
                             data: 'DT_RowIndex',

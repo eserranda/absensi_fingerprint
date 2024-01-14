@@ -20,7 +20,10 @@ class JadwalPelajaranController extends Controller
             if ($kelasFilter) {
                 $query->where('kelas', $kelasFilter);
             }
-            $data = $query->orderByDesc('hari')->get();
+
+            $query->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu')");
+
+            $data = $query->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('id_guru', function ($row) {

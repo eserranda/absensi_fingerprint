@@ -71,6 +71,8 @@ Route::controller(DataSiswaController::class)->group(function () {
 
 Route::controller(JadwalPelajaranController::class)->group(function () {
     Route::get('/jadwal_pelajaran', 'index')->name("jadwal_pelajaran.data");
+    Route::get('/jadwal_pelajaran/getid/{id}', 'getID')->name("getid_jadwal_pelajaran");
     Route::POST('/simpan_jadwal_pelajaran', 'store')->name("simpan_jadwal_pelajaran");
+    Route::POST('/jadwal_pelajaran/update_jadwal_pelajaran', 'update')->name("update_jadwal_pelajaran");
     Route::delete('/jadwal_pelajaran/delete/{id}', 'destroy')->name("hapus_jadwal_pelajaran");
 });

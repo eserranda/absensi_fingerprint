@@ -164,6 +164,117 @@
         </div>
     </div>
 
+    {{-- edit data  --}}
+    <div class="modal  modal-blur fade" id="modal_edit_data" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Jadwal</h5>
+                    <button type="button" class="btn-close" onclick="closeModalEdit()"></button>
+
+                </div>
+                <form action="" method="POST" id="form_edit_jadwal">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="hidden" id="edit_id" name="edit_id">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Hari</label>
+                                    <select class="form-select" id="edit_hari" name="edit_hari">
+                                        {{-- <option value="">- Pilih Hari -</option> --}}
+                                        <option value="Senin">Senin</option>
+                                        <option value="Selasa">Selasa</option>
+                                        <option value="Rabu">Rabu</option>
+                                        <option value="Kamis">Kamis</option>
+                                        <option value="Jumat">Jumat</option>
+                                        <option value="Sabtu">Sabtu</option>
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Matpel</label>
+                                    <select class="form-select" id="edit_id_matpel" name="edit_id_matpel">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Jam Mulai</label>
+                                    <input type="time" class="form-control" id="edit_jam_mulai"
+                                        name="edit_jam_mulai">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Jam Selesai</label>
+                                    <input type="time" class="form-control" id="edit_jam_selesai"
+                                        name="edit_jam_selesai">
+                                    <div class="invalid-feedback"></div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Pengajar</label>
+                                    <select class="form-select" id="edit_id_guru" name="edit_id_guru">
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Kelas</label>
+                                    <select class="form-select" id="edit_kelas" name="edit_kelas">
+                                        <option value="">- Pilih Kelas -</option>
+                                        <option value="XI MIPA 1">XI MIPA 1</option>
+                                        <option value="X IPS 1">X IPS 1</option>
+                                        <option value="XII IPS 1">XII IPS 1</option>
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Ruangan</label>
+                                    <select class="form-select" id="edit_ruangan" name="edit_ruangan">
+                                        <option value="">- Pilih Ruangan -</option>
+                                        <option value="XI MIPA 1">XI MIPA 1</option>
+                                        <option value="X IPS 1">X IPS 1</option>
+                                        <option value="XII IPS 1">XII IPS 1</option>
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        {{-- <button href="#" class="btn btn-primary " type="submit">
+                            Update
+                        </button> --}}
+                        <button type="button" tabindex="2" class="btn btn-primary"
+                            onclick="updateData()">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     @push('script')
         <script type="text/javascript">
             function closeModalAdd() {
@@ -353,7 +464,6 @@
 
             });
 
-
             $(document).ready(function() {
                 const selectedKelas = $('#filterKelas').val();
                 const myDataTable = $('.datatable').DataTable({
@@ -413,6 +523,209 @@
                 // });
 
             });
+
+            function edit(id) {
+                fetch('/jadwal_pelajaran/getid/' + id, {
+                        method: 'GET',
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Gagal mengambil data siswa');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const form = document.getElementById('form_edit_jadwal');
+                        form.elements['edit_id'].value = data.data.id;
+                        form.elements['edit_hari'].value = data.data.hari;
+                        form.elements['edit_id_matpel'].value = data.data.id_matpel;
+                        form.elements['edit_jam_mulai'].value = data.data
+                            .jam_mulai;
+                        form.elements['edit_jam_selesai'].value = data.data
+                            .jam_selesai;
+                        form.elements['edit_id_guru'].value = data.data
+                            .id_guru;
+                        form.elements['edit_kelas'].value = data.data.kelas;
+                        form.elements['edit_ruangan'].value = data.data.ruangan;
+
+                        // Setel nilai langsung pada elemen <select>
+                        var editIdMatpelSelect = document.getElementById('edit_id_matpel');
+                        var editIdPengajarSelect = document.getElementById('edit_id_guru');
+
+                        fetch('/data_matpel/getid/' + data.data.id_matpel, {
+                                method: 'GET',
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Gagal mengambil data tambahan');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                updateOptionsAndSelect2Matpel(editIdMatpelSelect, data.data.id, data.data.nama_matpel);
+                            });
+
+                        fetch('/data_guru/getID/' + data.data.id_guru, {
+                                method: 'GET',
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Gagal mengambil data tambahan');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                updateOptionsAndSelect2Guru(editIdPengajarSelect, data.data.id, data.data.nama);
+                            });
+
+
+                        $('#modal_edit_data').modal('show');
+                    })
+
+                $("#edit_id_matpel").select2({
+                    theme: "bootstrap-5",
+                    placeholder: "Pilih Matpel",
+                    minimumInputLength: 1,
+                    dropdownParent: $("#modal_edit_data"),
+                    ajax: {
+                        url: '/get_data_matpel',
+                        dataType: 'json',
+                        processResults: function(data) {
+                            if (data && data.length > 0) {
+                                var results = $.map(data, function(item) {
+                                    return {
+                                        id: item.id,
+                                        text: item.nama_matpel
+                                    };
+                                });
+                                return {
+                                    results: results
+                                };
+                            }
+                        },
+                    }
+                });
+
+                $("#edit_id_guru").select2({
+                    theme: "bootstrap-5",
+                    placeholder: "Pilih guru",
+                    minimumInputLength: 1,
+                    dropdownParent: $("#modal_edit_data"),
+                    ajax: {
+                        url: '/get_data_guru',
+                        dataType: 'json',
+                        processResults: function(data) {
+                            if (data && data.length > 0) {
+                                var results = $.map(data, function(item) {
+                                    return {
+                                        id: item.id,
+                                        text: item.nama
+                                    };
+                                });
+                                return {
+                                    results: results
+                                };
+                            }
+                        },
+                    }
+                });
+            }
+
+            function updateData() {
+                const form = document.getElementById('form_edit_jadwal');
+                const formData = new FormData(form);
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                fetch('/jadwal_pelajaran/update_jadwal_pelajaran', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data.message);
+                        if (data.errors) {
+                            Object.keys(data.errors).forEach(fieldName => {
+                                const inputField = document.getElementById(fieldName);
+                                inputField.classList.add('is-invalid');
+                                inputField.nextElementSibling.textContent = data.errors[
+                                    fieldName][0];
+                            });
+                            // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
+                            const validFields = form.querySelectorAll('.is-invalid');
+                            validFields.forEach(validField => {
+                                const fieldName = validField.id;
+                                if (!data.errors[fieldName]) {
+                                    validField.classList.remove('is-invalid');
+                                    validField.nextElementSibling.textContent = '';
+                                }
+                            });
+
+                        } else {
+                            console.log(data.message);
+                            form.reset();
+                            $('#modal_edit_data').modal('hide');
+                            Swal.fire(
+                                'Tersimpan!',
+                                'Data siswa berhasil diupdate.',
+                                'success'
+                            )
+                            $('.datatable').DataTable().ajax.reload();
+
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire(
+                            'Gagal!',
+                            'Terjadi kesalahan saat mengupdate data siswa.',
+                            'error'
+                        );
+                    });
+
+            }
+
+            function closeModalEdit() {
+                const invalidInputs = document.querySelectorAll('.is-invalid');
+                invalidInputs.forEach(invalidInput => {
+                    invalidInput.value = '';
+                    invalidInput.classList.remove('is-invalid');
+                    const errorNextSibling = invalidInput.nextElementSibling;
+                    if (errorNextSibling && errorNextSibling.classList.contains(
+                            'invalid-feedback')) {
+                        errorNextSibling.textContent = '';
+                    }
+                });
+                const form = document.getElementById('form_edit_jadwal');
+                form.reset();
+                $('#modal_edit_data').modal('hide');
+            }
+
+            // Fungsi untuk memperbarui opsi di elemen <select> dan tampilan Select2
+            function updateOptionsAndSelect2Matpel(selectElement, id, namaMatpel) {
+                // Hapus semua opsi yang ada di elemen <select>
+                $(selectElement).empty();
+
+                // Tambahkan opsi baru ke elemen <select>
+                var option = new Option(namaMatpel, id, true, true);
+                $(selectElement).append(option);
+
+                // Perbarui tampilan Select2
+                $(selectElement).trigger('change');
+            }
+
+            function updateOptionsAndSelect2Guru(selectElement, id, namaGuru) {
+                // Hapus semua opsi yang ada di elemen <select>
+                $(selectElement).empty();
+
+                // Tambahkan opsi baru ke elemen <select>
+                var option = new Option(namaGuru, id, true, true);
+                $(selectElement).append(option);
+
+                // Perbarui tampilan Select2
+                $(selectElement).trigger('change');
+            }
         </script>
     @endpush
 @endsection

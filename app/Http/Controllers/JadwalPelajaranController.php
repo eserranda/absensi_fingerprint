@@ -42,6 +42,12 @@ class JadwalPelajaranController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
+                    <button class="btn btn-sm btn-primary btn-icon" aria-label="Button" onclick="edit(' . $row->id . ')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                  </svg>
+                </button>
                 <button class="btn btn-sm btn-danger btn-icon" aria-label="Button" onclick="hapus(' . $row->id . ')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
@@ -55,9 +61,12 @@ class JadwalPelajaranController extends Controller
         return view('jadwal_pelajaran.data');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function getID($id)
+    {
+        $data = JadwalPelajaran::find($id);
+        return response()->json(['data' => $data]);
+    }
+
     public function create()
     {
         //
@@ -107,7 +116,36 @@ class JadwalPelajaranController extends Controller
      */
     public function update(Request $request, JadwalPelajaran $jadwalPelajaran)
     {
-        //
+        $id = $request->input('edit_id');
+        $hari = $request->input('edit_hari');
+        $id_matpel = $request->input('edit_id_matpel');
+        $jam_mulai = $request->input('edit_jam_mulai');
+        $jam_selesai = $request->input('edit_jam_selesai');
+        $id_guru = $request->input('edit_id_guru');
+        $kelas = $request->input('edit_kelas');
+        $ruangan = $request->input('edit_ruangan');
+
+        $validator = Validator::make($request->all(), [
+            'edit_hari' => 'required|string',
+            'edit_jam_mulai' => 'required|string',
+            'edit_jam_selesai' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $jadwalPelajaran->find($id)->update([
+            'hari' => $hari,
+            'id_matpel' => $id_matpel,
+            'jam_mulai' => $jam_mulai,
+            'jam_selesai' => $jam_selesai,
+            'id_guru' => $id_guru,
+            'kelas' => $kelas,
+            'ruangan' => $ruangan
+        ]);
+
+        return response()->json(['status' => true, 'message' => 'Data berhasil diupdate'], 200);
     }
 
     /**

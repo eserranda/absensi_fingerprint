@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\KelasController;
+use App\Http\Controllers\MatpelController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\DataGuruController;
 use App\Http\Controllers\DashboardController;
@@ -8,7 +11,6 @@ use App\Http\Controllers\DataSiswaController;
 use App\Http\Controllers\DataAbsensiGuruController;
 use App\Http\Controllers\JadwalPelajaranController;
 use App\Http\Controllers\DataAbsensiSiswaController;
-use App\Http\Controllers\MatpelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +22,10 @@ use App\Http\Controllers\MatpelController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/login', [AuthController::class, 'loginForm'])->name("login")->middleware('guest'); // Form login
+Route::post('/login', [AuthController::class, 'authenticate'])->middleware('guest'); // Login
+Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth'); // Login
 
 Route::controller(MatpelController::class)->group(function () {
     Route::get('matpel', 'index')->name("data_matpel.data");
@@ -75,4 +81,13 @@ Route::controller(JadwalPelajaranController::class)->group(function () {
     Route::POST('/simpan_jadwal_pelajaran', 'store')->name("simpan_jadwal_pelajaran");
     Route::POST('/jadwal_pelajaran/update_jadwal_pelajaran', 'update')->name("update_jadwal_pelajaran");
     Route::delete('/jadwal_pelajaran/delete/{id}', 'destroy')->name("hapus_jadwal_pelajaran");
+});
+
+Route::controller(KelasController::class)->group(function () {
+    Route::get('/kelas', 'index')->name("kelas.data");
+    Route::POST('/simpan_data_kelas', 'store')->name("simpan_data_kelas");
+    Route::get('/data_kelas/getid/{id}', 'getID')->name("getid_data_kelas");
+    Route::POST('/update_data_kelas', 'update')->name("update_data_kelas");
+    Route::delete('/data_kelas/delete/{id}', 'destroy')->name("hapus_data_kelas");
+    Route::get('/get_data_kelas', 'getDataKelas')->name("get_data_kelas");
 });

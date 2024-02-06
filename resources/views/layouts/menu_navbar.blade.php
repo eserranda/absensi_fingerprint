@@ -371,11 +371,11 @@
                                 Pengaturan
                             </span>
                         </a>
-                        {{-- <div class="dropdown-menu">
-                            <a class="dropdown-item" href="https://tabler.io/docs" target="_blank" rel="noopener">
-                                Documentation
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/kelas" rel="noopener">
+                                Kelas
                             </a>
-                            <a class="dropdown-item" href="./changelog.html">
+                            {{-- <a class="dropdown-item" href="./changelog.html">
                                 Changelog
                             </a>
                             <a class="dropdown-item" href="https://github.com/tabler/tabler" target="_blank"
@@ -393,8 +393,8 @@
                                         d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
                                 </svg>
                                 Sponsor project!
-                            </a>
-                        </div> --}}
+                            </a> --}}
+                        </div>
                     </li>
 
                     <li class="nav-item ">

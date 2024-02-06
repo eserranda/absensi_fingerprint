@@ -364,10 +364,6 @@
                                             text: item.nama
                                         };
                                     });
-                                    // results.unshift({
-                                    //     id: '',
-                                    //     text: 'Pilih guru'
-                                    // });
                                     return {
                                         results: results
                                     };
@@ -461,7 +457,6 @@
                             );
                         });
                 });
-
             });
 
             $(document).ready(function() {

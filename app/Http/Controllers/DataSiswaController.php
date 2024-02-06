@@ -58,7 +58,7 @@ class DataSiswaController extends Controller
         $data = [];
 
         if ($request->filled('q')) {
-            $data = DataSiswa::select("nama", "id")
+            $data = DataSiswa::select("nama", "id", "kelas")
                 ->where('nama', 'LIKE', '%' . $request->get('q') . '%')
                 ->get();
         }

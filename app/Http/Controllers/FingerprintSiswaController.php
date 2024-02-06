@@ -72,6 +72,13 @@ class FingerprintSiswaController extends Controller
      */
     public function store(Request $request)
     {
+
+        $kelas = "Kelas" . $request->input('id_modul_fingerprint');
+        $finger = Fingerprint::where('modul_fingerprint', $kelas)->first();
+        if ($finger) {
+            $id_modul_fingerprint = $finger->id;
+            dd($id_modul_fingerprint);
+        }
         $validator = Validator::make($request->all(), [
             'id_siswa' => 'required|unique:fingerprint_siswas',
             'id_modul_fingerprint' => 'required',
@@ -82,7 +89,21 @@ class FingerprintSiswaController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        FingerprintSiswa::create($request->all());
+        $kelas = "Kelas " . $request->input('id_modul_fingerprint');
+        $finger = Fingerprint::where('modul_fingerprint', $kelas)->first();
+        $id_modul_fingerprint = null;
+
+        if ($finger) {
+            $id_modul_fingerprint = $finger->id;
+        }
+
+        // dd($id_modul_fingerprint);
+
+        FingerprintSiswa::create([
+            'id_siswa' => $request->id_siswa,
+            'id_modul_fingerprint' => $id_modul_fingerprint,
+            'id_fingerprint' => $request->id_fingerprint
+        ]);
         return response()->json(['message' => 'Data berhasil disimpan'], 200);
     }
 

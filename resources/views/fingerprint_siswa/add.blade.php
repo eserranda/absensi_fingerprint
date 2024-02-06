@@ -29,14 +29,19 @@
 
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label class="form-label">Pilih Modul Fingerprint</label>
+                                {{-- <label class="form-label">Pilih Modul Fingerprint</label>
                                 <select class="form-select" id="id_modul_fingerprint" name="id_modul_fingerprint">
                                     <option value="">Pilih Modul Fingerprint</option>
                                     @foreach ($finger as $m)
                                         <option value="{{ $m->id }}">{{ $m->modul_fingerprint }}</option>
                                     @endforeach
 
-                                </select>
+                                </select> --}}
+                                {{-- <label class="form-label">Modul Fingerprint</label> --}}
+                                <label class="form-label">Modul Fingerprint</label>
+                                <input type="text " class="form-control bg-white" id="id_modul_fingerprint"
+                                    name="id_modul_fingerprint" readonly>
+                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
 
@@ -59,7 +64,7 @@
                         <button href="" class="btn btn-primary " type="submit">
                             Simpan
                         </button>
-                        <a href="/fingerprint_guru"class="btn btn-warning">Back</a>
+                        <a href="/fingerprint_siswa"class="btn btn-warning">Back</a>
                     </div>
                 </form>
             </div>
@@ -132,6 +137,8 @@
                             dataType: 'json',
                             processResults: function(data) {
                                 if (data && data.length > 0) {
+                                    var kelas = data[0].kelas;
+                                    $('#id_modul_fingerprint').val(kelas);
                                     var results = $.map(data, function(item) {
                                         return {
                                             id: item.id,

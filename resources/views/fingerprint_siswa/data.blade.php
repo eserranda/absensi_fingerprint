@@ -24,7 +24,7 @@
                                 <th>No</th>
                                 <th>ID Fingerprint</th>
                                 <th>Nama Siswa</th>
-                                <th>Kelas</th>
+                                <th>Modul Fingerprint</th>
                                 <th>Opsi</th>
                             </tr>
                         </thead>

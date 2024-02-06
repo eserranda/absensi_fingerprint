@@ -411,6 +411,55 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card card-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <span class="bg-info text-white avatar">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="icon icon-tabler icon-tabler-clipboard-list" width="24" height="24"
+                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path
+                                        d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+                                    <path
+                                        d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+                                    <path d="M9 12l.01 0" />
+                                    <path d="M13 12l2 0" />
+                                    <path d="M9 16l.01 0" />
+                                    <path d="M13 16l2 0" />
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="col">
+                            <h3 class="card-title mb-1">
+                                <span id="totalKelas">0</span>
+                            </h3>
+                            <div class="text-secondary">
+                                Kelas
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <a href="/jadwal_pelajaran" class="btn btn-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-search"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                    <path
+                                        d="M12 18c-.328 0 -.652 -.017 -.97 -.05c-3.172 -.332 -5.85 -2.315 -8.03 -5.95c2.4 -4 5.4 -6 9 -6c3.465 0 6.374 1.853 8.727 5.558" />
+                                    <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                                    <path d="M20.2 20.2l1.8 1.8" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     {{-- <div class="row row-deck row-cards mt-2">
@@ -544,6 +593,7 @@
                                 document.getElementById('totalSiswa').textContent = data.totalSiswa;
                                 document.getElementById('totalMatpel').textContent = data.totalMatpel;
                                 document.getElementById('totalJadwal').textContent = data.totalJadwal;
+                                document.getElementById('totalKelas').textContent = data.totalKelas;
                             })
                     } catch (error) {
                         return error

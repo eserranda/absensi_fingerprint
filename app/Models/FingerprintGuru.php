@@ -2,21 +2,27 @@
 
 namespace App\Models;
 
+use App\Models\DataGuru;
+use App\Models\Fingerprint;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Kelas extends Model
+class FingerprintGuru extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'nama_kelas',
         'id_guru',
-        'jumlah_siswa',
+        'id_modul_fingerprint',
+        'id_fingerprint'
     ];
 
-    public function data_guru(): BelongsTo
+    public function guru(): BelongsTo
     {
         return $this->belongsTo(DataGuru::class, 'id_guru', 'id');
+    }
+    public function modul_fingerprint(): BelongsTo
+    {
+        return $this->belongsTo(Fingerprint::class, 'id_modul_fingerprint', 'id');
     }
 }

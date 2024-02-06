@@ -11,6 +11,11 @@ use App\Http\Controllers\DataSiswaController;
 use App\Http\Controllers\DataAbsensiGuruController;
 use App\Http\Controllers\JadwalPelajaranController;
 use App\Http\Controllers\DataAbsensiSiswaController;
+use App\Http\Controllers\FingerprintController;
+use App\Http\Controllers\FingerprintGuruController;
+use App\Http\Controllers\FingerprintSiswaController;
+use App\Models\FingerprintGuru;
+use App\Models\FingerprintSiswa;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,6 +78,7 @@ Route::controller(DataSiswaController::class)->group(function () {
     Route::get('/data_siswa/getid/{id}', 'getID')->name("getid_data_siswa");
     Route::delete('/data_siswa/delete/{id}', 'destroy')->name("hapus_data_siswa");
     Route::get('/data_siswa_tes', 'tes');
+    Route::get('/get_data_siswa', 'getDataSiswa')->name("get_data_siswa");
 });
 
 Route::controller(JadwalPelajaranController::class)->group(function () {
@@ -90,4 +96,24 @@ Route::controller(KelasController::class)->group(function () {
     Route::POST('/update_data_kelas', 'update')->name("update_data_kelas");
     Route::delete('/data_kelas/delete/{id}', 'destroy')->name("hapus_data_kelas");
     Route::get('/get_data_kelas', 'getDataKelas')->name("get_data_kelas");
+});
+
+Route::controller(FingerprintGuruController::class)->group(function () {
+    Route::get('/fingerprint_guru', 'index')->name("fingerprint_guru.data");
+    Route::get('/fingerprint_guru/add', 'create')->name("fingerprint_guru.add");
+    Route::post('/fingerprint_guru/store', 'store')->name("fingerprint_guru.store");
+    Route::delete('/fingerprint_guru/delete/{id}', 'destroy')->name("fingerprint_guru.delete");
+});
+
+Route::controller(FingerprintSiswaController::class)->group(function () {
+    Route::get('/fingerprint_siswa', 'index')->name("fingerprint_siswa.data");
+    Route::get('/fingerprint_siswa/add', 'create')->name("fingerprint_siswa.add");
+    Route::post('/fingerprint_siswa/store', 'store')->name("fingerprint_siswa.store");
+    Route::delete('/fingerprint_siswa/delete/{id}', 'destroy')->name("fingerprint_siswa.delete");
+});
+
+Route::controller(FingerprintController::class)->group(function () {
+    Route::get('/fingerprint', 'index')->name("fingerprint.data");
+    Route::post('/fingerprint/store', 'store')->name("fingerprint.store");
+    Route::delete('/fingerprint/delete/{id}', 'destroy')->name("fingerprint.delete");
 });

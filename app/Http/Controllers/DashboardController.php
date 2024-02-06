@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kelas;
+use App\Models\Matpel;
 use App\Models\DataGuru;
 use App\Models\Dashboard;
 use App\Models\DataSiswa;
-use App\Models\JadwalPelajaran;
-use App\Models\Matpel;
 use Illuminate\Http\Request;
+use App\Models\JadwalPelajaran;
 
 class DashboardController extends Controller
 {
@@ -26,6 +27,7 @@ class DashboardController extends Controller
         $totalGuru = DataGuru::count();
         $totalSiswa = DataSiswa::count();
         $totalMatpel = Matpel::count();
+        $totalKelas = Kelas::count();
         // $totalJadwal = JadwalPelajaran::count();
         $totalJadwal = JadwalPelajaran::where('id_matpel', '!=', 28)->count();
 
@@ -34,7 +36,8 @@ class DashboardController extends Controller
             'totalGuru' => $totalGuru,
             'totalSiswa' => $totalSiswa,
             'totalMatpel' => $totalMatpel,
-            'totalJadwal' => $totalJadwal
+            'totalJadwal' => $totalJadwal,
+            'totalKelas' => $totalKelas
         ]);
     }
 

@@ -53,6 +53,18 @@ class DataSiswaController extends Controller
         //
     }
 
+    public function getDataSiswa(Request $request)
+    {
+        $data = [];
+
+        if ($request->filled('q')) {
+            $data = DataSiswa::select("nama", "id")
+                ->where('nama', 'LIKE', '%' . $request->get('q') . '%')
+                ->get();
+        }
+
+        return response()->json($data);
+    }
     /**
      * Store a newly created resource in storage.
      */

@@ -8,7 +8,9 @@ use App\Models\DataGuru;
 use App\Models\Dashboard;
 use App\Models\DataSiswa;
 use Illuminate\Http\Request;
+use App\Models\FingerprintGuru;
 use App\Models\JadwalPelajaran;
+use App\Models\FingerprintSiswa;
 
 class DashboardController extends Controller
 {
@@ -28,6 +30,8 @@ class DashboardController extends Controller
         $totalSiswa = DataSiswa::count();
         $totalMatpel = Matpel::count();
         $totalKelas = Kelas::count();
+        $totalFingerprintGuru = FingerprintGuru::count();
+        $totalFingerprintSiswa = FingerprintSiswa::count();
         // $totalJadwal = JadwalPelajaran::count();
         $totalJadwal = JadwalPelajaran::where('id_matpel', '!=', 28)->count();
 
@@ -37,7 +41,9 @@ class DashboardController extends Controller
             'totalSiswa' => $totalSiswa,
             'totalMatpel' => $totalMatpel,
             'totalJadwal' => $totalJadwal,
-            'totalKelas' => $totalKelas
+            'totalKelas' => $totalKelas,
+            'totalFingerprintGuru' => $totalFingerprintGuru,
+            'totalFingerprintSiswa' => $totalFingerprintSiswa
         ]);
     }
 

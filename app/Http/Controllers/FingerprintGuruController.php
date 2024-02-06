@@ -58,8 +58,10 @@ class FingerprintGuruController extends Controller
      */
     public function create()
     {
-        $finger = Fingerprint::all();
-        return view('fingerprint_guru.add', compact('finger'));
+        $modul = "Guru dan Pegawai";
+        $finger = Fingerprint::where('modul_fingerprint', $modul)->first();
+
+        return view('fingerprint_guru.add', (['finger' => $finger]));
     }
 
     /**

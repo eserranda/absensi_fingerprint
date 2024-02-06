@@ -29,16 +29,16 @@
 
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label class="form-label">Pilih Modul Fingerprint</label>
-                                <select class="form-select" id="id_modul_fingerprint" name="id_modul_fingerprint">
-                                    <option value="">Pilih Modul Fingerprint</option>
-                                    @foreach ($finger as $m)
-                                        <option value="{{ $m->id }}">{{ $m->modul_fingerprint }}</option>
-                                    @endforeach
+                                <label class="form-label">ID Fingerprint</label>
+                                <input type="hidden" class="form-control bg-white" id="id_modul_fingerprint"
+                                    name="id_modul_fingerprint" value="{{ $finger->id }}">
+                                <input type="text" class="form-control bg-white" value="{{ $finger->modul_fingerprint }}"
+                                    readonly>
 
-                                </select>
+                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
+
 
                         <div class="row">
                             <div class="mb-3 col-lg-5 mb-0">

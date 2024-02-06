@@ -246,7 +246,7 @@
                         </div>
                         <div class="col">
                             <h3 class="card-title mb-1">
-                                <span id="totalGuru">0</span>
+                                <span id="totalFingerprintGuru">0</span>
                             </h3>
                             <div class="text-secondary">
                                 Fingerprint guru
@@ -291,7 +291,7 @@
                         </div>
                         <div class="col">
                             <h3 class="card-title mb-1">
-                                <span id="totalGuru">0</span>
+                                <span id="totalFingerprintSiswa">0</span>
                             </h3>
                             <div class="text-secondary">
                                 Fingerprint siswa
@@ -594,6 +594,10 @@
                                 document.getElementById('totalMatpel').textContent = data.totalMatpel;
                                 document.getElementById('totalJadwal').textContent = data.totalJadwal;
                                 document.getElementById('totalKelas').textContent = data.totalKelas;
+                                document.getElementById('totalFingerprintGuru').textContent = data
+                                    .totalFingerprintGuru;
+                                document.getElementById('totalFingerprintSiswa').textContent = data
+                                    .totalFingerprintSiswa;
                             })
                     } catch (error) {
                         return error

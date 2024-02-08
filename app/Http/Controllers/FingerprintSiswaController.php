@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Fingerprint;
 use Illuminate\Http\Request;
+use App\Models\FingerprintModul;
 use App\Models\FingerprintSiswa;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -62,7 +63,7 @@ class FingerprintSiswaController extends Controller
      */
     public function create()
     {
-        $finger = Fingerprint::all();
+        $finger = FingerprintModul::all();
         return view('fingerprint_siswa.add', compact('finger'));
     }
 
@@ -74,7 +75,7 @@ class FingerprintSiswaController extends Controller
     {
 
         $kelas = "Kelas" . $request->input('id_modul_fingerprint');
-        $finger = Fingerprint::where('modul_fingerprint', $kelas)->first();
+        $finger = FingerprintModul::where('modul_fingerprint', $kelas)->first();
         if ($finger) {
             $id_modul_fingerprint = $finger->id;
             dd($id_modul_fingerprint);
@@ -90,7 +91,7 @@ class FingerprintSiswaController extends Controller
         }
 
         $kelas = "Kelas " . $request->input('id_modul_fingerprint');
-        $finger = Fingerprint::where('modul_fingerprint', $kelas)->first();
+        $finger = FingerprintModul::where('modul_fingerprint', $kelas)->first();
         $id_modul_fingerprint = null;
 
         if ($finger) {

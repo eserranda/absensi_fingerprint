@@ -20,7 +20,7 @@
                                 <th>No</th>
                                 <th>Fingerprint</th>
                                 <th>Api Key</th>
-                                <th>Status</th>
+                                {{-- <th>Status</th> --}}
                                 <th>Opsi</th>
                             </tr>
                         </thead>
@@ -30,8 +30,9 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $d->modul_fingerprint }}</td>
                                     <td>{{ $d->apiKey }}</td>
-                                    <td>{{ $d->status }}</td>
-                                    <td> <button class="btn btn-sm btn-primary btn-icon" aria-label="Button"
+                                    {{-- <td>{{ $d->status }}</td> --}}
+                                    <td>
+                                        {{-- <button class="btn btn-sm btn-primary btn-icon" aria-label="Button"
                                             onclick="edit({{ $d->id }})">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                 fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -40,7 +41,7 @@
                                                 <path fill-rule="evenodd"
                                                     d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
                                             </svg>
-                                        </button>
+                                        </button> --}}
                                         <button class="btn btn-sm btn-danger btn-icon" aria-label="Button"
                                             onclick="hapus({{ $d->id }})">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"

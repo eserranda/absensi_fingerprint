@@ -23,6 +23,6 @@ class FingerprintGuru extends Model
     }
     public function modul_fingerprint(): BelongsTo
     {
-        return $this->belongsTo(Fingerprint::class, 'id_modul_fingerprint', 'id');
+        return $this->belongsTo(FingerprintModul::class, 'id_modul_fingerprint', 'id');
     }
 }

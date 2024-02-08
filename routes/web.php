@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\FingerprintGuru;
+use App\Models\FingerprintSiswa;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KelasController;
@@ -9,13 +11,12 @@ use App\Http\Controllers\DataGuruController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataSiswaController;
 use App\Http\Controllers\DataAbsensiGuruController;
+use App\Http\Controllers\FingerprintGuruController;
 use App\Http\Controllers\JadwalPelajaranController;
 use App\Http\Controllers\DataAbsensiSiswaController;
-use App\Http\Controllers\FingerprintController;
-use App\Http\Controllers\FingerprintGuruController;
+use App\Http\Controllers\FingerprintModulController;
 use App\Http\Controllers\FingerprintSiswaController;
-use App\Models\FingerprintGuru;
-use App\Models\FingerprintSiswa;
+use App\Http\Controllers\FingerprintStatusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,8 +113,14 @@ Route::controller(FingerprintSiswaController::class)->group(function () {
     Route::delete('/fingerprint_siswa/delete/{id}', 'destroy')->name("fingerprint_siswa.delete");
 });
 
-Route::controller(FingerprintController::class)->group(function () {
+Route::controller(FingerprintModulController::class)->group(function () {
     Route::get('/fingerprint', 'index')->name("fingerprint.data");
     Route::post('/fingerprint/store', 'store')->name("fingerprint.store");
     Route::delete('/fingerprint/delete/{id}', 'destroy')->name("fingerprint.delete");
+
+    Route::post('/finger-status/update-status', 'updateStatus')->name("fingerprint.update_status");
 });
+
+// Route::controller(FingerprintStatusController::class)->group(function () {
+//     Route::post('/finger-status/update-status', 'updateStatus')->name("fingerprint.update_status");
+// });

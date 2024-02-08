@@ -53,6 +53,12 @@ class KelasController extends Controller
         return view('kelas.data');
     }
 
+    public function getID($id)
+    {
+        $data = Kelas::find($id);
+        return response()->json(['data' => $data]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -106,7 +112,25 @@ class KelasController extends Controller
      */
     public function update(Request $request, Kelas $kelas)
     {
-        //
+        $id = $request->input('edit_id');
+        $nama_kelas = $request->input('edit_nama_kelas');
+        $id_guru = $request->input('edit_id_guru');
+
+        $validator = Validator::make($request->all(), [
+            'edit_nama_kelas' => 'required|string',
+            'edit_id_guru' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $kelas->find($id)->update([
+            'nama_kelas' => $nama_kelas,
+            'id_guru' => $id_guru,
+        ]);
+
+        return response()->json(['status' => true, 'message' => 'Data berhasil diupdate'], 200);
     }
 
     /**

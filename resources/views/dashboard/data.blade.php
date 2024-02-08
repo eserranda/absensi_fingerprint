@@ -253,7 +253,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <a href="/data_guru" class="btn btn-icon">
+                            <a href="/fingerprint_guru" class="btn btn-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-search"
                                     width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
                                     stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -298,7 +298,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <a href="/data_guru" class="btn btn-icon">
+                            <a href="/fingerprint_siswa" class="btn btn-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-search"
                                     width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
                                     stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -443,7 +443,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <a href="/jadwal_pelajaran" class="btn btn-icon">
+                            <a href="/kelas" class="btn btn-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-search"
                                     width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
                                     stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Fingerprint;
 use Illuminate\Http\Request;
 use App\Models\FingerprintGuru;
+use App\Models\FingerprintModul;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
@@ -59,7 +60,7 @@ class FingerprintGuruController extends Controller
     public function create()
     {
         $modul = "Guru dan Pegawai";
-        $finger = Fingerprint::where('modul_fingerprint', $modul)->first();
+        $finger = FingerprintModul::where('modul_fingerprint', $modul)->first();
 
         return view('fingerprint_guru.add', (['finger' => $finger]));
     }

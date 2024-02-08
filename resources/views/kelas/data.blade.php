@@ -83,8 +83,178 @@
         </div>
     </div>
 
+    {{-- edit data  --}}
+    <div class="modal modal-blur fade" id="modal_edit_data" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Data </h5>
+                    <button type="button" class="btn-close" onclick="closeModalEdit()"></button>
+                </div>
+                <form action="" method="POST" id="form_edit_data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nama Kelas</label>
+                                    <input type="hidden" class="form-control" id="edit_id" name="edit_id">
+                                    <input type="text" class="form-control" id="edit_nama_kelas" name="edit_nama_kelas">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nama Wali</label>
+                                    <select class="form-select" id="edit_id_guru" name="edit_id_guru">
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" tabindex="2" class="btn btn-primary" onclick="updateData()">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     @push('script')
         <script>
+            function closeModalEdit() {
+                const invalidInputs = document.querySelectorAll('.is-invalid');
+                invalidInputs.forEach(invalidInput => {
+                    invalidInput.value = '';
+                    invalidInput.classList.remove('is-invalid');
+                    const errorNextSibling = invalidInput.nextElementSibling;
+                    if (errorNextSibling && errorNextSibling.classList.contains(
+                            'invalid-feedback')) {
+                        errorNextSibling.textContent = '';
+                    }
+                });
+                const form = document.getElementById('form_edit_data');
+                form.reset();
+                $('#modal_edit_data').modal('hide');
+            }
+
+            function edit(id) {
+                fetch('/data_kelas/getid/' + id, {
+                        method: 'GET',
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Gagal mengambil data siswa');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const form = document.getElementById('form_edit_data');
+                        form.elements['edit_id'].value = data.data.id;
+                        form.elements['edit_nama_kelas'].value = data.data.nama_kelas;
+                        form.elements['edit_id_guru'].value = data.data.id_guru;
+
+                        // Setel nilai langsung pada elemen <select>
+                        var editIdPengajarSelect = document.getElementById('edit_id_guru');
+                        fetch('/data_guru/getID/' + data.data.id_guru, {
+                                method: 'GET',
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Gagal mengambil data tambahan');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                updateOptionsAndSelect2Guru(editIdPengajarSelect, data.data.id, data.data.nama);
+                            });
+
+
+                        $('#modal_edit_data').modal('show');
+                    })
+
+                $("#edit_id_guru").select2({
+                    theme: "bootstrap-5",
+                    placeholder: "Pilih guru",
+                    minimumInputLength: 1,
+                    dropdownParent: $("#modal_edit_data"),
+                    ajax: {
+                        url: '/get_data_guru',
+                        dataType: 'json',
+                        processResults: function(data) {
+                            if (data && data.length > 0) {
+                                var results = $.map(data, function(item) {
+                                    return {
+                                        id: item.id,
+                                        text: item.nama
+                                    };
+                                });
+                                return {
+                                    results: results
+                                };
+                            }
+                        },
+                    }
+                });
+            }
+
+            function updateData() {
+                const form = document.getElementById('form_edit_data');
+                const formData = new FormData(form);
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                fetch('/update_data_kelas', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data.message);
+                        if (data.errors) {
+                            Object.keys(data.errors).forEach(fieldName => {
+                                const inputField = document.getElementById(fieldName);
+                                inputField.classList.add('is-invalid');
+                                inputField.nextElementSibling.textContent = data.errors[
+                                    fieldName][0];
+                            });
+                            // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
+                            const validFields = form.querySelectorAll('.is-invalid');
+                            validFields.forEach(validField => {
+                                const fieldName = validField.id;
+                                if (!data.errors[fieldName]) {
+                                    validField.classList.remove('is-invalid');
+                                    validField.nextElementSibling.textContent = '';
+                                }
+                            });
+
+                        } else {
+                            console.log(data.message);
+                            form.reset();
+                            $('#modal_edit_data').modal('hide');
+                            Swal.fire(
+                                'Tersimpan!',
+                                'Data siswa berhasil diupdate.',
+                                'success'
+                            )
+                            $('.datatable').DataTable().ajax.reload();
+
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire(
+                            'Gagal!',
+                            'Terjadi kesalahan saat mengupdate data siswa.',
+                            'error'
+                        );
+                    });
+
+            }
+
             function hapus(id) {
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
@@ -218,9 +388,6 @@
                 });
             });
 
-
-
-
             document.getElementById('add_data').addEventListener('click', function() {
                 $('#modal_add_data').modal('show');
             });
@@ -276,6 +443,18 @@
                     ]
                 });
             });
+
+            function updateOptionsAndSelect2Guru(selectElement, id, namaGuru) {
+                // Hapus semua opsi yang ada di elemen <select>
+                $(selectElement).empty();
+
+                // Tambahkan opsi baru ke elemen <select>
+                var option = new Option(namaGuru, id, true, true);
+                $(selectElement).append(option);
+
+                // Perbarui tampilan Select2
+                $(selectElement).trigger('change');
+            }
         </script>
     @endpush
 @endsection

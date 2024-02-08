@@ -13,6 +13,18 @@ use Illuminate\Support\Facades\Validator;
 class FingerprintModulController extends Controller
 {
 
+    public function getFingerID(Request $request, $apiKey)
+    {
+        $fingerprintStatus = FingerprintTmp::where('apiKey', $apiKey)->first();
+        if ($fingerprintStatus) {
+            $data = $fingerprintStatus->id_finger;
+            return response()->json($data);
+        } else {
+            // Tangani jika tidak ada data yang ditemukan
+            return response()->json(['error' => 'Data not found'], 404);
+        }
+    }
+
     public function updateStatus(Request $request)
     {
         $apiKey = $request->input('apiKey');
@@ -37,6 +49,10 @@ class FingerprintModulController extends Controller
 
             if ($fingerprintTmp) {
                 $fingerprintTmp->update(['id_finger' => $id_finger]);
+                // Balikin ke mode Scan
+                $fingerprintGuru = FingerprintModul::where('apiKey', 'guru')->first();
+                $fingerprintGuru->update(['status' => 'scan']);
+
                 return response()->json(['status' => 'success', 'message' => 'Data berhasil diperbarui', 'id_finger' =>  $id_finger], 200);
             } else {
                 $saveData = FingerprintTmp::create(['apiKey' => $apiKey, 'id_finger' => $id_finger]);
@@ -75,6 +91,7 @@ class FingerprintModulController extends Controller
         $data = FingerprintModul::all();
         return view('fingerprint.data', compact('data'));
     }
+
 
     /**
      * Show the form for creating a new resource.

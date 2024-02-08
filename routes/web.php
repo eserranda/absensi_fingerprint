@@ -119,6 +119,7 @@ Route::controller(FingerprintModulController::class)->group(function () {
     Route::delete('/fingerprint/delete/{id}', 'destroy')->name("fingerprint.delete");
 
     Route::post('/finger-status/update-status', 'updateStatus')->name("fingerprint.update_status");
+    Route::get('/fingerprint/get-finger-id/{apiKey}', 'getFingerID');
 });
 
 // Route::controller(FingerprintStatusController::class)->group(function () {

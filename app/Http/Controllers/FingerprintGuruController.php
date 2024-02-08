@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Fingerprint;
 use Illuminate\Http\Request;
+use App\Models\FingerprintTmp;
 use App\Models\FingerprintGuru;
 use App\Models\FingerprintModul;
 use Yajra\DataTables\Facades\DataTables;
@@ -79,6 +80,12 @@ class FingerprintGuruController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
+
+        $fingerprintTMP_Status = FingerprintTmp::where('apiKey', 'guru')->first();
+        $fingerprintTMP_Status->update(['id_finger' => null]);
+
+        $fingerprintGuru = FingerprintModul::where('apiKey', 'guru')->first();
+        $fingerprintGuru->update(['status' => 'scan']);
 
         FingerprintGuru::create($request->all());
         return response()->json(['message' => 'Data berhasil disimpan'], 200);

@@ -75,6 +75,31 @@
 
     @push('script')
         <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                function getID_Guru() {
+                    const apiKey = 'guru';
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                    fetch('/fingerprint/get-finger-id/' + apiKey, {
+                            method: 'GET',
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            const idFingerprintInput = document.getElementById('id_fingerprint');
+                            if (Object.keys(data).length === 0 && data.constructor === Object) {
+                                idFingerprintInput.value = "Loading...";
+                            } else {
+                                idFingerprintInput.value = data;
+                            }
+                        })
+                        .catch(error => {
+                            // Tangani error jika terjadi
+                            console.error('Error:', error);
+                        });
+                }
+                getID_Guru();
+                setInterval(getID_Guru, 3000);
+            });
+
             document.getElementById('scan').addEventListener('click', function() {
                 const apiKey = 'guru';
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').content;

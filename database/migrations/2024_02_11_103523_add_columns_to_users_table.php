@@ -10,8 +10,6 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('username')->nullable()->after("name"); // ambil nis (siswa) atau nip (guru) 
-            // $table->string('role')->nullable()->after("username");
-            $table->string('kelas')->nullable()->after("role");
         });
     }
 

@@ -18,6 +18,7 @@ use App\Http\Controllers\DataAbsensiSiswaController;
 use App\Http\Controllers\FingerprintModulController;
 use App\Http\Controllers\FingerprintSiswaController;
 use App\Http\Controllers\FingerprintStatusController;
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,17 @@ use App\Http\Controllers\FingerprintStatusController;
 Route::get('/login', [AuthController::class, 'loginForm'])->name("login")->middleware('guest'); // Form login
 Route::post('/login', [AuthController::class, 'authenticate'])->middleware('guest'); // Login
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth'); // Login
+
+
+Route::prefix('role')->controller(RoleController::class)->group(function () {
+    Route::get('', 'index')->name("data_role.data");
+    Route::POST('/store', 'store')->name("save_role");
+    Route::delete('/delete/{id}', 'destroy')->name("delete_role");
+
+    // Route::get('/data_matpel/getid/{id}', 'getID')->name("getid_data_matpel");
+    // Route::POST('/update_data_matpel', 'update')->name("update_data_matpel");
+    // Route::get('/get_data_matpel', 'getDataMatpel')->name("get_data_matpel");
+});
 
 
 Route::prefix('akun')->controller(UserController::class)->group(function () {

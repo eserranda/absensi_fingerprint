@@ -450,6 +450,9 @@
                             <a class="dropdown-item" href="/fingerprint">
                                 Modul Fingerprint
                             </a>
+                            <a class="dropdown-item" href="/role">
+                                Role
+                            </a>
                             {{--  <a class="dropdown-item" href="https://github.com/tabler/tabler" target="_blank"
                                 rel="noopener">
                                 Source code

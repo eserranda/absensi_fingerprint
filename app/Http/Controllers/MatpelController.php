@@ -56,6 +56,9 @@ class MatpelController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nama_matpel' => 'required|string',
+        ], [
+            'required' => ':attribute harus diisi',
+            'string' => ':attribute harus berupa string',
         ]);
 
         if ($validator->fails()) {

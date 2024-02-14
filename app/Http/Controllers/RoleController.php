@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class RoleController extends Controller
 {
@@ -12,23 +13,30 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        $data = Role::all();
+        return view('role.data', compact('data'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|unique:roles',
+            'keterangan' => 'required|string',
+        ], [
+            'name.required' => 'Data harus diisi.',
+            'name.string' => 'Data harus berupa string.',
+            'name.unique' => 'Data sudah ada.',
+
+            'keterangan.required' => 'Data harus diisi.',
+            'keterangan.string' => 'Data harus berupa string.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        Role::create($request->all());
+        return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
     }
 
     /**
@@ -58,8 +66,15 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Role $role)
+    public function destroy($id)
     {
-        //
+        try {
+            $del_siswa = Role::findOrFail($id);
+            $del_siswa->delete();
+
+            return response()->json(['status' => true, 'message' => 'Data berhasil dihapus'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => 'Gagal menghapus data'], 500);
+        }
     }
 }

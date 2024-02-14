@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-
     protected $fillable = [
         'name',
         'username',
@@ -39,8 +38,13 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class, 'user_roles');
     }
 
-    public function Guru()
+    public function guru()
     {
         return $this->belongsTo(DataGuru::class, 'id_guru');
+    }
+
+    public function username()
+    {
+        return 'username';
     }
 }

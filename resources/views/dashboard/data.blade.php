@@ -28,7 +28,9 @@
                             SISTEM MONITORING ABSENSI, SMAN 1 SUMARORONG
                         </h2>
                         <div class="markdown text-secondary">
-                            <h3>Hallo Admin, Selamat datang</h3>
+                            <p>Hallo <span class="fw-bold">{{ Auth::user()->guru->nama }}</span>, Selamat datang anda
+                                login sebagai
+                                {{ Auth::user()->roles->pluck('name')->implode(', ') }}</p>
                         </div>
                     </div>
                 </div>

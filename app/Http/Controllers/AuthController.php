@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -14,24 +13,33 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
+    public function username()
+    {
+        $login = request()->input('username');
+        $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        request()->merge([$field => $login]);
+        return $field;
+    }
+
     public function authenticate(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'password' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(), 'success' => false], 422);
-        }
-
-        $credentials = $request->only('email', 'password');
-
+        $credentials = $request->only($this->username(), 'password');
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            // return redirect()->intended('/');
-            return response()->json(['success' => true, 'message' => 'Login berhasil', 'redirect' => '/dashboard']);
+
+            return redirect()->intended('/dashboard');
         }
+
+        return redirect()->back()->withInput($request->except('password'))->withErrors(['username' => 'Data tidak sesuai!']);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
     }
 
     public function index()

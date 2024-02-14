@@ -72,7 +72,7 @@ class DataGuruController extends Controller
         $data = [];
 
         if ($request->filled('q')) {
-            $data = DataGuru::select("nama", "id")
+            $data = DataGuru::select("nama", "id", "nuptk")
                 ->where('nama', 'LIKE', '%' . $request->get('q') . '%')
                 ->get();
         }
@@ -80,6 +80,16 @@ class DataGuruController extends Controller
         return response()->json($data);
     }
 
+    public function getNUPTKGuru($id)
+    {
+        $data = DataGuru::where('id', $id)->first();
+        if ($data) {
+            $nuptk = $data->nuptk;
+            return response()->json(['status' => true, 'data' => $nuptk]);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Guru tidak ditemukan']);
+        }
+    }
     public function getID($id)
     {
         $data = DataGuru::find($id);

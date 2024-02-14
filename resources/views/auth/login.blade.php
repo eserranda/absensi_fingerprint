@@ -51,20 +51,19 @@
                         <div class="card card-md">
                             <div class="card-body">
                                 <h2 class="h2 text-center mb-4">Login </h2>
-                                <form action="./" method="get" autocomplete="off" novalidate>
+                                <form action="" method="get" autocomplete="off" id="form_login" novalidate>
                                     <div class="mb-3">
                                         <label class="form-label">Email address</label>
-                                        <input type="email" class="form-control" placeholder="your@email.com"
-                                            autocomplete="off">
+                                        <input type="email" class="form-control" id="email" name="email"
+                                            placeholder="your@email.com" autocomplete="off">
                                     </div>
                                     <div class="mb-2">
                                         <label class="form-label">
                                             Password
-
                                         </label>
                                         <div class="input-group input-group-flat">
-                                            <input type="password" class="form-control" placeholder="Your password"
-                                                autocomplete="off">
+                                            <input type="password" class="form-control" id="password" name="password"
+                                                placeholder="Your password" autocomplete="off">
                                             <span class="input-group-text">
                                                 <a href="#" class="link-secondary" title="Show password"
                                                     data-bs-toggle="tooltip">
@@ -102,6 +101,52 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("loginForm").addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                const email = document.getElementById("email").value;
+                const password = document.getElementById("password").value;
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+                fetch("/login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify({
+                            email,
+                            password
+                        })
+                    })
+                    .then(response => response.json())
+
+                    .then(data => {
+                        if (!data.success) {
+                            if (data.errors) {
+                                errorMessagesElement.innerHTML = ''; // kosongkan alert sebelumnya
+                                Object.values(data.errors).forEach(errors => {
+                                    errors.forEach(error => {
+                                        const errorMessage = document.createElement(
+                                            'div');
+                                        errorMessage.textContent = error;
+                                        errorMessagesElement.appendChild(errorMessage);
+                                    });
+                                });
+                                alertElement.style.display = 'block';
+                            }
+                        } else {
+                            console.log("Login Sukses");
+                            window.location.href = data.redirect;
+                        }
+                    })
+                    .catch(error => console.error('Error submitting form:', error));
+            });
+        });
+    </script>
     <!-- Libs JS -->
     <!-- Tabler Core -->
     <script src="{{ asset('assets') }}/dist/js/tabler.min.js?1692870487" defer></script>

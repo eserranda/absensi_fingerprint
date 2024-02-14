@@ -21,4 +21,9 @@ class DataGuru extends Model
         'agama',
         'alamat',
     ];
+
+    public function roles_guru()
+    {
+        return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
+    }
 }

@@ -28,8 +28,12 @@ class FingerprintModulController extends Controller
     public function updateStatus(Request $request)
     {
         $apiKey = $request->input('apiKey');
+
         if ($apiKey === 'guru') {
             $fingerprintStatus = FingerprintModul::where('apiKey', 'guru')->first();
+            $fingerprintStatus->update(['status' => 'daftar']);
+        } else if ($apiKey === '10ips1') {
+            $fingerprintStatus = FingerprintModul::where('apiKey', '10ips1')->first();
             $fingerprintStatus->update(['status' => 'daftar']);
         }
 

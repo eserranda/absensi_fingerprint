@@ -142,6 +142,51 @@
     </div>
 
     <div class="row row-deck row-cards mt-2">
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card card-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <span class="bg-info text-white avatar">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5"
+                                    stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                                    <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                    <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="col">
+                            <h3 class="card-title mb-1">
+                                <span id="totalUsers">0</span>
+                            </h3>
+                            <div class="text-secondary">
+                                Data Users
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <a href="/akun/guru" class="btn btn-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-search"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                    <path
+                                        d="M12 18c-.328 0 -.652 -.017 -.97 -.05c-3.172 -.332 -5.85 -2.315 -8.03 -5.95c2.4 -4 5.4 -6 9 -6c3.465 0 6.374 1.853 8.727 5.558" />
+                                    <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                                    <path d="M20.2 20.2l1.8 1.8" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="col-md-6 col-xl-3">
             <div class="card card-sm">
                 <div class="card-body">
@@ -460,6 +505,8 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 
     {{-- <div class="row row-deck row-cards mt-2">
@@ -598,6 +645,8 @@
                                     .totalFingerprintGuru;
                                 document.getElementById('totalFingerprintSiswa').textContent = data
                                     .totalFingerprintSiswa;
+                                document.getElementById('totalUsers').textContent = data
+                                    .totalUsers;
                             })
                     } catch (error) {
                         return error

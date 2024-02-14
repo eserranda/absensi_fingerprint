@@ -4,6 +4,7 @@ use App\Models\FingerprintGuru;
 use App\Models\FingerprintSiswa;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MatpelController;
 use App\Http\Controllers\AbsensiController;
@@ -32,6 +33,19 @@ use App\Http\Controllers\FingerprintStatusController;
 Route::get('/login', [AuthController::class, 'loginForm'])->name("login")->middleware('guest'); // Form login
 Route::post('/login', [AuthController::class, 'authenticate'])->middleware('guest'); // Login
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth'); // Login
+
+
+Route::prefix('akun')->controller(UserController::class)->group(function () {
+    Route::get('/siswa', 'akun_siswa')->name("akun_siswa");
+    Route::get('/guru', 'akun_guru')->name("akun_guru");
+    // Route::get('/add', 'addUser')->name("add_users");
+    Route::post('/store_user_guru', 'storeUserGuru')->name("store_user_guru");
+    Route::delete('/delete/{id}', 'destroy')->name("delete_users");
+
+    Route::get('/data_user_guru', 'dataUserGuru')->name("data_user.guru");
+    Route::get('/get_roles', 'roles')->name("data_user.roles");
+});
+
 
 Route::controller(MatpelController::class)->group(function () {
     Route::get('matpel', 'index')->name("data_matpel.data");
@@ -69,6 +83,7 @@ Route::controller(DataGuruController::class)->group(function () {
     Route::POST('/update_data_guru', 'update')->name("update_data_guru");
     Route::delete('/data_guru/delete/{id}', 'destroy')->name("hapus_data_guru");
     Route::get('/get_data_guru', 'getDataGuru')->name("get_data_guru");
+    Route::get('/get_nuptk_guru/{id}', 'getNUPTKGuru')->name("get_nuptk_guru");
 });
 
 Route::controller(DataSiswaController::class)->group(function () {

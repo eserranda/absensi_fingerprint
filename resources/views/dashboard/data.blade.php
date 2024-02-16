@@ -636,7 +636,8 @@
             document.addEventListener('DOMContentLoaded', function() {
                 async function getData() {
                     try {
-                        const data = fetch('/dashboard/count_data').then(response => response.json())
+                        const data = fetch('/dashboard/count_data')
+                            .then(response => response.json())
                             .then(data => {
                                 document.getElementById('totalGuru').textContent = data.totalGuru;
                                 document.getElementById('totalSiswa').textContent = data.totalSiswa;

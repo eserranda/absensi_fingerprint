@@ -19,6 +19,7 @@ use App\Http\Controllers\FingerprintModulController;
 use App\Http\Controllers\FingerprintSiswaController;
 use App\Http\Controllers\FingerprintStatusController;
 use App\Http\Controllers\RoleController;
+use App\Models\DataAbsensiSiswa;
 use GuzzleHttp\Middleware;
 
 /*
@@ -37,12 +38,18 @@ Route::post('/login', [AuthController::class, 'authenticate'])->name("login")->m
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth'); // Login
 
 
-Route::prefix('daftar-absensi')->controller(DataAbsensiSiswaController::class)->group(function () {
+Route::prefix('rekap-absensi-siswa')->controller(DataAbsensiSiswaController::class)->group(function () {
+    Route::get("", 'index')->name("data_absensi_siswa.data")->middleware('auth');
     Route::get('/absensi/{id}', 'show')->name("daftar_absensi.show");
-    Route::POST('/detail', 'detail')->name("daftar_absensi.detail");
+    Route::get('/data-absensi/{id}', 'absensi')->name("rekap-absensi-siswa.data-absensi")->middleware('auth');
+    Route::get('/count-absensi/{id}', 'countAbsensi')->name("rekap-absensi-siswa.count-absensi")->middleware('auth');
 
     // Route::POST('/store', 'store')->name("save_role")->middleware('auth');
     // Route::delete('/delete/{id}', 'destroy')->name("delete_role")->middleware('auth');
+});
+
+Route::controller(DataAbsensiGuruController::class)->group(function () {
+    Route::get('/data_absensi_guru', 'index')->name("data_absensi_guru.data")->middleware('auth');
 });
 
 Route::prefix('role')->controller(RoleController::class)->group(function () {
@@ -73,14 +80,9 @@ Route::controller(MatpelController::class)->group(function () {
 });
 
 
-Route::controller(DataAbsensiSiswaController::class)->group(function () {
-    Route::get("data_absensi_siswa", 'index')->name("data_absensi_siswa.data")->middleware('auth');
-});
 
 
-Route::controller(DataAbsensiGuruController::class)->group(function () {
-    Route::get('/data_absensi_guru', 'index')->name("data_absensi_guru.data")->middleware('auth');
-});
+
 
 Route::controller(AbsensiController::class)->group(function () {
     Route::get('/absensi', 'index')->name("absensi.data");
@@ -91,6 +93,8 @@ Route::controller(DashboardController::class)->group(function () {
     Route::get('/', 'index')->name("dashboard.data")->middleware('auth');
     Route::get('/dashboard', 'index')->name("dashboard.data")->middleware('auth');
     Route::get('/dashboard/count_data', 'count_data')->name("dashboard.count_data")->middleware('auth');
+
+    // Route::POST('/detail', 'detail')->name("daftar_absensi.detail");
 });
 
 Route::controller(DataGuruController::class)->group(function () {

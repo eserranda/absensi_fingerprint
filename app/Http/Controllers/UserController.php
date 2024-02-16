@@ -28,7 +28,6 @@ class UserController extends Controller
                 ->addColumn('role', function ($user) {
                     return $user->roles->pluck('name')->implode(', ');
                 })
-
                 ->addColumn('name', function ($row) {
                     if ($row->id_guru) {
                         return $row->guru->nama;

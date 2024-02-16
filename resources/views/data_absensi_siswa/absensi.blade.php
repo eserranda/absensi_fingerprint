@@ -55,6 +55,18 @@
             </div>
         </div>
 
+        <div class="col-auto d-none d-md-flex">
+            <a href="/rekap-absensi-siswa" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-back" width="24"
+                    height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M9 11l-4 4l4 4m-4 -4h11a4 4 0 0 0 0 -8h-1" />
+                </svg>
+                Kembali
+            </a>
+        </div>
+
     </div>
     <div class="row row-deck row-cards mt-3">
         <div class="col-sm-6 col-lg-6">
@@ -66,20 +78,20 @@
                         <div class="row ">
                             <div class="col">
                                 <div class="text-truncate">
-                                    <div class="text-secondary">Total Absen</div>
-                                    <strong>8</strong>
+                                    <div class="text-secondary mb-2">Total Absen</div>
+                                    <strong id="total_absen"></strong>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="text-truncate">
-                                    <div class="text-secondary">Terlambat</div>
-                                    <strong>1</strong>
+                                    <div class="text-secondary mb-2">Terlambat</div>
+                                    <strong id="terlambat"></strong>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="text-truncate">
-                                    <div class="text-secondary">Tanpa Keterangan</div>
-                                    <strong>0</strong>
+                                    <div class="text-secondary mb-2">Tanpa Keterangan</div>
+                                    <strong id="tanpa_keterangan"></strong>
                                 </div>
                             </div>
                         </div>
@@ -87,19 +99,19 @@
                         <div class="row">
                             <div class="col">
                                 <div class="text-truncate">
-                                    <div class="text-secondary">Izin</div>
-                                    <strong>0</strong>
+                                    <div class="text-secondary mb-2">Izin</div>
+                                    <strong id="izin"></strong>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="text-truncate">
-                                    <div class="text-secondary">Sakit</div>
-                                    <strong>1</strong>
+                                    <div class="text-secondary mb-2">Sakit</div>
+                                    <strong id="sakit"></strong>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="text-truncate">
-                                    <div class="text-secondary"></div>
+                                    <div class="text-secondary mb-2"></div>
                                     <strong></strong>
                                 </div>
                             </div>
@@ -235,7 +247,7 @@
         <div class="col-sm-6 col-lg-6">
             <div class="card" style="height: 28rem">
                 <div class="card-body card-body-scrollable card-body-scrollable-shadow">
-                    <div class="divide-y">
+                    <div class="divide-y" id="absensi">
                         <div class="row">
                             <div class="col">
                                 <div class="text-truncate">
@@ -259,236 +271,113 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>16 February</strong>
-                                    <div class="text-secondary">Rabu</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>07.00</strong>
-                                    <div class="text-secondary">Jam Masuk</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>13.00</strong>
-                                    <div class="text-secondary">Jam Pulang</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <div class="text-secondary my-2"> <strong>Hadir</strong>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>16 February</strong>
-                                    <div class="text-secondary">Rabu</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>07.00</strong>
-                                    <div class="text-secondary">Jam Masuk</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>13.00</strong>
-                                    <div class="text-secondary">Jam Pulang</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <div class="text-secondary my-2"> <strong>Hadir</strong>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>16 February</strong>
-                                    <div class="text-secondary">Rabu</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>07.00</strong>
-                                    <div class="text-secondary">Jam Masuk</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>13.00</strong>
-                                    <div class="text-secondary">Jam Pulang</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <div class="text-secondary my-2"> <strong>Hadir</strong>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>16 February</strong>
-                                    <div class="text-secondary">Rabu</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>07.00</strong>
-                                    <div class="text-secondary">Jam Masuk</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>13.00</strong>
-                                    <div class="text-secondary">Jam Pulang</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <div class="text-secondary my-2"> <strong>Hadir</strong>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>16 February</strong>
-                                    <div class="text-secondary">Rabu</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>07.00</strong>
-                                    <div class="text-secondary">Jam Masuk</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>13.00</strong>
-                                    <div class="text-secondary">Jam Pulang</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <div class="text-secondary my-2"> <strong>Hadir</strong>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>16 February</strong>
-                                    <div class="text-secondary">Rabu</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>07.00</strong>
-                                    <div class="text-secondary">Jam Masuk</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <strong>13.00</strong>
-                                    <div class="text-secondary">Jam Pulang</div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="text-truncate">
-                                    <div class="text-secondary my-2"> <strong>Hadir</strong>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-6 col-lg-6">
-            <div class="card">
-                <div class="card-body">
+        @push('script')
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const id = {{ $data->id }};
+                    async function fetchAbsensiBySiswaId(id) {
+                        try {
+                            const response = await fetch(`/rekap-absensi-siswa/data-absensi/${id}`);
+                            const data = await response.json();
+
+                            const absensi = document.getElementById('absensi');
+
+                            data.forEach(absensiData => {
+                                const htmlString =
+                                    `
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="text-truncate">
+                                            <strong class="${absensiData.hari === 'Minggu' ? 'text-red'  : ''}">${absensiData.tanggal_absen }</strong>
+                                            <div class="text-secondary ${absensiData.hari === 'Minggu' ? 'text-red' : ''}">
+                                            ${absensiData.hari}
+                                        </div>
+                                    </div>
+
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-truncate">
+                                            <strong>${absensiData.jam_masuk != null ? absensiData.jam_masuk.slice(0, -3) : '<div class="text-red ">-</div>'}</strong>
+                                            <div class="text-secondary" style="display: ${absensiData.hari === 'Minggu' ? 'none'  : 'block'};">Jam Masuk</div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-truncate">
+                                            <strong>${absensiData.jam_keluar != null ? absensiData.jam_keluar.slice(0, -3) : '<div class="text-red ">-</div>'}</strong>
+                                            <div class="text-secondary" style="display: ${absensiData.hari === 'Minggu' ? 'none'  : 'block'};">Jam Pulang</div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-truncate">
+                                         <div class="text-secondary my-2"><strong>${absensiData.keterangan != null ? absensiData.keterangan : '<div class="text-red">-</div>'}</strong></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                     `;
+
+                                absensi.innerHTML += htmlString;
+                            });
+                        } catch (error) {
+                            console.error('Error fetching absensi data:', error);
+                        }
+                    }
+
+                    fetchAbsensiBySiswaId(id);
+
+                    async function countAbsensiBySiswaId(id) {
+                        try {
+                            const response = await fetch(`/rekap-absensi-siswa/count-absensi/${id}`);
+                            const data = await response.json();
+
+                            document.getElementById('total_absen').textContent = data.total_absen;
+                            document.getElementById('terlambat').textContent = data.terlambat;
+                            document.getElementById('tanpa_keterangan').textContent = data.tanpa_keterangan;
+                            document.getElementById('izin').textContent = data.izin;
+                            document.getElementById('sakit').textContent = data.sakit;
+
+                            console.log(data);
+                        } catch (error) {
+                            console.error('Error fetching absensi data:', error);
+                        }
+                    }
+                    countAbsensiBySiswaId(id)
+
+                });
+            </script>
+        @endpush
+    @endsection
+
+    {{-- <div class="row">
+            <div class="col">
+                <div class="text-truncate">
+                    <strong>${absensi.tanggal_absen}</strong>
+                    <div class="text-secondary">${absensi.hari}</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="text-truncate">
+                    <strong>${absensi.jam_masuk}</strong>
+                    <div class="text-secondary">Jam Masuk</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="text-truncate">
+                    <strong>${absensi.jam_keluar}</strong>
+                    <div class="text-secondary">Jam Pulang</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="text-truncate">
+                    <div class="text-secondary my-2"> <strong>${absensi.keterangan}</strong>
+                    </div>
 
                 </div>
             </div>
         </div>
-    </div>
 
-    <ul id="absensi-list"></ul>
-    @push('script')
-        <script>
-            $(document).ready(function() {
-
-                const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                var id = {{ $data->id }}
-                fetch('/daftar-absensi/detail', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                        },
-                        body: JSON.stringify({
-                            id: id
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {})
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-
-                // const absensiList = document.getElementById('absensi-list');
-                // const siswaId = {{ $data->id }};
-
-                // async function fetchAbsensiBySiswaId(id) {
-                //     try {
-                //         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                //         const response = await fetch('/daftar-absensi/detail', {
-                //             method: 'POST',
-                //             headers: {
-                //                 'X-CSRF-TOKEN': csrfToken,
-                //                 'Content-Type': 'application/json'
-                //             },
-                //             body: JSON.stringify({
-                //                 id: id
-                //             })
-                //         });
-                //         const data = await response.json();
-
-                //         // Menampilkan daftar absensi dalam elemen ul
-                //         data.forEach(absensi => {
-                //             const listItem = document.createElement('li');
-                //             listItem.textContent =
-                //                 `Tanggal: ${absensi.tanggal_absen}, Jam Masuk: ${absensi.jam_masuk}, Jam Keluar: ${absensi.jam_keluar}`;
-                //             absensiList.appendChild(listItem);
-                //         });
-                //     } catch (error) {
-                //         console.error('Error fetching absensi data:', error);
-                //     }
-                // }
-                // fetchAbsensiBySiswaId(siswaId);
-            });
-        </script>
-    @endpush
-@endsection
+    </div> --}}

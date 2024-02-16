@@ -125,7 +125,7 @@
                                     <a class="dropdown-item" href="/data_absensi_guru">
                                         Rekap Pegawai/Guru
                                     </a>
-                                    <a class="dropdown-item" href="/data_absensi_siswa">
+                                    <a class="dropdown-item" href="/rekap-absensi-siswa">
                                         Rekap Peserta Didik
                                     </a>
 

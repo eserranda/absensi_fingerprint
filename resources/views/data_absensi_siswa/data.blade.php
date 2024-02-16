@@ -11,20 +11,8 @@
             <div class="card-header">
                 <div class="btn-actions ">
                     <div class="input-icon">
-                        <input class="form-control " placeholder="Select a date" id="datepicker-icon" value="2020-06-20" />
-                        <span class="input-icon-addon">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
-                                <path d="M16 3v4" />
-                                <path d="M8 3v4" />
-                                <path d="M4 11h16" />
-                                <path d="M11 15h1" />
-                                <path d="M12 15v3" />
-                            </svg>
-                        </span>
+                        <input class="form-control" type="date" id="tanggal" />
+
                     </div>
                 </div>
 
@@ -57,12 +45,15 @@
                                 <th>#</th>
                                 <th>Nama</th>
                                 <th>ID Finger</th>
-                                <th>Kelas</th>
+                                <th>Tanggal</th>
+                                <th>Jam Masuk</th>
+                                <th>Jam Keluar</th>
+                                <th>Ket</th>
                                 <th class="w-1">Lihat Absensi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $d)
+                            {{-- @foreach ($data as $d)
                                 <tr>
                                     <td> {{ $loop->iteration }}</td>
                                     <td> {{ $d->siswa->nama }}</td>
@@ -74,11 +65,70 @@
                                         </a>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @endforeach --}}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+
+    @push('script')
+        <script>
+            $(document).ready(function() {
+                const myDataTable = $('.datatable').DataTable({
+                    processing: true,
+                    serverSide: true,
+
+                    ajax: "{{ route('data_absensi_siswa.data') }}",
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: '#',
+                            searchable: false
+                        },
+                        {
+                            data: 'id_siswa',
+                            name: 'id_siswa'
+                        },
+                        {
+                            data: 'id_fingerprint',
+                            name: 'id_fingerprint'
+                        },
+                        {
+                            data: 'tanggal_absen',
+                            name: 'tanggal_absen'
+                        },
+                        {
+                            data: 'jam_masuk',
+                            name: 'jam_masuk'
+                        },
+                        {
+                            data: 'jam_keluar',
+                            name: 'jam_keluar'
+                        },
+                        {
+                            data: 'keterangan',
+                            name: 'keterangan'
+                        },
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        },
+                    ]
+                });
+                $('#tanggal').on('change', function() {
+                    const selectedKelas = $(this).val();
+                    myDataTable.ajax.url('{{ route('data_absensi_siswa.data') }}?tanggal=' +
+                        selectedKelas).load();
+                });
+
+
+                $('#reload').on('click', function() {
+                    myDataTable.ajax.url('{{ route('data_absensi_siswa.data') }}').load();
+                });
+            });
+        </script>
+    @endpush
 @endsection

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Kelas;
 use App\Models\Matpel;
 use App\Models\DataGuru;
@@ -10,8 +11,8 @@ use App\Models\DataSiswa;
 use Illuminate\Http\Request;
 use App\Models\FingerprintGuru;
 use App\Models\JadwalPelajaran;
+use App\Models\DataAbsensiSiswa;
 use App\Models\FingerprintSiswa;
-use App\Models\User;
 
 class DashboardController extends Controller
 {
@@ -50,6 +51,12 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function detail(Request $request)
+    {
+        $id = $request->input('id');
+        $absensi = DataAbsensiSiswa::findOrFail($id);
+        return response()->json($absensi);
+    }
 
     public function create()
     {

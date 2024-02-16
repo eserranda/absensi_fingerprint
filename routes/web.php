@@ -37,6 +37,14 @@ Route::post('/login', [AuthController::class, 'authenticate'])->name("login")->m
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth'); // Login
 
 
+Route::prefix('daftar-absensi')->controller(DataAbsensiSiswaController::class)->group(function () {
+    Route::get('/absensi/{id}', 'show')->name("daftar_absensi.show");
+    Route::POST('/detail', 'detail')->name("daftar_absensi.detail");
+
+    // Route::POST('/store', 'store')->name("save_role")->middleware('auth');
+    // Route::delete('/delete/{id}', 'destroy')->name("delete_role")->middleware('auth');
+});
+
 Route::prefix('role')->controller(RoleController::class)->group(function () {
     Route::get('', 'index')->name("data_role.data")->middleware('auth');
     Route::POST('/store', 'store')->name("save_role")->middleware('auth');

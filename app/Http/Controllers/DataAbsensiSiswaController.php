@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\DataAbsensiSiswa;
+use App\Models\DataSiswa;
+use App\Models\FingerprintSiswa;
 use Illuminate\Http\Request;
 
 class DataAbsensiSiswaController extends Controller
@@ -12,12 +14,18 @@ class DataAbsensiSiswaController extends Controller
      */
     public function index()
     {
-        return view('data_absensi_siswa.data');
+        $data = FingerprintSiswa::all();
+        return view('data_absensi_siswa.data', compact('data'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
+    public function detail(Request $request)
+    {
+        $id = $request->input('id');
+        $absensi = DataAbsensiSiswa::findOrFail($id);
+        return response()->json($absensi);
+    }
+
     public function create()
     {
         //
@@ -34,9 +42,10 @@ class DataAbsensiSiswaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DataAbsensiSiswa $dataAbsensiSiswa)
+    public function show(DataAbsensiSiswa $dataAbsensiSiswa, $id)
     {
-        //
+        $data = DataSiswa::find($id);
+        return view('data_absensi_siswa.absensi', compact('data'));
     }
 
     /**

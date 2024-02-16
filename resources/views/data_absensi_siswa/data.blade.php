@@ -58,13 +58,23 @@
                                 <th>Nama</th>
                                 <th>ID Finger</th>
                                 <th>Kelas</th>
-                                <th>Matpel</th>
-                                <th>Guru</th>
-                                <th>Jam Absen</th>
-                                <th class="w-1">Opsi</th>
+                                <th class="w-1">Lihat Absensi</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach ($data as $d)
+                                <tr>
+                                    <td> {{ $loop->iteration }}</td>
+                                    <td> {{ $d->siswa->nama }}</td>
+                                    <td> {{ $d->id_fingerprint }}</td>
+                                    <td> {{ $d->siswa->kelas }}</td>
+                                    <td>
+                                        <a href="{{ route('daftar_absensi.show', $d->siswa->id) }}">
+                                            <span class="badge bg-blue text-bg-danger">Data Absensi</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

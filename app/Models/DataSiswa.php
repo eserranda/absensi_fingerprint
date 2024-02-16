@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class DataSiswa extends Model
 {
@@ -19,4 +20,10 @@ class DataSiswa extends Model
         'kelas',
         'alamat',
     ];
+
+
+    public function getTanggalLahirAttribute($value)
+    {
+        return Carbon::parse($value);
+    }
 }

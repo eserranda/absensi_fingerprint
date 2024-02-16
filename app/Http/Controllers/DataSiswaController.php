@@ -4,14 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\DataSiswa;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class DataSiswaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         if ($request->ajax()) {

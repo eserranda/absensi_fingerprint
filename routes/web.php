@@ -41,8 +41,10 @@ Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth'); //
 Route::prefix('rekap-absensi-siswa')->controller(DataAbsensiSiswaController::class)->group(function () {
     Route::get("", 'index')->name("data_absensi_siswa.data")->middleware('auth');
     Route::get('/absensi/{id}', 'show')->name("daftar_absensi.show");
-    Route::get('/data-absensi/{id}', 'absensi')->name("rekap-absensi-siswa.data-absensi")->middleware('auth');
-    Route::get('/count-absensi/{id}', 'countAbsensi')->name("rekap-absensi-siswa.count-absensi")->middleware('auth');
+    Route::POST('/filter-bulan', 'filterAbsensi')->name("rekap-absensi-siswa.filter-bulan")->middleware('auth');
+
+    // Route::get('/data-absensi/{id}', 'absensi')->name("rekap-absensi-siswa.data-absensi")->middleware('auth');
+    // Route::get('/count-absensi/{id}', 'countAbsensi')->name("rekap-absensi-siswa.count-absensi")->middleware('auth');
 
     // Route::POST('/store', 'store')->name("save_role")->middleware('auth');
     // Route::delete('/delete/{id}', 'destroy')->name("delete_role")->middleware('auth');

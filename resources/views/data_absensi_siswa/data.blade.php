@@ -12,7 +12,6 @@
                 <div class="btn-actions ">
                     <div class="input-icon">
                         <input class="form-control" type="date" id="tanggal" />
-
                     </div>
                 </div>
 

@@ -4,6 +4,8 @@
     {{-- <link href="{{ asset('assets') }}/dist/css/dataTables-bootstrap5.min.css" rel="stylesheet" /> --}}
     {{-- <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js"></script>
 @endpush
 @section('content')
     <div class="row align-items-center">
@@ -70,15 +72,30 @@
     </div>
     <div class="row row-deck row-cards mt-3">
         <div class="col-sm-6 col-lg-6">
-            <div class="card bg-gray-300" style="height: 14rem">
+            <div class="card bg-gray-300" style="height: 16rem">
                 <div class="card-body">
-                    <h2 class="card-title mx-4">Data Absensi</h2>
+                    <div class="col-lg-8 mx-4">
+                        <select type="text" class="form-select" id="select-users" name="bulan">
+                            <option value="" selected disabled>Pilih Bulan</option>
+                            <option value="01">Januari</option>
+                            <option value="02">Februari</option>
+                            <option value="03">Maret</option>
+                            <option value="04">April</option>
+                            <option value="05">Mei</option>
+                            <option value="06">Juni</option>
+                            <option value="07">Juli</option>
+                            <option value="08">Agustus</option>
+                            <option value="09">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Desember</option>
+                        </select>
+                    </div>
                     <div class="divide-y m-4">
-
                         <div class="row ">
                             <div class="col">
                                 <div class="text-truncate">
-                                    <div class="text-secondary mb-2">Total Absen</div>
+                                    <div class="text-secondary mb-2">Hadir</div>
                                     <strong id="total_absen"></strong>
                                 </div>
                             </div>
@@ -245,9 +262,9 @@
 
     <div class="row row-deck row-cards my-3">
         <div class="col-sm-6 col-lg-6">
-            <div class="card" style="height: 28rem">
+            <div class="card" style="height: 35rem">
                 <div class="card-body card-body-scrollable card-body-scrollable-shadow">
-                    <div class="divide-y" id="absensi">
+                    <div class="divide-y">
                         <div class="row">
                             <div class="col">
                                 <div class="text-truncate">
@@ -270,24 +287,161 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="divide-y" id="absensi">
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        @push('script')
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const id = {{ $data->id }};
-                    async function fetchAbsensiBySiswaId(id) {
-                        try {
-                            const response = await fetch(`/rekap-absensi-siswa/data-absensi/${id}`);
-                            const data = await response.json();
+        <div class="col-sm-6 col-lg-6">
+            <div class="card" style="height: 35rem">
+                <canvas class="mb-5" id="myPieChart"></canvas>
+
+
+            </div>
+        </div>
+    </div>
+
+    @push('script')
+        <script>
+            document.addEventListener('DOMContentLoaded', async function() {
+                const id = {{ $data->id }};
+
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                    const formData = new FormData();
+                    formData.append('id', id);
+                    const response = await fetch('{{ route('rekap-absensi-siswa.filter-bulan') }}', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                    });
+
+                    if (response.ok) {
+                        const responseData = await response.json();
+                        const dataAbsensi = responseData.dataAbsensi;
+                        const countData = responseData.countData;
+
+                        document.getElementById('total_absen').textContent = countData.total_absen;
+                        document.getElementById('terlambat').textContent = countData.terlambat;
+                        document.getElementById('tanpa_keterangan').textContent = countData
+                            .tanpa_keterangan;
+                        document.getElementById('izin').textContent = countData.izin;
+                        document.getElementById('sakit').textContent = countData.sakit;
+
+                        createPieChart(countData);
+
+                        const absensi = document.getElementById('absensi');
+                        absensi.innerHTML = '';
+                        dataAbsensi.forEach(absensiData => {
+                            const htmlString =
+                                `
+                        <div class="row">
+                            <div class="col">
+                                <div class="text-truncate">
+                                    <strong class="${absensiData.hari === 'Minggu' ? 'text-red'  : ''}">${absensiData.tanggal_absen }</strong>
+                                    <div class="text-secondary ${absensiData.hari === 'Minggu' ? 'text-red' : ''}">
+                                    ${absensiData.hari}
+                                </div>
+                            </div>
+
+                            </div>
+                            <div class="col">
+                                <div class="text-truncate">
+                                    <strong>${absensiData.jam_masuk != null ? absensiData.jam_masuk.slice(0, -3) : '<div class="text-red ">-</div>'}</strong>
+                                    <div class="text-secondary" style="display: ${absensiData.hari === 'Minggu' ? 'none'  : 'block'};">Jam Masuk</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="text-truncate">
+                                    <strong>${absensiData.jam_keluar != null ? absensiData.jam_keluar.slice(0, -3) : '<div class="text-red ">-</div>'}</strong>
+                                    <div class="text-secondary" style="display: ${absensiData.hari === 'Minggu' ? 'none'  : 'block'};">Jam Pulang</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="text-truncate">
+                                 <div class="text-secondary my-2"><strong>${absensiData.keterangan != null ? absensiData.keterangan : '<div class="text-red">-</div>'}</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                             `;
+
+                            absensi.innerHTML += htmlString;
+                            console.log(responseData);
+                        });
+                        console.log(responseData);
+                    } else {
+                        console.error('Error:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+                // });
+
+                // document.addEventListener("DOMContentLoaded", function() {
+                var el;
+                window.TomSelect && (new TomSelect(el = document.getElementById('select-users'), {
+                    copyClassesToDropdown: false,
+                    dropdownParent: 'body',
+                    controlInput: '<input>',
+                    render: {
+                        item: function(data, escape) {
+                            if (data.customProperties) {
+                                return '<div><span class="dropdown-item-indicator">' + data
+                                    .customProperties + '</span>' + escape(data.text) + '</div>';
+                            }
+                            return '<div>' + escape(data.text) + '</div>';
+                        },
+                        option: function(data, escape) {
+                            if (data.customProperties) {
+                                return '<div><span class="dropdown-item-indicator">' + data
+                                    .customProperties + '</span>' + escape(data.text) + '</div>';
+                            }
+                            return '<div>' + escape(data.text) + '</div>';
+                        },
+                    },
+                }));
+
+                // const id = {{ $data->id }};
+
+                document.getElementById('select-users').addEventListener('change', async function() {
+                    var selectedMonth = this.value;
+                    try {
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                        const formData = new FormData();
+                        formData.append('selectedMonth', selectedMonth);
+                        formData.append('id', id);
+                        absensi.innerHTML = '';
+                        const response = await fetch(
+                            '{{ route('rekap-absensi-siswa.filter-bulan') }}', {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken,
+                                },
+                            });
+
+                        if (response.ok) {
+                            const responseData = await response.json();
+                            const dataAbsensi = responseData.dataAbsensi;
+                            const countData = responseData.countData;
+
+                            await createPieChart(countData);
+
+                            document.getElementById('total_absen').textContent = countData.total_absen;
+                            document.getElementById('terlambat').textContent = countData.terlambat;
+                            document.getElementById('tanpa_keterangan').textContent = countData
+                                .tanpa_keterangan;
+                            document.getElementById('izin').textContent = countData.izin;
+                            document.getElementById('sakit').textContent = countData.sakit;
 
                             const absensi = document.getElementById('absensi');
-
-                            data.forEach(absensiData => {
+                            absensi.innerHTML = '';
+                            dataAbsensi.forEach(absensiData => {
                                 const htmlString =
                                     `
                                 <div class="row">
@@ -321,38 +475,98 @@
                                      `;
 
                                 absensi.innerHTML += htmlString;
+                                console.log(responseData);
                             });
-                        } catch (error) {
-                            console.error('Error fetching absensi data:', error);
+                        } else {
+                            // Tangani kesalahan jika permintaan tidak berhasil
+                            console.error('Error:', response.statusText);
                         }
+                    } catch (error) {
+                        // Tangani kesalahan jika ada
+                        console.error('Error:', error);
                     }
-
-                    fetchAbsensiBySiswaId(id);
-
-                    async function countAbsensiBySiswaId(id) {
-                        try {
-                            const response = await fetch(`/rekap-absensi-siswa/count-absensi/${id}`);
-                            const data = await response.json();
-
-                            document.getElementById('total_absen').textContent = data.total_absen;
-                            document.getElementById('terlambat').textContent = data.terlambat;
-                            document.getElementById('tanpa_keterangan').textContent = data.tanpa_keterangan;
-                            document.getElementById('izin').textContent = data.izin;
-                            document.getElementById('sakit').textContent = data.sakit;
-
-                            console.log(data);
-                        } catch (error) {
-                            console.error('Error fetching absensi data:', error);
-                        }
-                    }
-                    countAbsensiBySiswaId(id)
-
                 });
-            </script>
-        @endpush
-    @endsection
 
-    {{-- <div class="row">
+
+                async function createPieChart(countData) {
+                    var myPieChart = Chart.getChart("myPieChart");
+
+                    if (myPieChart) {
+                        myPieChart.destroy();
+                    }
+                    var ctx = document.getElementById('myPieChart').getContext('2d');
+                    var myPieChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Hadir', 'Terlambat', 'Sakit', 'Izin', 'Tanpa keterangan'],
+                            datasets: [{
+                                label: 'Total',
+                                data: [
+                                    countData.total_absen,
+                                    countData.terlambat,
+                                    countData.sakit,
+                                    countData.izin,
+                                    countData.tanpa_keterangan
+                                ],
+                                backgroundColor: [
+                                    'rgba(27, 158, 44, 0.6)',
+                                    'rgba(230, 230, 60, 0.6)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(60, 100, 230, 0.6)',
+                                    'rgba(235, 57, 28, 0.6)'
+                                ],
+                                borderWidth: 0,
+                                hoverOffset: 20
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            layout: {
+                                autoPadding: false,
+                                padding: {
+                                    top: 10,
+                                    left: 30,
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Chart Total Absensi Siswa',
+                                    padding: {
+                                        top: 10,
+                                        bottom: 10
+                                    },
+                                    font: {
+                                        size: 20,
+                                    }
+                                },
+                                labels: {
+                                    render: (context) => {
+                                        return context.value
+                                    },
+                                    fontColor: '#000000',
+                                },
+                                legend: {
+                                    display: true,
+                                    position: "right",
+                                    labels: {
+                                        usePointStyle: true,
+                                        padding: 20,
+                                    },
+                                }
+                            },
+
+                        }
+                    });
+
+                    return myPieChart;
+                }
+            });
+        </script>
+    @endpush
+@endsection
+
+{{-- <div class="row">
             <div class="col">
                 <div class="text-truncate">
                     <strong>${absensi.tanggal_absen}</strong>

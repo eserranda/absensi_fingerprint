@@ -24,9 +24,11 @@ class DataSiswaController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $actionBtn = '<a href="#" class="edit btn btn-success btn-sm" onclick="editSiswa(' . $row->id . ')">Edit</a> 
+                    $actionBtn = '
+                    <a href="#" class="edit btn btn-success btn-sm" onclick="editSiswa(' . $row->id . ')">Edit</a> 
                     <a href="#" class="delete btn btn-danger btn-sm" onclick="deleteSiswa(' . $row->id . ')">Delete</a>
-                    <a href="#" class="detail btn btn-primary btn-sm" onclick="detailSiswa(' . $row->id . ')">Detail</a>';
+                    <a href="#" class="detail btn btn-primary btn-sm" onclick="detailSiswa(' . $row->id . ')">Detail</a>
+                    ';
                     return $actionBtn;
                 })
 

@@ -277,12 +277,14 @@
                         console.log(data.message);
                         if (data.errors) {
                             Object.keys(data.errors).forEach(fieldName => {
-                                const inputField = document.getElementById(
-                                    fieldName);
-                                inputField.classList.add('is-invalid');
-                                inputField.nextElementSibling.textContent = data
-                                    .errors[
-                                        fieldName][0];
+                                const inputField = document.getElementById(fieldName);
+                                if (fieldName === 'id_siswa') {
+                                    inputField.classList.add('is-invalid');
+                                } else {
+                                    inputField.classList.add('is-invalid');
+                                    inputField.nextElementSibling.textContent = data.errors[fieldName][0];
+                                }
+
                             });
 
                             // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki

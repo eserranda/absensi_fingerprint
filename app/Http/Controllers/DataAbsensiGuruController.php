@@ -72,7 +72,9 @@ class DataAbsensiGuruController extends Controller
         $id = $request->input('id');
 
         if ($selectedMonth) {
-            $dataAbsensi = DataAbsensiGuru::whereMonth('tanggal_absen', $selectedMonth)->where('id_guru', $id)
+            $dataAbsensi = DataAbsensiGuru::whereMonth('tanggal_absen', $selectedMonth)
+                // ->whereYear('tanggal_absen', Carbon::now()->year) 
+                ->where('id_guru', $id)
                 ->orderBy('tanggal_absen', 'desc')
                 ->get();
 
@@ -139,6 +141,7 @@ class DataAbsensiGuruController extends Controller
     {
         $idGuru = $request->input('id_guru');
         $validator = Validator::make($request->all(), [
+            'id_guru' => 'required',
             'tanggal_absen' => [
                 'required',
                 'date',
@@ -187,6 +190,7 @@ class DataAbsensiGuruController extends Controller
 
 
         $validator = Validator::make($request->all(), [
+            'id_guru' => 'required',
             'edit_tanggal_absen' => [
                 'required',
                 'date',

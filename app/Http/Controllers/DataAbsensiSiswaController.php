@@ -164,6 +164,7 @@ class DataAbsensiSiswaController extends Controller
     {
         $idSiswa = $request->input('id_siswa');
         $validator = Validator::make($request->all(), [
+            'id_siswa' => 'required',
             'tanggal_absen' => [
                 'required',
                 'date',

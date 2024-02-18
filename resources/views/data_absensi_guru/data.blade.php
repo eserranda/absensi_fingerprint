@@ -101,7 +101,8 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Tanggal Absen</label>
-                                    <input type="date" class="form-control" id="tanggal_absen" name="tanggal_absen">
+                                    <input type="date" class="form-control" id="edit_tanggal_absen"
+                                        name="edit_tanggal_absen">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -243,8 +244,6 @@
         </div>
     </div>
 
-
-
     @push('script')
         <script>
             async function edit(id) {
@@ -266,7 +265,7 @@
                     console.log(response);
                     const form = document.getElementById('form_edit_data');
                     form.elements['id'].value = responseData.data.id;
-                    form.elements['tanggal_absen'].value = responseData.data.tanggal_absen;
+                    form.elements['edit_tanggal_absen'].value = responseData.data.tanggal_absen;
                     form.elements['edit_jam_masuk'].value = responseData.data.jam_masuk;
                     form.elements['edit_jam_keluar'].value = responseData.data.jam_keluar;
                     form.elements['keterangan'].value = responseData.data.keterangan;
@@ -294,7 +293,7 @@
 
                 $("#edit_id_guru").select2({
                     theme: "bootstrap-5",
-                    placeholder: "Pilih guru",
+                    placeholder: "Pilih Guru/pegawai",
                     minimumInputLength: 1,
                     dropdownParent: $("#modal_edit_data"),
                     ajax: {
@@ -422,7 +421,7 @@
 
             $("#id_guru").select2({
                 theme: "bootstrap-5",
-                placeholder: "Pilih Guru",
+                placeholder: "Pilih Guru/pegawai",
                 minimumInputLength: 1,
                 dropdownParent: $("#modal_add_data"),
                 ajax: {

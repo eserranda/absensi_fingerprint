@@ -180,7 +180,7 @@
 
             $("#id_siswa").select2({
                 theme: "bootstrap-5",
-                placeholder: "Pilih Guru",
+                placeholder: "Pilih nama siswa",
                 minimumInputLength: 1,
                 dropdownParent: $("#modal_add_data"),
                 ajax: {

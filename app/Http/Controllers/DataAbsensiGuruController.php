@@ -147,7 +147,7 @@ class DataAbsensiGuruController extends Controller
                 })
             ]
         ], [
-            'tanggal_absen.required' => 'Tidak boleh kosong',
+            'tanggal_absen.required' => 'Tanggal Tidak boleh kosong',
             'tanggal_absen.date' => 'Format tanggal salah',
             'tanggal_absen.unique' => 'Data absensi sudah ada',
         ]);
@@ -185,19 +185,21 @@ class DataAbsensiGuruController extends Controller
         $id = $request->input('id');
         $idGuru = $request->input('id_guru');
 
-        // memberikan pengecualian untuk catatan saat ini agar tidak memvalidasi dirinya sendiri.
+
         $validator = Validator::make($request->all(), [
-            'tanggal_absen' => [
+            'edit_tanggal_absen' => [
                 'required',
                 'date',
-                Rule::unique('data_absensi_gurus')->ignore($dataAbsensiGuru->id)->where(function ($query) use ($idGuru) {
-                    return $query->where('id_guru', $idGuru);
-                })
+                Rule::unique('data_absensi_gurus', 'tanggal_absen')
+                    ->ignore($dataAbsensiGuru->id)
+                    ->where(function ($query) use ($idGuru) {
+                        return $query->where('id_guru', $idGuru);
+                    })
             ]
         ], [
-            'tanggal_absen.required' => 'Tidak boleh kosong',
-            'tanggal_absen.date' => 'Format tanggal salah',
-            'tanggal_absen.unique' => 'Data absensi sudah ada',
+            'edit_tanggal_absen.required' => 'Tanggal Tidak boleh kosong',
+            'edit_tanggal_absen.date' => 'Format tanggal salah',
+            'edit_tanggal_absen.unique' => 'Data absensi sudah ada',
         ]);
 
         if ($validator->fails()) {
@@ -207,7 +209,7 @@ class DataAbsensiGuruController extends Controller
         $dataAbsensiGuru->find($id)->update([
             'id_guru' => $request->input('edit_id_guru'),
             'id_fingerprint ' => $request->input('edit_id_fingerprint '),
-            'tanggal_absen' => $request->input('tanggal_absen'),
+            'edit_tanggal_absen' => $request->input('edit_tanggal_absen'),
             'jam_masuk' => $request->input('edit_jam_masuk'),
             'jam_keluar' => $request->input('edit_jam_keluar'),
             'keterangan' => $request->input('keterangan'),

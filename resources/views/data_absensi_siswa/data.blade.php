@@ -292,8 +292,12 @@
                             validFields.forEach(validField => {
                                 const fieldName = validField.id;
                                 if (!data.errors[fieldName]) {
-                                    validField.classList.remove('is-invalid');
-                                    validField.nextElementSibling.textContent = '';
+                                    if (fieldName === 'id_siswa') {
+                                        validField.classList.remove('is-invalid');
+                                    } else {
+                                        validField.classList.remove('is-invalid');
+                                        validField.nextElementSibling.textContent = '';
+                                    }
                                 }
                             });
                         } else {

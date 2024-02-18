@@ -10,6 +10,15 @@ class DataAbsensiSiswa extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'id_siswa',
+        'id_fingerprint',
+        'tanggal_absen',
+        'jam_masuk',
+        'jam_keluar',
+        'keterangan',
+    ];
+
     public function siswa(): BelongsTo
     {
         return $this->belongsTo(DataSiswa::class, 'id_siswa', 'id');

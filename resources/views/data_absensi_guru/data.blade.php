@@ -4,27 +4,21 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
+
+    {{-- select2 --}}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
 @endpush
 @section('content')
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <div class="btn-actions ">
-                    <div class="input-icon">
-                        <input class="form-control " placeholder="Select a date" id="datepicker-icon" value="2020-06-20" />
-                        <span class="input-icon-addon">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
-                                <path d="M16 3v4" />
-                                <path d="M8 3v4" />
-                                <path d="M4 11h16" />
-                                <path d="M11 15h1" />
-                                <path d="M12 15v3" />
-                            </svg>
-                        </span>
+                <div class="btn-actions">
+                    <div class="input-icon ">
+                        <input class="form-control" type="date" placeholder="Pilih Tangal" name="tanggal"
+                            id="tanggal" />
                     </div>
                 </div>
 
@@ -38,14 +32,15 @@
                     </svg>
                 </button>
 
-                {{-- <div class="card-actions">
-                    <a href="#" class="btn btn-success">
+                <div class="card-actions">
+                    {{-- <a href="#" class="btn btn-success">
                         Exel
-                    </a>
+                    </a> --}}
                     <a href="#" class="btn btn-primary" id="add_data">
                         Tambah Data
                     </a>
-                </div> --}}
+                </div>
+
             </div>
 
             <div class="card-body border-bottom py-3">
@@ -56,11 +51,11 @@
                                 <th>#</th>
                                 <th>Nama</th>
                                 <th>ID Finger</th>
-                                <th>Status Pegawai</th>
+                                <th>Tanggal</th>
                                 <th>Jam Masuk</th>
-                                <th>Jam Pulang</th>
-                                <th>Keterangan</th>
-                                <th class="w-1">Opsi</th>
+                                <th>Jam Keluar</th>
+                                <th>Ket</th>
+                                <th class="w-1">Lihat Absensi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,6 +66,94 @@
         </div>
     </div>
 
+    {{-- Edit data  --}}
+    <div class="modal modal-blur fade" id="modal_edit_data" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Data </h5>
+                    <button type="button" class="btn-close" onclick="closeModalEdit()"></button>
+                </div>
+                <form action="" method="POST" id="form_edit_data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nama Guru</label>
+                                    <input type="hidden" class="form-control" id="id" name="id">
+                                    <select class="form-select" id="edit_id_guru" name="edit_id_guru">
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ID Finger</label>
+                                    <select class="form-select" id="id_finger" name="id_finger">
+                                        <option value="" selected disabled>Pilih ID Finger</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Tanggal Absen</label>
+                                    <input type="date" class="form-control" id="tanggal_absen" name="tanggal_absen">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Jam Masuk</label>
+                                    <input type="time" class="form-control" id="edit_jam_masuk" name="edit_jam_masuk">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Jam Keluar</label>
+                                    <input type="time" class="form-control" id="edit_jam_keluar" name="edit_jam_keluar">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Keterangan</label>
+                                    <select class="form-select" id="keterangan" name="keterangan">
+                                        <option value="" selected disabled>- Pilih Keterangan -</option>
+                                        <option value="Hadir">Hadir</option>
+                                        <option value="Izin">Izin</option>
+                                        <option value="Sakit">Sakit</option>
+                                        <option value="Terlambat">Terlambat</option>
+                                        <option value="Tanpa Keterangan">Tanpa Keterangan</option>
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button href="#" class="btn btn-primary ms-auto" type="submit">
+                            Update
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     {{-- Tambah data  --}}
     <div class="modal modal-blur fade" id="modal_add_data" tabindex="-1" role="dialog" aria-hidden="true">
@@ -80,21 +163,52 @@
                     <h5 class="modal-title">Tambah Data </h5>
                     <button type="button" class="btn-close" onclick="closeModalAdd()"></button>
                 </div>
-                <form action="" method="POST" id="form_data_guru">
+                <form action="" method="POST" id="form_add_data">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Nama</label>
-                                    <input type="text" class="form-control" id="nama" name="nama">
-                                    <div class="invalid-feedback"></div>
+                                    <label class="form-label">Nama Guru</label>
+                                    <select class="form-select" id="id_guru" name="id_guru">
+
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label">NUPTK</label>
-                                    <input type="number" class="form-control" id="nuptk" name="nuptk">
+                                    <label class="form-label">ID Finger</label>
+                                    <select class="form-select" id="id_finger" name="id_finger">
+                                        <option value="" selected disabled>Pilih ID Finger</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Tanggal Absen</label>
+                                    <input type="date" class="form-control" id="tanggal_absen" name="tanggal_absen">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Jam Masuk</label>
+                                    <input type="time" class="form-control" id="jam_masuk" name="jam_masuk">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Jam Keluar</label>
+                                    <input type="time" class="form-control" id="jam_keluar" name="jam_keluar">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -103,94 +217,19 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Tempat Lahir</label>
-                                    <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Tanggal Lahir</label>
-                                    <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Status Kepegawaian</label>
-                                    <select class="form-select" id="status_pegawai" name="status_pegawai">
-                                        <option value=" ">Pilih Status Pegawai</option>
-                                        <option value="PNS">PNS</option>
-                                        <option value="PNS">PPPK</option>
-                                        <option value="Honor Sekolah">Honor Sekolah</option>
-                                        <option value="Honor Daerah">Honor Daerah</option>
-                                    </select>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">NIP</label>
-                                    <input type="number" class="form-control" id="nip" name="nip">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Jenis PTK</label>
-                                    <select class="form-select" id="jenis_ptk" name="jenis_ptk">
-                                        <option value="">- Pilih Jenis PTK -</option>
-                                        <option value="Guru Mapel">Guru Mapel</option>
-                                        <option value="Guru Kelas">Guru Kelas</option>
-                                    </select>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Agama</label>
-                                    <select class="form-select" id="agama" name="agama">
-                                        <option value="">Pilih Agama</option>
-                                        <option value="Kristen">Kristen</option>
-                                        <option value="Islam">Islam</option>
-                                        <option value="Hindu">Hindu</option>
-                                        <option value="Buddha">Buddha</option>
+                                    <label class="form-label">Keterangan</label>
+                                    <select class="form-select" id="keterangan" name="keterangan">
+                                        <option value="" selected disabled>- Pilih Keterangan -</option>
+                                        <option value="Hadir">Hadir</option>
+                                        <option value="Izin">Izin</option>
+                                        <option value="Sakit">Sakit</option>
+                                        <option value="Terlambat">Terlambat</option>
+                                        <option value="Tanpa Keterangan">Tanpa Keterangan</option>
                                     </select>
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Jenis Kelamin</label>
-                                    <select class="form-select" id="jenis_kelamin" name="jenis_kelamin">
-                                        <option value="">Pilih Gender</option>
-                                        <option value="L">Laki-Laki</option>
-                                        <option value="P">Perempuan</option>
-                                    </select>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Alamat</label>
-                                    <textarea class="form-control" id="alamat" name="alamat" rows="2" placeholder="Masukkan Alamat"></textarea>
-                                    <div class="invalid-feedback"> </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
 
                     <div class="modal-footer">
@@ -204,76 +243,15 @@
         </div>
     </div>
 
-    <script>
-        // @formatter:off
-        document.addEventListener("DOMContentLoaded", function() {
-            window.Litepicker && (new Litepicker({
-                element: document.getElementById('datepicker-icon'),
-                buttonText: {
-                    previousMonth: `<!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>`,
-                    nextMonth: `<!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>`,
-                },
-            }));
-        });
-        // @formatter:on
-    </script>
-    {{-- @push('script')
-        <script type="text/javascript">
-            function hapus(id) {
-                Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: 'Data siswa akan dihapus permanen!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Ya, hapus!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                        $.ajax({
-                            url: '/data_guru/delete/' + id,
-                            type: 'DELETE',
-                            data: {
-                                _token: csrfToken
-                            },
-                            success: function(response) {
-                                console.log('Response:', response);
-                                if (response.status) {
-                                    Swal.fire(
-                                        'Terhapus!',
-                                        'Data guru berhasil dihapus.',
-                                        'success'
-                                    );
-                                    $('.datatable').DataTable().ajax.reload();
-                                } else {
-                                    Swal.fire(
-                                        'Gagal!',
-                                        'Terjadi kesalahan saat menghapus data guru.',
-                                        'error'
-                                    );
-                                }
-                            },
-                            error: function(error) {
-                                console.log(error);
-                                Swal.fire(
-                                    'Gagal!',
-                                    'Terjadi kesalahan saat menghapus data guru.',
-                                    'error'
-                                );
-                            }
-                        });
-                    }
-                });
-            }
 
+
+    @push('script')
+        <script>
             async function edit(id) {
                 try {
                     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-                    const response = await fetch('/data_guru/getID/' + id, {
+                    const response = await fetch('/rekap-absensi-guru/edit/' + id, {
                         method: 'GET',
                         headers: {
                             'X-CSRF-TOKEN': csrfToken,
@@ -283,35 +261,99 @@
                     const responseData = await response.json();
 
                     if (!response.status) {
-                        throw new Error('Gagal mengambil data siswa');
+                        throw new Error('Gagal mengambil data');
                     }
                     console.log(response);
-                    const form = document.getElementById('form_edit_data_guru');
+                    const form = document.getElementById('form_edit_data');
                     form.elements['id'].value = responseData.data.id;
-                    form.elements['edit_nama'].value = responseData.data.nama;
-                    form.elements['edit_nuptk'].value = responseData.data.nuptk;
-                    form.elements['edit_jenis_kelamin'].value = responseData.data.jenis_kelamin;
-                    form.elements['edit_tempat_lahir'].value = responseData.data.tempat_lahir;
-                    form.elements['edit_tanggal_lahir'].value = responseData.data.tanggal_lahir;
-                    form.elements['edit_nip'].value = responseData.data.nip;
-                    form.elements['edit_status_pegawai'].value = responseData.data.status_pegawai;
-                    form.elements['edit_jenis_ptk'].value = responseData.data.jenis_ptk;
-                    form.elements['edit_agama'].value = responseData.data.agama;
-                    form.elements['edit_alamat'].value = responseData.data.alamat;
+                    form.elements['tanggal_absen'].value = responseData.data.tanggal_absen;
+                    form.elements['edit_jam_masuk'].value = responseData.data.jam_masuk;
+                    form.elements['edit_jam_keluar'].value = responseData.data.jam_keluar;
+                    form.elements['keterangan'].value = responseData.data.keterangan;
+
+                    var editIdPengajarSelect = document.getElementById('edit_id_guru');
+                    fetch('/data_guru/getID/' + responseData.data.id_guru, {
+                            method: 'GET',
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Gagal mengambil data tambahan');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            updateOptionsAndSelect2Guru(editIdPengajarSelect, data.data.id, data.data.nama);
+                        });
+
                     $('#modal_edit_data').modal('show');
 
                 } catch (error) {
                     console.error('Terjadi kesalahan:', error);
                     throw error;
                 }
+
+                $("#edit_id_guru").select2({
+                    theme: "bootstrap-5",
+                    placeholder: "Pilih guru",
+                    minimumInputLength: 1,
+                    dropdownParent: $("#modal_edit_data"),
+                    ajax: {
+                        url: '/get_data_guru',
+                        dataType: 'json',
+                        processResults: function(data) {
+                            if (data && data.length > 0) {
+                                var results = $.map(data, function(item) {
+                                    return {
+                                        id: item.id,
+                                        text: item.nama
+                                    };
+                                });
+                                return {
+                                    results: results
+                                };
+                            }
+                        },
+                    }
+                });
             }
 
-            document.getElementById('form_edit_data_guru').addEventListener('submit', async function(event) {
+            function updateOptionsAndSelect2Guru(selectElement, id, namaGuru) {
+                $(selectElement).empty();
+
+                var option = new Option(namaGuru, id, true, true);
+                $(selectElement).append(option);
+
+                $(selectElement).trigger('change');
+            }
+
+            document.getElementById('add_data').addEventListener('click', function() {
+                $('#modal_add_data').modal('show');
+            });
+
+            function closeModalAdd() {
+                const invalidInputs = document.querySelectorAll('.is-invalid');
+                invalidInputs.forEach(invalidInput => {
+                    invalidInput.value = '';
+                    invalidInput.classList.remove('is-invalid');
+                    const errorNextSibling = invalidInput.nextElementSibling;
+                    if (errorNextSibling && errorNextSibling.classList.contains(
+                            'invalid-feedback')) {
+                        errorNextSibling.textContent = '';
+                    }
+                });
+
+                $('#modal_add_data').modal('hide');
+                const form = document.getElementById('form_data_matpel');
+                form.reset();
+                $('#modal_add_data').modal('hide');
+            }
+
+            document.getElementById('form_edit_data').addEventListener('submit', async function(event) {
                 event.preventDefault();
 
                 try {
                     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                    const response = await fetch('/update_data_guru', {
+                    const response = await fetch('/rekap-absensi-guru/update', {
                         method: 'POST',
                         body: new FormData(this),
                         headers: {
@@ -346,12 +388,12 @@
                                 errorNextSibling.textContent = '';
                             }
                         });
-                        const form = document.getElementById('form_edit_data_guru');
+                        const form = document.getElementById('form_edit_data');
                         form.reset();
                         $('#modal_edit_data').modal('hide');
                         Swal.fire(
                             'Tersimpan!',
-                            'Data guru berhasil diupdate.',
+                            'Data mata pelajaran berhasil diupdate.',
                             'success'
                         )
                         $('.datatable').DataTable().ajax.reload();
@@ -373,154 +415,118 @@
                         errorNextSibling.textContent = '';
                     }
                 });
-                const form = document.getElementById('form_edit_data_guru');
+                const form = document.getElementById('form_edit_data');
                 form.reset();
                 $('#modal_edit_data').modal('hide');
             }
 
-            function closeModalAdd() {
-                const invalidInputs = document.querySelectorAll('.is-invalid');
-                invalidInputs.forEach(invalidInput => {
-                    invalidInput.value = '';
-                    invalidInput.classList.remove('is-invalid');
-                    const errorNextSibling = invalidInput.nextElementSibling;
-                    if (errorNextSibling && errorNextSibling.classList.contains(
-                            'invalid-feedback')) {
-                        errorNextSibling.textContent = '';
-                    }
-                });
-
-                $('#modal_add_data').modal('hide');
-                const form = document.getElementById('form_data_guru');
-                form.reset();
-                $('#modal_add_data').modal('hide');
-            }
-
-            document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById('add_data').addEventListener('click', function() {
-                    $('#modal_add_data').modal('show');
-                });
-
-                document.getElementById('form_data_guru').addEventListener('submit', async function(event) {
-                    event.preventDefault();
-                    try {
-                        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                        const response = await fetch('/simpan_data_guru', {
-                            method: 'POST',
-                            body: new FormData(this),
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken,
-                            },
-                        }).then(response => response.json());
-
-                        if (!response.status) {
-                            handleValidationErrors(response.errors);
-                        } else {
-                            console.log(response);
-                            // Cari semua elemen input dengan kelas "is-invalid"
-                            const invalidInputs = document.querySelectorAll('.is-invalid');
-                            // Iterasi melalui setiap elemen input
-                            invalidInputs.forEach(invalidInput => {
-                                // Kosongkan nilai elemen input
-                                invalidInput.value = '';
-                                // Hapus kelas "is-invalid" dari elemen input
-                                invalidInput.classList.remove('is-invalid');
-                                // Kosongkan pesan kesalahan di sebelah input (jika ada)
-                                const errorNextSibling = invalidInput.nextElementSibling;
-                                if (errorNextSibling && errorNextSibling.classList.contains(
-                                        'invalid-feedback')) {
-                                    errorNextSibling.textContent = '';
-                                }
+            $("#id_guru").select2({
+                theme: "bootstrap-5",
+                placeholder: "Pilih Guru",
+                minimumInputLength: 1,
+                dropdownParent: $("#modal_add_data"),
+                ajax: {
+                    url: '/get_data_guru',
+                    dataType: 'json',
+                    processResults: function(data) {
+                        if (data && data.length > 0) {
+                            var results = $.map(data, function(item) {
+                                return {
+                                    id: item.id,
+                                    text: item.nama
+                                };
                             });
-                            // Close modal
-                            $('#modal_add_data').modal('hide');
-                            const form = document.getElementById('form_data_guru');
-                            form.reset();
-                            $('#modal_add_data').modal('hide');
-                            Swal.fire(
-                                'Tersimpan!',
-                                'Data siswa berhasil diupdate.',
-                                'success'
-                            )
-                            $('.datatable').DataTable().ajax.reload();
+                            return {
+                                results: results
+                            };
                         }
-                    } catch (error) {
-                        console.error('Terjadi kesalahan:', error);
-                        throw error;
-                    }
-                });
+                    },
+                }
+            });
 
-                function handleValidationErrors(errors) {
-                    if (errors && typeof errors === 'object') {
-                        Object.keys(errors).forEach(fieldName => {
-                            const inputField = document.getElementById(fieldName);
-                            inputField.classList.add('is-invalid');
-                            inputField.nextElementSibling.textContent = errors[fieldName][0];
-                        });
 
-                        // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
-                        const validFields = document.querySelectorAll('.is-invalid');
-                        validFields.forEach(validField => {
-                            const fieldName = validField.id;
-                            if (!errors[fieldName]) {
-                                validField.classList.remove('is-invalid');
-                                validField.nextElementSibling.textContent = '';
+            function hapus(id) {
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: 'Data akan dihapus permanen!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                        $.ajax({
+                            url: '/rekap-absensi-guru/delete/' + id,
+                            type: 'DELETE',
+                            data: {
+                                _token: csrfToken
+                            },
+                            success: function(response) {
+                                console.log('Response:', response);
+                                if (response.status) {
+                                    Swal.fire(
+                                        'Terhapus!',
+                                        'Data berhasil dihapus.',
+                                        'success'
+                                    );
+                                    $('.datatable').DataTable().ajax.reload();
+                                } else {
+                                    Swal.fire(
+                                        'Gagal!',
+                                        'Terjadi kesalahan saat menghapus data.',
+                                        'error'
+                                    );
+                                }
+                            },
+                            error: function(error) {
+                                console.log(error);
+                                Swal.fire(
+                                    'Gagal!',
+                                    'Terjadi kesalahan saat menghapus data.',
+                                    'error'
+                                );
                             }
                         });
                     }
-                }
-            });
+                });
+            }
 
             $(document).ready(function() {
                 const myDataTable = $('.datatable').DataTable({
                     processing: true,
                     serverSide: true,
 
-                    ajax: "{{ route('data_guru.data') }}",
+                    ajax: "{{ route('data_absensi_guru.data') }}",
                     columns: [{
                             data: 'DT_RowIndex',
                             name: '#',
                             searchable: false
                         },
                         {
-                            data: 'nama',
-                            name: 'nama'
+                            data: 'id_guru',
+                            name: 'id_guru'
                         },
                         {
-                            data: 'nuptk',
-                            name: 'nuptk'
+                            data: 'id_fingerprint',
+                            name: 'id_fingerprint'
                         },
                         {
-                            data: 'jenis_kelamin',
-                            name: 'jenis_kelamin'
+                            data: 'tanggal_absen',
+                            name: 'tanggal_absen'
                         },
                         {
-                            data: 'tempat_lahir',
-                            name: 'tempat_lahir'
+                            data: 'jam_masuk',
+                            name: 'jam_masuk'
                         },
                         {
-                            data: 'tanggal_lahir',
-                            name: 'tanggal_lahir'
+                            data: 'jam_keluar',
+                            name: 'jam_keluar'
                         },
                         {
-                            data: 'nip',
-                            name: 'nip'
-                        },
-                        {
-                            data: 'status_pegawai',
-                            name: 'status_pegawai'
-                        },
-                        {
-                            data: 'jenis_ptk',
-                            name: 'jenis_ptk'
-                        },
-                        {
-                            data: 'agama',
-                            name: 'agama'
-                        },
-                        {
-                            data: 'alamat',
-                            name: 'alamat'
+                            data: 'keterangan',
+                            name: 'keterangan'
                         },
                         {
                             data: 'action',
@@ -530,18 +536,87 @@
                         },
                     ]
                 });
-
-                $('#filterPegawai').on('change', function() {
-                    const selectedPegawai = $(this).val();
-                    myDataTable.ajax.url('{{ route('data_guru.data') }}?status_pegawai=' + selectedPegawai)
-                        .load();
+                $('#tanggal').on('change', function() {
+                    const selectedDate = $(this).val();
+                    myDataTable.ajax.url('{{ route('data_absensi_guru.data') }}?tanggal=' +
+                        selectedDate).load();
                 });
 
                 $('#reload').on('click', function() {
-                    myDataTable.ajax.url('{{ route('data_guru.data') }}').load();
+                    myDataTable.ajax.url('{{ route('data_absensi_guru.data') }}').load();
+                });
+
+                // Add Data 
+                const form = document.getElementById('form_add_data');
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    const formData = new FormData(form);
+
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                    fetch('/rekap-absensi-guru/store', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data.message);
+                            if (data.errors) {
+                                Object.keys(data.errors).forEach(fieldName => {
+                                    const inputField = document.getElementById(
+                                        fieldName);
+                                    inputField.classList.add('is-invalid');
+                                    inputField.nextElementSibling.textContent = data
+                                        .errors[
+                                            fieldName][0];
+                                });
+
+                                // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
+                                const validFields = form.querySelectorAll('.is-invalid');
+                                validFields.forEach(validField => {
+                                    const fieldName = validField.id;
+                                    if (!data.errors[fieldName]) {
+                                        validField.classList.remove('is-invalid');
+                                        validField.nextElementSibling.textContent = '';
+                                    }
+                                });
+                            } else {
+                                console.log(data.message);
+                                form.reset();
+                                $('#modal_add_data').modal('hide');
+                                Swal.fire(
+                                    'Tersimpan!',
+                                    'Data berhasil ditambahkan.',
+                                    'success'
+                                );
+                                $('.datatable').DataTable().ajax.reload();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan saat menambahkan  data.',
+                                'error'
+                            );
+                        });
                 });
 
             });
+
+            // document.addEventListener("DOMContentLoaded", function() {
+            //     window.Litepicker && (new Litepicker({
+            //         element: document.getElementById('datepicker-icon'),
+            //         buttonText: {
+            //             previousMonth: `<!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
+    //             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>`,
+            //             nextMonth: `<!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+    //             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>`,
+            //         },
+            //     }));
+            // });
         </script>
-    @endpush --}}
+    @endpush
 @endsection

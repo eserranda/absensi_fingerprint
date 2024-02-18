@@ -38,10 +38,25 @@ Route::post('/login', [AuthController::class, 'authenticate'])->name("login")->m
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth'); // Login
 
 
+Route::prefix('rekap-absensi-guru')->controller(DataAbsensiGuruController::class)->group(function () {
+    Route::get("", 'index')->name("data_absensi_guru.data")->middleware('auth');
+    Route::get('/absensi/{id}', 'show')->name("daftar_absensi.show");
+    Route::POST('/store', 'store')->name("data_absensi_guru.store")->middleware('auth');
+
+    Route::get('/edit/{id}', 'edit')->name("data_absensi_guru.edit");
+    Route::POST('/update', 'update')->name("data_absensi_guru.update")->middleware('auth');
+
+    Route::POST('/filter-bulan', 'filterAbsensi')->name("rekap-absensi-guru.filter-bulan")->middleware('auth');
+    Route::delete('/delete/{id}', 'destroy')->name("hapus_rekap_absensi_guru")->middleware('auth');
+});
+
 Route::prefix('rekap-absensi-siswa')->controller(DataAbsensiSiswaController::class)->group(function () {
     Route::get("", 'index')->name("data_absensi_siswa.data")->middleware('auth');
     Route::get('/absensi/{id}', 'show')->name("daftar_absensi.show");
+    Route::POST('/store', 'store')->name("data_absensi_siswa.store")->middleware('auth');
     Route::POST('/filter-bulan', 'filterAbsensi')->name("rekap-absensi-siswa.filter-bulan")->middleware('auth');
+    Route::delete('/delete/{id}', 'destroy')->name("hapus_rekap_absensi_siswa")->middleware('auth');
+
 
     // Route::get('/data-absensi/{id}', 'absensi')->name("rekap-absensi-siswa.data-absensi")->middleware('auth');
     // Route::get('/count-absensi/{id}', 'countAbsensi')->name("rekap-absensi-siswa.count-absensi")->middleware('auth');
@@ -50,9 +65,6 @@ Route::prefix('rekap-absensi-siswa')->controller(DataAbsensiSiswaController::cla
     // Route::delete('/delete/{id}', 'destroy')->name("delete_role")->middleware('auth');
 });
 
-Route::controller(DataAbsensiGuruController::class)->group(function () {
-    Route::get('/data_absensi_guru', 'index')->name("data_absensi_guru.data")->middleware('auth');
-});
 
 Route::prefix('role')->controller(RoleController::class)->group(function () {
     Route::get('', 'index')->name("data_role.data")->middleware('auth');

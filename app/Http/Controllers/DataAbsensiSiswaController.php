@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\DataSiswa;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Models\DataAbsensiSiswa;
 use App\Models\FingerprintSiswa;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class DataAbsensiSiswaController extends Controller
 {
@@ -88,23 +90,6 @@ class DataAbsensiSiswaController extends Controller
         // ...
     }
 
-
-    // public function absensi($id)
-    // {
-    //     Carbon::setLocale('id');
-    //     $absensi = DataAbsensiSiswa::where('id_siswa', $id)
-    //         ->orderBy('tanggal_absen', 'desc')
-    //         ->get();
-
-    //     foreach ($absensi as $data) {
-    //         $tanggalAbsen = Carbon::parse($data->tanggal_absen);
-    //         $data->hari = $tanggalAbsen->isoFormat('dddd');
-    //         $data->tanggal_absen = $tanggalAbsen->format('d-m-Y');
-    //     }
-
-    //     return response()->json($absensi);
-    // }
-
     public function filterAbsensi(Request $request)
     {
         Carbon::setLocale('id');
@@ -175,12 +160,29 @@ class DataAbsensiSiswaController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $idSiswa = $request->input('id_siswa');
+        $validator = Validator::make($request->all(), [
+            'tanggal_absen' => [
+                'required',
+                'date',
+                Rule::unique('data_absensi_siswas')->where(function ($query) use ($idSiswa) {
+                    return $query->where('id_siswa', $idSiswa);
+                })
+            ]
+        ], [
+            'tanggal_absen.required' => 'Tidak boleh kosong',
+            'tanggal_absen.date' => 'Format tanggal salah',
+            'tanggal_absen.unique' => 'Data absensi sudah ada',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        DataAbsensiSiswa::create($request->all());
+        return response()->json(['message' => 'Data berhasil disimpan'], 200);
     }
 
     /**
@@ -213,8 +215,13 @@ class DataAbsensiSiswaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DataAbsensiSiswa $dataAbsensiSiswa)
+    public function destroy(DataAbsensiSiswa $dataAbsensiSiswa, $id)
     {
-        //
+        try {
+            $dataAbsensiSiswa->findOrFail($id)->delete();
+            return response()->json(['status' => true, 'message' => 'Data berhasil dihapus'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => 'Gagal menghapus data'], 500);
+        }
     }
 }

@@ -122,7 +122,7 @@
                         <div class="dropdown-menu">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item" href="/data_absensi_guru">
+                                    <a class="dropdown-item" href="/rekap-absensi-guru">
                                         Rekap Pegawai/Guru
                                     </a>
                                     <a class="dropdown-item" href="/rekap-absensi-siswa">

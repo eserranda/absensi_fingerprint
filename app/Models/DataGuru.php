@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class DataGuru extends Model
 {
@@ -21,6 +22,11 @@ class DataGuru extends Model
         'agama',
         'alamat',
     ];
+
+    public function getTanggalLahirAttribute($value)
+    {
+        return Carbon::parse($value);
+    }
 
     public function roles_guru()
     {

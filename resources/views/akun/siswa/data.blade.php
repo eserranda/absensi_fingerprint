@@ -4,16 +4,21 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
+
+    {{-- select2 --}}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
 @endpush
 @section('content')
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <div class="btn-actions">
+                <div class="btn-actions col-md-2">
                     <select class="form-select" id="filterKelas">
-                        <option value="XI MIPA 1">Guru</option>
-                        <option value="XI MIPA 1">XI MIPA 1</option>
                         <option value="X IPS 1">X IPS 1</option>
+                        <option value="XI MIPA 1">XI MIPA 1</option>
                         <option value="XII IPS 1">XII IPS 1</option>
                     </select>
                 </div>
@@ -40,7 +45,11 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Matapelajaran</th>
+                                <th>Nama</th>
+                                <th>NISN</th>
+                                <th>Kelas</th>
+                                <th>Email</th>
+                                <th>Role</th>
                                 <th class="w-1">Opsi</th>
                             </tr>
                         </thead>
@@ -58,59 +67,54 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data </h5>
+                    <h5 class="modal-title">Tambah Users Siswa</h5>
                     <button type="button" class="btn-close" onclick="closeModalAdd()"></button>
                 </div>
-                <form action="" method="POST" id="form_data_matpel">
+                <form action="" method="POST" id="form_add_user_siswa">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Pilih Role</label>
-                                    <select class="form-select" id="filterRole">
-                                        <option value="">-- Pilih Role --</option>
-                                        <option value="siswa">Siswa</option>
-                                        <option value="guru">Guru</option>
+                                    <label class="form-label">Nama Lengkap</label>
+                                    <select class="form-select" id="id_siswa" name="id_siswa">
+
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Pilih Kelas</label>
-                                    <select class="form-select" id="filterKelas">
-                                        <option value="">-- Pilih Kelas --</option>
-                                        <option value="XI MIPA 1">XI MIPA 1</option>
-                                        <option value="X IPS 1">X IPS 1</option>
-                                        <option value="XII IPS 1">XII IPS 1</option>
-                                    </select>
+                                    <label class="form-label">NISN</label>
+                                    <input type="text" class="form-control" id="username" name="username" readonly>
+                                    <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                         </div>
-                        <hr class="mt-0">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Nama Lengkap</label>
-                                    <input type="text" class="form-control" id="nama_matpel" name="nama_matpel">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
+
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Nama Matpel</label>
-                                    <input type="text" class="form-control" id="nama_matpel" name="nama_matpel">
+                                    <label class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password">
+
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div id="roles-container"></div>
 
-                    <div class="modal-footer">
-                        <button href="" class="btn btn-primary ms-auto" type="submit">
-                            Simpan
-                        </button>
-                    </div>
+                        <div class="modal-footer">
+                            <button href="" class="btn btn-primary ms-auto" type="submit">
+                                Simpan
+                            </button>
+                        </div>
                 </form>
             </div>
         </div>
@@ -152,6 +156,55 @@
 
     @push('script')
         <script type="text/javascript">
+            $(document).ready(function() {
+                $('#modal_add_data').on('shown.bs.modal', function() {
+                    $("#id_siswa").select2({
+                        theme: "bootstrap-5",
+                        placeholder: "Pilih Nama Siswa",
+                        minimumInputLength: 1,
+                        dropdownParent: $("#modal_add_data"),
+                        ajax: {
+                            url: '/get_data_siswa',
+                            dataType: 'json',
+                            processResults: function(data) {
+                                if (data && data.length > 0) {
+                                    var results = $.map(data, function(item) {
+                                        return {
+                                            // id: item.nama,
+                                            id: item.id,
+                                            text: item.nama
+                                        };
+                                    });
+                                    return {
+                                        results: results
+                                    };
+                                }
+
+                            },
+                        }
+                    });
+
+                    $("#id_siswa").on("change", async function() {
+                        var id = $(this).val();
+                        try {
+                            const response = await fetch('/get_nisn_siswa/' + id, {
+                                method: 'GET',
+                            });
+                            const responseData = await response.json();
+                            if (responseData.status === true) {
+                                var nuptk = responseData.data;
+                                $('#username').val(nuptk);
+                            } else {
+                                throw new Error('Gagal mendapatkan data nuptk');
+                            }
+                        } catch (error) {
+                            console.error('Terjadi kesalahan:', error);
+                        }
+                    });
+
+                });
+            });
+
             function hapus(id) {
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
@@ -165,7 +218,7 @@
                     if (result.isConfirmed) {
                         var csrfToken = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
-                            url: '/data_matpel/delete/' + id,
+                            url: '/akun/delete/' + id,
                             type: 'DELETE',
                             data: {
                                 _token: csrfToken
@@ -200,105 +253,111 @@
                 });
             }
 
-            async function edit(id) {
-                try {
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            // async function edit(id) {
+            //     try {
+            //         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-                    const response = await fetch('/data_matpel/getid/' + id, {
-                        method: 'GET',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                    const responseData = await response.json();
+            //         const response = await fetch('/data_matpel/getid/' + id, {
+            //             method: 'GET',
+            //             headers: {
+            //                 'X-CSRF-TOKEN': csrfToken,
+            //                 'Content-Type': 'application/json',
+            //             },
+            //         })
+            //         const responseData = await response.json();
 
-                    if (!response.status) {
-                        throw new Error('Gagal mengambil data');
-                    }
-                    console.log(response);
-                    const form = document.getElementById('form_edit_data_matpel');
-                    form.elements['id'].value = responseData.data.id;
-                    form.elements['edit_nama_matpel'].value = responseData.data.nama_matpel;
-                    $('#modal_edit_data').modal('show');
+            //         if (!response.status) {
+            //             throw new Error('Gagal mengambil data');
+            //         }
+            //         console.log(response);
+            //         const form = document.getElementById('form_edit_data_matpel');
+            //         form.elements['id'].value = responseData.data.id;
+            //         form.elements['edit_nama_matpel'].value = responseData.data.nama_matpel;
+            //         $('#modal_edit_data').modal('show');
 
-                } catch (error) {
-                    console.error('Terjadi kesalahan:', error);
-                    throw error;
-                }
-            }
+            //     } catch (error) {
+            //         console.error('Terjadi kesalahan:', error);
+            //         throw error;
+            //     }
+            // }
 
-            document.getElementById('form_edit_data_matpel').addEventListener('submit', async function(event) {
-                event.preventDefault();
+            // document.getElementById('form_edit_data_matpel').addEventListener('submit', async function(event) {
+            //     event.preventDefault();
 
-                try {
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                    const response = await fetch('/update_data_matpel', {
-                        method: 'POST',
-                        body: new FormData(this),
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                        },
-                    }).then(response => response.json());
-                    if (response.errors) {
+            //     try {
+            //         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            //         const response = await fetch('/akun/update_data_matpel', {
+            //             method: 'POST',
+            //             body: new FormData(this),
+            //             headers: {
+            //                 'X-CSRF-TOKEN': csrfToken,
+            //             },
+            //         }).then(response => response.json());
+            //         if (response.errors) {
 
-                        Object.keys(response.errors).forEach(fieldName => {
-                            const inputField = document.getElementById(fieldName);
-                            inputField.classList.add('is-invalid');
-                            inputField.nextElementSibling.textContent = response.errors[fieldName][0];
-                        });
+            //             Object.keys(response.errors).forEach(fieldName => {
+            //                 const inputField = document.getElementById(fieldName);
+            //                 inputField.classList.add('is-invalid');
+            //                 inputField.nextElementSibling.textContent = response.errors[fieldName][0];
+            //             });
 
-                        const validFields = document.querySelectorAll('.is-invalid');
-                        validFields.forEach(validField => {
-                            const fieldName = validField.id;
-                            if (!response.errors[fieldName]) {
-                                validField.classList.remove('is-invalid');
-                                validField.nextElementSibling.textContent = '';
-                            }
-                        });
-                    } else {
-                        console.log(response);
-                        const invalidInputs = document.querySelectorAll('.is-invalid');
-                        invalidInputs.forEach(invalidInput => {
-                            invalidInput.value = '';
-                            invalidInput.classList.remove('is-invalid');
-                            const errorNextSibling = invalidInput.nextElementSibling;
-                            if (errorNextSibling && errorNextSibling.classList.contains(
-                                    'invalid-feedback')) {
-                                errorNextSibling.textContent = '';
-                            }
-                        });
-                        const form = document.getElementById('form_edit_data_matpel');
-                        form.reset();
-                        $('#modal_edit_data').modal('hide');
-                        Swal.fire(
-                            'Tersimpan!',
-                            'Data mata pelajaran berhasil diupdate.',
-                            'success'
-                        )
-                        $('.datatable').DataTable().ajax.reload();
-                    }
-                } catch (error) {
-                    console.error('Terjadi kesalahan:', error);
-                    throw error;
-                }
-            });
+            //             const validFields = document.querySelectorAll('.is-invalid');
+            //             validFields.forEach(validField => {
+            //                 const fieldName = validField.id;
+            //                 if (!response.errors[fieldName]) {
+            //                     validField.classList.remove('is-invalid');
+            //                     validField.nextElementSibling.textContent = '';
+            //                 }
+            //             });
+            //         } else {
+            //             console.log(response);
+            //             const invalidInputs = document.querySelectorAll('.is-invalid');
+            //             invalidInputs.forEach(invalidInput => {
+            //                 invalidInput.value = '';
+            //                 invalidInput.classList.remove('is-invalid');
+            //                 const errorNextSibling = invalidInput.nextElementSibling;
+            //                 if (errorNextSibling && errorNextSibling.classList.contains(
+            //                         'invalid-feedback')) {
+            //                     errorNextSibling.textContent = '';
+            //                 }
+            //             });
+            //             const form = document.getElementById('form_edit_data_matpel');
 
-            function closeModalEdit() {
-                const invalidInputs = document.querySelectorAll('.is-invalid');
-                invalidInputs.forEach(invalidInput => {
-                    invalidInput.value = '';
-                    invalidInput.classList.remove('is-invalid');
-                    const errorNextSibling = invalidInput.nextElementSibling;
-                    if (errorNextSibling && errorNextSibling.classList.contains(
-                            'invalid-feedback')) {
-                        errorNextSibling.textContent = '';
-                    }
-                });
-                const form = document.getElementById('form_edit_data_matpel');
-                form.reset();
-                $('#modal_edit_data').modal('hide');
-            }
+            //             const rolesContainer = document.getElementById('roles-container');
+            //             rolesContainer.innerHTML = '';
+
+            //             form.reset();
+            //             $('#modal_edit_data').modal('hide');
+            //             Swal.fire(
+            //                 'Tersimpan!',
+            //                 'Data mata pelajaran berhasil diupdate.',
+            //                 'success'
+            //             )
+            //             $('.datatable').DataTable().ajax.reload();
+            //         }
+            //     } catch (error) {
+            //         console.error('Terjadi kesalahan:', error);
+            //         throw error;
+            //     }
+            // });
+
+            // function closeModalEdit() {
+            //     const invalidInputs = document.querySelectorAll('.is-invalid');
+            //     invalidInputs.forEach(invalidInput => {
+            //         invalidInput.value = '';
+            //         invalidInput.classList.remove('is-invalid');
+            //         const errorNextSibling = invalidInput.nextElementSibling;
+            //         if (errorNextSibling && errorNextSibling.classList.contains(
+            //                 'invalid-feedback')) {
+            //             errorNextSibling.textContent = '';
+            //         }
+            //     });
+            //     const form = document.getElementById('form_edit_data_matpel');
+            //     const rolesContainer = document.getElementById('roles-container');
+            //     rolesContainer.innerHTML = '';
+            //     form.reset();
+            //     $('#modal_edit_data').modal('hide');
+            // }
 
             function closeModalAdd() {
                 const invalidInputs = document.querySelectorAll('.is-invalid');
@@ -313,7 +372,7 @@
                 });
 
                 $('#modal_add_data').modal('hide');
-                const form = document.getElementById('form_data_matpel');
+                const form = document.getElementById('form_add_user_siswa');
                 form.reset();
                 $('#modal_add_data').modal('hide');
             }
@@ -323,11 +382,11 @@
                 $('#modal_add_data').modal('show');
             });
 
-            document.getElementById('form_data_matpel').addEventListener('submit', async function(event) {
+            document.getElementById('form_add_user_siswa').addEventListener('submit', async function(event) {
                 event.preventDefault();
                 try {
                     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                    const response = await fetch('/simpan_data_matpel', {
+                    const response = await fetch('/akun/store_user_siswa', {
                         method: 'POST',
                         body: new FormData(this),
                         headers: {
@@ -339,8 +398,9 @@
                         handleValidationErrors(response.errors);
                     } else {
                         console.log(response);
-                        // Cari semua elemen input dengan kelas "is-invalid"
+
                         const invalidInputs = document.querySelectorAll('.is-invalid');
+
                         // Iterasi melalui setiap elemen input
                         invalidInputs.forEach(invalidInput => {
                             // Kosongkan nilai elemen input
@@ -356,7 +416,7 @@
                         });
                         // Close modal
                         $('#modal_add_data').modal('hide');
-                        const form = document.getElementById('form_data_matpel');
+                        const form = document.getElementById('form_add_user_siswa');
                         form.reset();
                         $('#modal_add_data').modal('hide');
                         Swal.fire(
@@ -376,11 +436,15 @@
                 if (errors && typeof errors === 'object') {
                     Object.keys(errors).forEach(fieldName => {
                         const inputField = document.getElementById(fieldName);
-                        inputField.classList.add('is-invalid');
-                        inputField.nextElementSibling.textContent = errors[fieldName][0];
+                        if (fieldName === 'id_siswa') {
+                            inputField.classList.add('is-invalid');
+                        } else {
+                            inputField.classList.add('is-invalid');
+                            inputField.nextElementSibling.textContent = errors[fieldName][0];
+                        }
                     });
 
-                    // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
+                    // fix error pad a add user siswa
                     const validFields = document.querySelectorAll('.is-invalid');
                     validFields.forEach(validField => {
                         const fieldName = validField.id;
@@ -388,6 +452,12 @@
                             validField.classList.remove('is-invalid');
                             validField.nextElementSibling.textContent = '';
                         }
+                        // if (fieldName === 'id_siswa') {
+                        //     validField.classList.remove('is-invalid');
+                        // } else {
+                        //     validFields.classList.remove('is-invalid');
+                        //     validFields.nextElementSibling.textContent = errors[fieldName][0];
+                        // }
                     });
                 }
             }
@@ -397,18 +467,32 @@
                 const myDataTable = $('.datatable').DataTable({
                     processing: true,
                     serverSide: true,
-
-                    ajax: "{{ route('data_matpel.data') }}",
+                    ajax: "{{ route('data_user.siswa') }}",
                     columns: [{
                             data: 'DT_RowIndex',
                             name: '#',
                             searchable: false
                         },
                         {
-                            data: 'nama_matpel',
-                            name: 'nama_matpel'
+                            data: 'name',
+                            name: 'name'
                         },
-
+                        {
+                            data: 'username',
+                            name: 'username'
+                        },
+                        {
+                            data: 'kelas',
+                            name: 'kelas'
+                        },
+                        {
+                            data: 'email',
+                            name: 'email'
+                        },
+                        {
+                            data: 'role',
+                            name: 'role'
+                        },
                         {
                             data: 'action',
                             name: 'action',
@@ -416,6 +500,12 @@
                             searchable: false
                         },
                     ]
+                });
+
+
+                $('#filterRoles').on('change', function() {
+                    const selectedRole = $(this).val();
+                    myDataTable.ajax.url('{{ route('data_user.guru') }}?role=' + selectedRole).load();
                 });
             });
         </script>

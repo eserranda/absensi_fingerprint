@@ -186,11 +186,6 @@ class DataAbsensiSiswaController extends Controller
         return response()->json(['message' => 'Data berhasil disimpan'], 200);
     }
 
-    /**
-     * Display the specified resource.
-     */
-
-
     public function show(DataAbsensiSiswa $dataAbsensiSiswa, $id)
     {
         $data = DataSiswa::find($id);

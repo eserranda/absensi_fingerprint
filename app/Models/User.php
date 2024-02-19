@@ -20,6 +20,7 @@ class User extends Authenticatable
         'email',
         'password',
         'id_guru',
+        'id_siswa',
         // 'role',
     ];
 
@@ -41,6 +42,10 @@ class User extends Authenticatable
     public function guru()
     {
         return $this->belongsTo(DataGuru::class, 'id_guru');
+    }
+    public function siswa()
+    {
+        return $this->belongsTo(DataSiswa::class, 'id_siswa');
     }
 
     public function username()

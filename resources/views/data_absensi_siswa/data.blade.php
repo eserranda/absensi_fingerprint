@@ -37,7 +37,7 @@
                     {{-- <a href="#" class="btn btn-success">
                         Exel
                     </a> --}}
-                    <a href="#" class="btn btn-primary" id="add_data">
+                    <a class="btn btn-primary" id="add_data">
                         Tambah Data
                     </a>
                 </div>
@@ -144,8 +144,7 @@
                     </div>
 
                     <div class="modal-footer">
-
-                        <button href="#" class="btn btn-primary ms-auto" type="submit">
+                        <button class="btn btn-primary ms-auto" type="submit">
                             Simpan
                         </button>
                     </div>

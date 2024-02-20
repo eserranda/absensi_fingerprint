@@ -36,7 +36,7 @@
                     {{-- <a href="#" class="btn btn-success">
                         Exel
                     </a> --}}
-                    <a href="#" class="btn btn-primary" id="add_data">
+                    <a class="btn btn-primary" id="add_data">
                         Tambah Data
                     </a>
                 </div>
@@ -147,7 +147,7 @@
 
                     <div class="modal-footer">
 
-                        <button href="#" class="btn btn-primary ms-auto" type="submit">
+                        <button class="btn btn-primary ms-auto" type="submit">
                             Update
                         </button>
                     </div>
@@ -234,8 +234,7 @@
                     </div>
 
                     <div class="modal-footer">
-
-                        <button href="#" class="btn btn-primary ms-auto" type="submit">
+                        <button class="btn btn-primary ms-auto" type="submit">
                             Simpan
                         </button>
                     </div>
@@ -335,17 +334,15 @@
                     invalidInput.value = '';
                     invalidInput.classList.remove('is-invalid');
                     const errorNextSibling = invalidInput.nextElementSibling;
-                    if (errorNextSibling && errorNextSibling.classList.contains(
-                            'invalid-feedback')) {
+                    if (errorNextSibling && errorNextSibling.classList.contains('invalid-feedback')) {
                         errorNextSibling.textContent = '';
                     }
                 });
-
-                $('#modal_add_data').modal('hide');
-                const form = document.getElementById('form_data_matpel');
+                const form = document.getElementById('form_add_data');
                 form.reset();
                 $('#modal_add_data').modal('hide');
             }
+
 
             document.getElementById('form_edit_data').addEventListener('submit', async function(event) {
                 event.preventDefault();
@@ -360,7 +357,6 @@
                         },
                     }).then(response => response.json());
                     if (response.errors) {
-
                         Object.keys(response.errors).forEach(fieldName => {
                             const inputField = document.getElementById(fieldName);
                             if (fieldName === 'id_guru') {
@@ -597,6 +593,11 @@
                                 });
                             } else {
                                 console.log(data.message);
+                                const validFields = form.querySelectorAll('.is-invalid');
+                                validFields.forEach(validField => {
+                                    validField.classList.remove('is-invalid');
+                                    validField.nextElementSibling.textContent = '';
+                                });
                                 form.reset();
                                 $('#modal_add_data').modal('hide');
                                 Swal.fire(

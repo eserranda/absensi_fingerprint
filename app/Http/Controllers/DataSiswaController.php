@@ -105,6 +105,25 @@ class DataSiswaController extends Controller
             'agama' => 'required|string',
             'kelas' => 'required|string',
             'alamat' => 'required|string',
+            'keterangan' => 'required|string',
+        ], [
+            'nama.required' => 'Nama harus diisi',
+            'nama.string' => 'Nama harus berupa string',
+            'nisn.unique' => 'NISN sudah terdaftar',
+            'nisn.string' => 'NISN harus berupa string',
+            'nisn.numeric' => 'NISN harus berupa angka',
+            'nisn.required' => 'NISN harus diisi',
+            'tempat_lahir.required' => 'Tempat lahir harus diisi',
+            'tempat_lahir.string' => 'Tempat lahir harus berupa string',
+            'tanggal_lahir.required' => 'Tanggal lahir harus diisi',
+            'tanggal_lahir.string' => 'Tanggal lahir harus berupa string',
+            'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
+            'kelas.required' => 'Kelas harus diisi',
+            'kelas.string' => 'Kelas harus berupa string',
+            'alamat.required' => 'Alamat harus diisi',
+            'alamat.string' => 'Alamat harus berupa string',
+            'keterangan.required' => 'Keterangan harus diisi',
+            'agama.required' => 'Agama harus diisi',
         ]);
 
         if ($validator->fails()) {
@@ -151,6 +170,7 @@ class DataSiswaController extends Controller
         $agama = $request->input('edit_agama');
         $kelas = $request->input('edit_kelas');
         $alamat = $request->input('edit_alamat');
+        $keterangan = $request->input('edit_keterangan');
 
         $validator = Validator::make($request->all(), [
             'edit_nama' => 'required|string',
@@ -161,6 +181,7 @@ class DataSiswaController extends Controller
             'edit_agama' => 'required|string',
             'edit_kelas' => 'required|string',
             'edit_alamat' => 'required|string',
+            'edit_keterangan' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -174,7 +195,8 @@ class DataSiswaController extends Controller
             'jenis_kelamin' => $jenis_kelamin,
             'agama' => $agama,
             'kelas' => $kelas,
-            'alamat' => $alamat
+            'alamat' => $alamat,
+            'keterangan' => $keterangan
         ]);
 
         return response()->json(['message' => 'Data siswa berhasil diperbarui'], 200);

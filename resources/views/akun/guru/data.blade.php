@@ -32,7 +32,7 @@
                 </button>
 
                 <div class="card-actions">
-                    <a href="#" class="btn btn-primary" id="add_data">
+                    <a class="btn btn-primary" id="add_data">
                         Tambah Data
                     </a>
                 </div>
@@ -425,59 +425,82 @@
                 $('#modal_add_data').modal('hide');
             }
 
-            // document.addEventListener('DOMContentLoaded', function() {
+            // Add Data 
+            const form = document.getElementById('form_add_user_guru');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(form);
+
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                fetch('/akun/store_user_guru', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data.message);
+                        if (data.errors) {
+                            Object.keys(data.errors).forEach(fieldName => {
+                                const inputField = document.getElementById(fieldName);
+                                if (fieldName === 'id_guru') {
+                                    inputField.classList.add('is-invalid');
+                                } else {
+                                    inputField.classList.add('is-invalid');
+                                    inputField.nextElementSibling.textContent = data.errors[
+                                        fieldName][0];
+                                }
+                            });
+
+                            // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
+                            const validFields = form.querySelectorAll('.is-invalid');
+                            validFields.forEach(validField => {
+                                const fieldName = validField.id;
+                                if (!data.errors[fieldName]) {
+                                    if (fieldName === 'id_guru') {
+                                        validField.classList.remove('is-invalid');
+                                    } else {
+                                        validField.classList.remove('is-invalid');
+                                        validField.nextElementSibling.textContent = '';
+                                    }
+                                }
+                            });
+                        } else {
+                            console.log(data.message);
+                            const validFields = form.querySelectorAll('.is-invalid');
+                            validFields.forEach(validField => {
+                                validField.classList.remove('is-invalid');
+                                validField.nextElementSibling.textContent = '';
+                            });
+
+                            const rolesContainer = document.getElementById('roles-container');
+                            rolesContainer.innerHTML = '';
+                            form.reset();
+                            $('#modal_add_data').modal('hide');
+                            Swal.fire(
+                                'Tersimpan!',
+                                'Data berhasil ditambahkan.',
+                                'success'
+                            );
+                            $('.datatable').DataTable().ajax.reload();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire(
+                            'Gagal!',
+                            'Terjadi kesalahan saat menambahkan  data.',
+                            'error'
+                        );
+                    });
+            });
+
             document.getElementById('add_data').addEventListener('click', function() {
                 $('#modal_add_data').modal('show');
             });
 
-            document.getElementById('form_add_user_guru').addEventListener('submit', async function(event) {
-                event.preventDefault();
-                try {
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                    const response = await fetch('/akun/store_user_guru', {
-                        method: 'POST',
-                        body: new FormData(this),
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken
-                        },
-                    }).then(response => response.json());
-
-                    if (!response.status) {
-                        handleValidationErrors(response.errors);
-                    } else {
-                        console.log(response);
-                        // Cari semua elemen input dengan kelas "is-invalid"
-                        const invalidInputs = document.querySelectorAll('.is-invalid');
-                        // Iterasi melalui setiap elemen input
-                        invalidInputs.forEach(invalidInput => {
-                            // Kosongkan nilai elemen input
-                            invalidInput.value = '';
-                            // Hapus kelas "is-invalid" dari elemen input
-                            invalidInput.classList.remove('is-invalid');
-                            // Kosongkan pesan kesalahan di sebelah input (jika ada)
-                            const errorNextSibling = invalidInput.nextElementSibling;
-                            if (errorNextSibling && errorNextSibling.classList.contains(
-                                    'invalid-feedback')) {
-                                errorNextSibling.textContent = '';
-                            }
-                        });
-                        // Close modal
-                        $('#modal_add_data').modal('hide');
-                        const form = document.getElementById('form_add_user_guru');
-                        form.reset();
-                        $('#modal_add_data').modal('hide');
-                        Swal.fire(
-                            'Tersimpan!',
-                            'Data berhasil diupdate.',
-                            'success'
-                        )
-                        $('.datatable').DataTable().ajax.reload();
-                    }
-                } catch (error) {
-                    console.error('Terjadi kesalahan:', error);
-                    throw error;
-                }
-            });
 
             function handleValidationErrors(errors) {
                 if (errors && typeof errors === 'object') {
@@ -498,7 +521,6 @@
                     });
                 }
             }
-            // });
 
             $(document).ready(function() {
                 const myDataTable = $('.datatable').DataTable({
@@ -538,7 +560,8 @@
 
                 $('#filterRoles').on('change', function() {
                     const selectedRole = $(this).val();
-                    myDataTable.ajax.url('{{ route('data_user.guru') }}?role=' + selectedRole).load();
+                    myDataTable.ajax.url('{{ route('data_user.guru') }}?role=' + selectedRole)
+                        .load();
                 });
             });
         </script>

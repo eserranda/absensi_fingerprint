@@ -19,6 +19,7 @@ class DataSiswa extends Model
         'agama',
         'kelas',
         'alamat',
+        'keterangan',
     ];
 
 

@@ -29,7 +29,7 @@
                     </svg>
                 </button>
                 <div class="card-actions">
-                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_data">
+                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_add_data">
                         Tambah Data
                     </a>
                 </div>
@@ -48,6 +48,7 @@
                                 <th>Agama</th>
                                 <th>Kelas</th>
                                 <th>Alamat</th>
+                                <th>Keterangan</th>
                                 <th class="w-1">Opsi</th>
                             </tr>
                         </thead>
@@ -152,9 +153,21 @@
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label class="form-label">Keterangan</label>
+                                <select class="form-select" id="edit_keterangan" name="edit_keterangan">
+                                    <option value="Aktif">Aktif</option>
+                                    <option value="DO">DO</option>
+                                    <option value="Sudah Berhenti">Sudah Berhenti</option>
+                                    <option value="Meninggal">Meninggal</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        {{-- <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                        {{-- <a class="btn btn-link link-secondary" data-bs-dismiss="modal">
                             Cancel
                         </a> --}}
                         <button type="button" tabindex="2" class="btn btn-primary"
@@ -259,6 +272,20 @@
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label class="form-label">Keterangan</label>
+                                <select class="form-select" id="keterangan" name="keterangan">
+                                    <option value="Aktif">Aktif</option>
+                                    <option value="DO">DO</option>
+                                    <option value="Sudah Berhenti">Sudah Berhenti</option>
+                                    <option value="Meninggal">Meninggal</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button href="" class="btn btn-primary " type="submit">
@@ -381,6 +408,10 @@
                         {
                             data: 'alamat',
                             name: 'alamat'
+                        },
+                        {
+                            data: 'keterangan',
+                            name: 'keterangan'
                         },
                         {
                             data: 'action',
@@ -507,14 +538,17 @@
                         return response.json();
                     })
                     .then(data => {
+                        var tanggalLahirISO = data.data.tanggal_lahir;
+                        var tanggalLahirDate = new Date(tanggalLahirISO);
+                        var tanggalLahirFormatted = tanggalLahirDate.toISOString().split('T')[0];
+
                         const form = document.getElementById('edit_data_siswa');
                         form.elements['edit_id'].value = data.data.id;
                         form.elements['edit_nama'].value = data.data.nama;
                         form.elements['edit_nisn'].value = data.data.nisn;
                         form.elements['edit_tempat_lahir'].value = data.data
                             .tempat_lahir;
-                        form.elements['edit_tanggal_lahir'].value = data.data
-                            .tanggal_lahir;
+                        form.elements['edit_tanggal_lahir'].value = tanggalLahirFormatted;
                         form.elements['edit_jenis_kelamin'].value = data.data
                             .jenis_kelamin;
                         form.elements['edit_agama'].value = data.data.agama;

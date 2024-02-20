@@ -113,7 +113,7 @@ class UserController extends Controller
 
     function roles()
     {
-        $roles = Role::all();
+        $roles = Role::where('name', '!=', 'siswa')->get();
         if (!empty($roles)) {
             return response()->json(['status' => true, 'data' => $roles], 200);
         } else {
@@ -141,10 +141,13 @@ class UserController extends Controller
     public function storeUserGuru(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'id_guru' => 'required|unique:users',
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string',
         ], [
+            'id_guru.required' => 'Kolom NIP harus diisi.',
+            'id_guru.unique' => 'NIP sudah terdaftar.',
             'username.required' => 'Kolom username harus diisi.',
             'username.string' => 'Kolom username harus berupa teks.',
             'username.max' => 'Kolom username tidak boleh lebih dari :max karakter.',

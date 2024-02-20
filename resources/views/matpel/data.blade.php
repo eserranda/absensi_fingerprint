@@ -11,7 +11,7 @@
             <div class="card-header">
                 <h3 class="card-title mx-1">Mata Pelajaran</h3>
                 <div class="card-actions">
-                    <a href="#" class="btn btn-primary" id="add_data">
+                    <a class="btn btn-primary" id="add_data">
                         Tambah Data
                     </a>
                 </div>

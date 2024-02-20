@@ -25,13 +25,12 @@
                 </div>
                 {{-- <button class="btn btn-success mx-2 " id="reload">Reload</button> --}}
                 <div class="card-actions">
-                    {{-- <button type="button" class="btn btn-primary" onclick="addData()" id="add_data">
-                        Tambah Jadwal Add
-                    </button> --}}
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#modal_add_jadwal">
-                        Tambah Jadwal
-                    </button>
+                    @if (Auth::user()->roles->contains('name', 'admin'))
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#modal_add_jadwal">
+                            Tambah Jadwal
+                        </button>
+                    @endif
                 </div>
             </div>
             <div class="card-body border-bottom py-3 ">
@@ -46,7 +45,9 @@
                                 <th>Guru/Pengajar</th>
                                 <th>Kelas</th>
                                 <th>Ruangan</th>
-                                <th class="w-1">Opsi</th>
+                                @if (Auth::user()->roles->contains('name', 'admin'))
+                                    <th class="w-1">Opsi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -155,7 +156,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button href="#" class="btn btn-primary " type="submit">
+                        <button class="btn btn-primary " type="submit">
                             Simpan
                         </button>
                     </div>
@@ -264,7 +265,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        {{-- <button href="#" class="btn btn-primary " type="submit">
+                        {{-- <button class="btn btn-primary " type="submit">
                             Update
                         </button> --}}
                         <button type="button" tabindex="2" class="btn btn-primary"
@@ -503,12 +504,14 @@
                             data: 'ruangan',
                             name: 'ruangan'
                         },
-                        {
-                            data: 'action',
-                            name: 'action',
-                            orderable: false,
-                            searchable: false
-                        },
+                        @if (Auth::user()->roles->contains('name', 'admin'))
+                            {
+                                data: 'action',
+                                name: 'action',
+                                orderable: false,
+                                searchable: false
+                            },
+                        @endif
                     ]
                 });
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\JadwalPelajaran;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,6 +16,8 @@ class JadwalPelajaranController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
+            $isAdmin = Auth::user()->roles->contains('name', 'admin');
+
             $kelasFilter = $request->input('kelas');
             $query = JadwalPelajaran::query();
             if ($kelasFilter) {
@@ -24,7 +27,7 @@ class JadwalPelajaranController extends Controller
             $query->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu')");
 
             $data = $query->get();
-            return DataTables::of($data)
+            $dataTable = DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('id_guru', function ($row) {
                     if ($row->id_guru) {
@@ -39,8 +42,9 @@ class JadwalPelajaranController extends Controller
                     } else {
                         return '-';
                     }
-                })
-                ->addColumn('action', function ($row) {
+                });
+            if ($isAdmin) {
+                $dataTable->addColumn('action', function ($row) {
                     $actionBtn = '
                     <button class="btn btn-sm btn-primary btn-icon" aria-label="Button" onclick="edit(' . $row->id . ')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -56,8 +60,9 @@ class JadwalPelajaranController extends Controller
                     </button> 
                     ';
                     return $actionBtn;
-                })
-                ->make(true);
+                });
+            }
+            return $dataTable->make(true);
         }
         return view('jadwal_pelajaran.data');
     }

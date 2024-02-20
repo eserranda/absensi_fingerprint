@@ -17,7 +17,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-actions">
-                    <a href="#" class="btn btn-primary" id="add_data">
+                    <a class="btn btn-primary" id="add_data">
                         Tambah Data
                     </a>
                 </div>

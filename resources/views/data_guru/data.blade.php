@@ -27,10 +27,10 @@
                 </button>
 
                 <div class="card-actions">
-                    <a href="#" class="btn btn-success">
+                    <a class="btn btn-success">
                         Exel
                     </a>
-                    <a href="#" class="btn btn-primary" id="add_data">
+                    <a class="btn btn-primary" id="add_data">
                         Tambah Data
                     </a>
                 </div>

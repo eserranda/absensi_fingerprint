@@ -160,7 +160,7 @@ class DataAbsensiGuruController extends Controller
         }
 
         DataAbsensiGuru::create($request->all());
-        return response()->json(['message' => 'Data berhasil disimpan'], 200);
+        return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
     }
 
     /**

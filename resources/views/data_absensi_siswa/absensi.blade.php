@@ -70,6 +70,7 @@
         </div>
 
     </div>
+
     <div class="row row-deck row-cards mt-3">
         <div class="col-sm-6 col-lg-6">
             <div class="card bg-gray-300" style="height: 16rem">

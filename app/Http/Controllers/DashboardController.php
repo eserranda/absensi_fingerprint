@@ -21,7 +21,10 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard.data');
+        $siswa = DataAbsensiSiswa::where('keterangan', 'terlambat')
+            ->orWhere('keterangan', 'tanpa_keterangan')->get();
+
+        return view('dashboard.data', compact('siswa'));
     }
 
     // DashboardController.php

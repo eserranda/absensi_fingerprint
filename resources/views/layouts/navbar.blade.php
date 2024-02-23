@@ -46,7 +46,12 @@
                                 style="background-image: url(./static/avatars/000m.jpg)"></span>
                             <div class="d-none d-xl-block ps-2">
                                 <div>
-                                    <div>{{ Auth::user()->guru->nama }}</div>
+                                    @if (Auth::user()->roles->contains('name', 'admin') ||
+                                            Auth::user()->roles->contains('name', 'guru_bk') ||
+                                            Auth::user()->roles->contains('name', 'wali_kelas') ||
+                                            Auth::user()->roles->contains('name', 'guru'))
+                                        <div>{{ Auth::user()->guru->nama }}</div>
+                                    @endif
                                 </div>
                                 <div class="mt-1 small text-secondary">
                                     {{ Auth::user()->roles->pluck('name')->implode(', ') }}

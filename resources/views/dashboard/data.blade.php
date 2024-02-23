@@ -30,7 +30,13 @@
                         <div class="markdown text-secondary">
                             <p>Hallo <span class="fw-bold">{{ Auth::user()->guru->nama }}</span>, Selamat datang anda
                                 login sebagai
-                                {{ Auth::user()->roles->pluck('name')->implode(', ') }}</p>
+                                @if (Auth::user()->roles->contains('name', 'admin') ||
+                                        Auth::user()->roles->contains('name', 'guru_bk') ||
+                                        Auth::user()->roles->contains('name', 'wali_kelas') ||
+                                        Auth::user()->roles->contains('name', 'guru'))
+                                    {{ Auth::user()->roles->pluck('name')->implode(', ') }}
+                                @endif
+                            </p>
                         </div>
                     </div>
                 </div>

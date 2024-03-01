@@ -128,10 +128,12 @@
                                 Simpan
                             </button>
                         </div>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
+
 
     {{-- edit data  --}}
     <div class="modal modal-blur fade" id="modal_edit_data" tabindex="-1" role="dialog" aria-hidden="true">
@@ -143,32 +145,229 @@
                     <button type="button" class="btn-close" onclick="closeModalEdit()"></button>
 
                 </div>
-                <form action="" method="POST" id="form_edit_data_matpel">
+                <form action="" method="POST" id="form_edit_data">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Nama</label>
-                                    <input type="hidden" class="form-control" id="id" name="id">
-                                    <input type="text" class="form-control" id="edit_nama_matpel"
-                                        name="edit_nama_matpel">
+                                    <label class="form-label">Nama Lengkap</label>
+                                    <input type="hidden" class="form-control" id="edit_id" name="edit_id">
+                                    <select class="form-select" id="edit_id_guru" name="edit_id_guru">
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">NUPTK</label>
+                                    <input type="text" class="form-control" id="edit_username" name="edit_username"
+                                        readonly>
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="edit_email" name="edit_email">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            {{-- <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password">
+
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div> --}}
+                        </div>
+                        <div id="roles-container"></div>
+
+
                         <div class="modal-footer">
                             <button href="" class="btn btn-primary ms-auto" type="submit">
                                 Update
                             </button>
                         </div>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 
+
+
+
+
     @push('script')
         <script type="text/javascript">
+            function edit(id) {
+                fetch('/akun/show/' + id, {
+                        method: 'GET',
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Gagal mengambil data siswa');
+                        }
+                        return response.json();
+                    })
+
+                    .then(data => {
+                        const form = document.getElementById('form_edit_data');
+                        form.elements['edit_id'].value = data.data.id;
+
+                        $('#modal_edit_data').modal('show');
+                    })
+
+                $("#edit_id_guru").select2({
+                    theme: "bootstrap-5",
+                    placeholder: "Pilih guru",
+                    minimumInputLength: 1,
+                    dropdownParent: $("#modal_edit_data"),
+                    ajax: {
+                        url: '/get_data_guru',
+                        dataType: 'json',
+                        processResults: function(data) {
+                            if (data && data.length > 0) {
+                                var results = $.map(data, function(item) {
+                                    return {
+                                        id: item.id,
+                                        text: item.nama
+                                    };
+                                });
+                                return {
+                                    results: results
+                                };
+                            }
+                        },
+                    }
+                });
+            }
+
+
+
+            // document.getElementById('form_edit_data').addEventListener('submit', async function(event) {
+            //     event.preventDefault();
+
+            //     try {
+            //         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            //         const response = await fetch('/akun/update_data_matpel', {
+            //             method: 'POST',
+            //             body: new FormData(this),
+            //             headers: {
+            //                 'X-CSRF-TOKEN': csrfToken,
+            //             },
+            //         }).then(response => response.json());
+            //         if (response.errors) {
+
+            //             Object.keys(response.errors).forEach(fieldName => {
+            //                 const inputField = document.getElementById(fieldName);
+            //                 inputField.classList.add('is-invalid');
+            //                 inputField.nextElementSibling.textContent = response.errors[fieldName][0];
+            //             });
+
+            //             const validFields = document.querySelectorAll('.is-invalid');
+            //             validFields.forEach(validField => {
+            //                 const fieldName = validField.id;
+            //                 if (!response.errors[fieldName]) {
+            //                     validField.classList.remove('is-invalid');
+            //                     validField.nextElementSibling.textContent = '';
+            //                 }
+            //             });
+            //         } else {
+            //             console.log(response);
+            //             const invalidInputs = document.querySelectorAll('.is-invalid');
+            //             invalidInputs.forEach(invalidInput => {
+            //                 invalidInput.value = '';
+            //                 invalidInput.classList.remove('is-invalid');
+            //                 const errorNextSibling = invalidInput.nextElementSibling;
+            //                 if (errorNextSibling && errorNextSibling.classList.contains(
+            //                         'invalid-feedback')) {
+            //                     errorNextSibling.textContent = '';
+            //                 }
+            //             });
+            //             const form = document.getElementById('form_edit_data');
+
+            //             const rolesContainer = document.getElementById('roles-container');
+            //             rolesContainer.innerHTML = '';
+
+            //             form.reset();
+            //             $('#modal_edit_data').modal('hide');
+            //             Swal.fire(
+            //                 'Tersimpan!',
+            //                 'Data mata pelajaran berhasil diupdate.',
+            //                 'success'
+            //             )
+            //             $('.datatable').DataTable().ajax.reload();
+            //         }
+            //     } catch (error) {
+            //         console.error('Terjadi kesalahan:', error);
+            //         throw error;
+            //     }
+            // });
+
+            function closeModalEdit() {
+                const invalidInputs = document.querySelectorAll('.is-invalid');
+                invalidInputs.forEach(invalidInput => {
+                    invalidInput.value = '';
+                    invalidInput.classList.remove('is-invalid');
+                    const errorNextSibling = invalidInput.nextElementSibling;
+                    if (errorNextSibling && errorNextSibling.classList.contains(
+                            'invalid-feedback')) {
+                        errorNextSibling.textContent = '';
+                    }
+                });
+                const form = document.getElementById('form_edit_data_matpel');
+                const rolesContainer = document.getElementById('roles-container');
+                rolesContainer.innerHTML = '';
+                form.reset();
+                $('#modal_edit_data').modal('hide');
+            }
+
+            function handleValidationErrors(errors) {
+                if (errors && typeof errors === 'object') {
+                    Object.keys(errors).forEach(fieldName => {
+                        const inputField = document.getElementById(fieldName);
+                        inputField.classList.add('is-invalid');
+                        inputField.nextElementSibling.textContent = errors[fieldName][0];
+                    });
+
+                    // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
+                    const validFields = document.querySelectorAll('.is-invalid');
+                    validFields.forEach(validField => {
+                        const fieldName = validField.id;
+                        if (!errors[fieldName]) {
+                            validField.classList.remove('is-invalid');
+                            validField.nextElementSibling.textContent = '';
+                        }
+                    });
+                }
+            }
+
+            function closeModalAdd() {
+                const invalidInputs = document.querySelectorAll('.is-invalid');
+                invalidInputs.forEach(invalidInput => {
+                    invalidInput.value = '';
+                    invalidInput.classList.remove('is-invalid');
+                    const errorNextSibling = invalidInput.nextElementSibling;
+                    if (errorNextSibling && errorNextSibling.classList.contains(
+                            'invalid-feedback')) {
+                        errorNextSibling.textContent = '';
+                    }
+                });
+
+                $('#modal_add_data').modal('hide');
+                const form = document.getElementById('form_add_user_guru');
+                form.reset();
+                const rolesContainer = document.getElementById('roles-container');
+                rolesContainer.innerHTML = '';
+                $('#modal_add_data').modal('hide');
+            }
+
             $(document).ready(function() {
                 $('#modal_add_data').on('shown.bs.modal', function() {
                     fetch('/akun/get_roles', {
@@ -249,6 +448,129 @@
                     });
 
                 });
+
+
+                // Add Data 
+                const form = document.getElementById('form_add_user_guru');
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    const formData = new FormData(form);
+
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                    fetch('/akun/store_user_guru', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data.message);
+                            if (data.errors) {
+                                Object.keys(data.errors).forEach(fieldName => {
+                                    const inputField = document.getElementById(fieldName);
+                                    if (fieldName === 'id_guru') {
+                                        inputField.classList.add('is-invalid');
+                                    } else {
+                                        inputField.classList.add('is-invalid');
+                                        inputField.nextElementSibling.textContent = data.errors[
+                                            fieldName][0];
+                                    }
+                                });
+
+                                // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
+                                const validFields = form.querySelectorAll('.is-invalid');
+                                validFields.forEach(validField => {
+                                    const fieldName = validField.id;
+                                    if (!data.errors[fieldName]) {
+                                        if (fieldName === 'id_guru') {
+                                            validField.classList.remove('is-invalid');
+                                        } else {
+                                            validField.classList.remove('is-invalid');
+                                            validField.nextElementSibling.textContent = '';
+                                        }
+                                    }
+                                });
+                            } else {
+                                console.log(data.message);
+                                const validFields = form.querySelectorAll('.is-invalid');
+                                validFields.forEach(validField => {
+                                    validField.classList.remove('is-invalid');
+                                    validField.nextElementSibling.textContent = '';
+                                });
+
+                                const rolesContainer = document.getElementById('roles-container');
+                                rolesContainer.innerHTML = '';
+                                form.reset();
+                                $('#modal_add_data').modal('hide');
+                                Swal.fire(
+                                    'Tersimpan!',
+                                    'Data berhasil ditambahkan.',
+                                    'success'
+                                );
+                                $('.datatable').DataTable().ajax.reload();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan saat menambahkan  data.',
+                                'error'
+                            );
+                        });
+                });
+            });
+
+            document.getElementById('add_data').addEventListener('click', function() {
+                $('#modal_add_data').modal('show');
+            });
+
+
+
+
+            $(document).ready(function() {
+                const myDataTable = $('.datatable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: "{{ route('data_user.guru') }}",
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: '#',
+                            searchable: false
+                        },
+                        {
+                            data: 'name',
+                            name: 'name'
+                        },
+                        {
+                            data: 'username',
+                            name: 'username'
+                        },
+                        {
+                            data: 'email',
+                            name: 'email'
+                        },
+                        {
+                            data: 'role',
+                            name: 'role'
+                        },
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        },
+                    ]
+                });
+
+
+                $('#filterRoles').on('change', function() {
+                    const selectedRole = $(this).val();
+                    myDataTable.ajax.url('{{ route('data_user.guru') }}?role=' + selectedRole)
+                        .load();
+                });
             });
 
             function hapus(id) {
@@ -298,272 +620,6 @@
                     }
                 });
             }
-
-            async function edit(id) {
-                try {
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-
-                    const response = await fetch('/data_matpel/getid/' + id, {
-                        method: 'GET',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                    const responseData = await response.json();
-
-                    if (!response.status) {
-                        throw new Error('Gagal mengambil data');
-                    }
-                    console.log(response);
-                    const form = document.getElementById('form_edit_data_matpel');
-                    form.elements['id'].value = responseData.data.id;
-                    form.elements['edit_nama_matpel'].value = responseData.data.nama_matpel;
-                    $('#modal_edit_data').modal('show');
-
-                } catch (error) {
-                    console.error('Terjadi kesalahan:', error);
-                    throw error;
-                }
-            }
-
-            document.getElementById('form_edit_data_matpel').addEventListener('submit', async function(event) {
-                event.preventDefault();
-
-                try {
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                    const response = await fetch('/akun/update_data_matpel', {
-                        method: 'POST',
-                        body: new FormData(this),
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                        },
-                    }).then(response => response.json());
-                    if (response.errors) {
-
-                        Object.keys(response.errors).forEach(fieldName => {
-                            const inputField = document.getElementById(fieldName);
-                            inputField.classList.add('is-invalid');
-                            inputField.nextElementSibling.textContent = response.errors[fieldName][0];
-                        });
-
-                        const validFields = document.querySelectorAll('.is-invalid');
-                        validFields.forEach(validField => {
-                            const fieldName = validField.id;
-                            if (!response.errors[fieldName]) {
-                                validField.classList.remove('is-invalid');
-                                validField.nextElementSibling.textContent = '';
-                            }
-                        });
-                    } else {
-                        console.log(response);
-                        const invalidInputs = document.querySelectorAll('.is-invalid');
-                        invalidInputs.forEach(invalidInput => {
-                            invalidInput.value = '';
-                            invalidInput.classList.remove('is-invalid');
-                            const errorNextSibling = invalidInput.nextElementSibling;
-                            if (errorNextSibling && errorNextSibling.classList.contains(
-                                    'invalid-feedback')) {
-                                errorNextSibling.textContent = '';
-                            }
-                        });
-                        const form = document.getElementById('form_edit_data_matpel');
-
-                        const rolesContainer = document.getElementById('roles-container');
-                        rolesContainer.innerHTML = '';
-
-                        form.reset();
-                        $('#modal_edit_data').modal('hide');
-                        Swal.fire(
-                            'Tersimpan!',
-                            'Data mata pelajaran berhasil diupdate.',
-                            'success'
-                        )
-                        $('.datatable').DataTable().ajax.reload();
-                    }
-                } catch (error) {
-                    console.error('Terjadi kesalahan:', error);
-                    throw error;
-                }
-            });
-
-            function closeModalEdit() {
-                const invalidInputs = document.querySelectorAll('.is-invalid');
-                invalidInputs.forEach(invalidInput => {
-                    invalidInput.value = '';
-                    invalidInput.classList.remove('is-invalid');
-                    const errorNextSibling = invalidInput.nextElementSibling;
-                    if (errorNextSibling && errorNextSibling.classList.contains(
-                            'invalid-feedback')) {
-                        errorNextSibling.textContent = '';
-                    }
-                });
-                const form = document.getElementById('form_edit_data_matpel');
-                const rolesContainer = document.getElementById('roles-container');
-                rolesContainer.innerHTML = '';
-                form.reset();
-                $('#modal_edit_data').modal('hide');
-            }
-
-            function closeModalAdd() {
-                const invalidInputs = document.querySelectorAll('.is-invalid');
-                invalidInputs.forEach(invalidInput => {
-                    invalidInput.value = '';
-                    invalidInput.classList.remove('is-invalid');
-                    const errorNextSibling = invalidInput.nextElementSibling;
-                    if (errorNextSibling && errorNextSibling.classList.contains(
-                            'invalid-feedback')) {
-                        errorNextSibling.textContent = '';
-                    }
-                });
-
-                $('#modal_add_data').modal('hide');
-                const form = document.getElementById('form_add_user_guru');
-                form.reset();
-                const rolesContainer = document.getElementById('roles-container');
-                rolesContainer.innerHTML = '';
-                $('#modal_add_data').modal('hide');
-            }
-
-            // Add Data 
-            const form = document.getElementById('form_add_user_guru');
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-                const formData = new FormData(form);
-
-                const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                fetch('/akun/store_user_guru', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken,
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data.message);
-                        if (data.errors) {
-                            Object.keys(data.errors).forEach(fieldName => {
-                                const inputField = document.getElementById(fieldName);
-                                if (fieldName === 'id_guru') {
-                                    inputField.classList.add('is-invalid');
-                                } else {
-                                    inputField.classList.add('is-invalid');
-                                    inputField.nextElementSibling.textContent = data.errors[
-                                        fieldName][0];
-                                }
-                            });
-
-                            // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
-                            const validFields = form.querySelectorAll('.is-invalid');
-                            validFields.forEach(validField => {
-                                const fieldName = validField.id;
-                                if (!data.errors[fieldName]) {
-                                    if (fieldName === 'id_guru') {
-                                        validField.classList.remove('is-invalid');
-                                    } else {
-                                        validField.classList.remove('is-invalid');
-                                        validField.nextElementSibling.textContent = '';
-                                    }
-                                }
-                            });
-                        } else {
-                            console.log(data.message);
-                            const validFields = form.querySelectorAll('.is-invalid');
-                            validFields.forEach(validField => {
-                                validField.classList.remove('is-invalid');
-                                validField.nextElementSibling.textContent = '';
-                            });
-
-                            const rolesContainer = document.getElementById('roles-container');
-                            rolesContainer.innerHTML = '';
-                            form.reset();
-                            $('#modal_add_data').modal('hide');
-                            Swal.fire(
-                                'Tersimpan!',
-                                'Data berhasil ditambahkan.',
-                                'success'
-                            );
-                            $('.datatable').DataTable().ajax.reload();
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire(
-                            'Gagal!',
-                            'Terjadi kesalahan saat menambahkan  data.',
-                            'error'
-                        );
-                    });
-            });
-
-            document.getElementById('add_data').addEventListener('click', function() {
-                $('#modal_add_data').modal('show');
-            });
-
-
-            function handleValidationErrors(errors) {
-                if (errors && typeof errors === 'object') {
-                    Object.keys(errors).forEach(fieldName => {
-                        const inputField = document.getElementById(fieldName);
-                        inputField.classList.add('is-invalid');
-                        inputField.nextElementSibling.textContent = errors[fieldName][0];
-                    });
-
-                    // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
-                    const validFields = document.querySelectorAll('.is-invalid');
-                    validFields.forEach(validField => {
-                        const fieldName = validField.id;
-                        if (!errors[fieldName]) {
-                            validField.classList.remove('is-invalid');
-                            validField.nextElementSibling.textContent = '';
-                        }
-                    });
-                }
-            }
-
-            $(document).ready(function() {
-                const myDataTable = $('.datatable').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: "{{ route('data_user.guru') }}",
-                    columns: [{
-                            data: 'DT_RowIndex',
-                            name: '#',
-                            searchable: false
-                        },
-                        {
-                            data: 'name',
-                            name: 'name'
-                        },
-                        {
-                            data: 'username',
-                            name: 'username'
-                        },
-                        {
-                            data: 'email',
-                            name: 'email'
-                        },
-                        {
-                            data: 'role',
-                            name: 'role'
-                        },
-                        {
-                            data: 'action',
-                            name: 'action',
-                            orderable: false,
-                            searchable: false
-                        },
-                    ]
-                });
-
-
-                $('#filterRoles').on('change', function() {
-                    const selectedRole = $(this).val();
-                    myDataTable.ajax.url('{{ route('data_user.guru') }}?role=' + selectedRole)
-                        .load();
-                });
-            });
         </script>
     @endpush
 @endsection

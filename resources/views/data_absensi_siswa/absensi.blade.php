@@ -31,28 +31,17 @@
                     {{ $data->kelas }}
                 </div>
                 <div class="list-inline-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline" width="24" height="24"
-                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                        stroke-linejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2 icon-tabler icon-tabler-gender-bigender"
+                        width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                        fill="none" stroke-linecap="round" stroke-linejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M3 7l6 -3l6 3l6 -3v13l-6 3l-6 -3l-6 3v-13" />
-                        <path d="M9 4v13" />
-                        <path d="M15 7v13" />
+                        <path d="M11 11m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                        <path d="M19 3l-5 5" />
+                        <path d="M15 3h4v4" />
+                        <path d="M11 16v6" />
+                        <path d="M8 19h6" />
                     </svg>
-                    {{ $data->alamat }}
-                </div>
-
-                <div class="list-inline-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline" width="24" height="24"
-                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M3 20h18v-8a3 3 0 0 0 -3 -3h-12a3 3 0 0 0 -3 3v8z" />
-                        <path
-                            d="M3 14.803c.312 .135 .654 .204 1 .197a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1c.35 .007 .692 -.062 1 -.197" />
-                        <path d="M12 4l1.465 1.638a2 2 0 1 1 -3.015 .099l1.55 -1.737z" />
-                    </svg>
-                    {{ $data->tanggal_lahir->format('d-m-Y') }}
+                    {{ $data->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}
                 </div>
             </div>
         </div>
@@ -186,7 +175,7 @@
                                     <path d="M11 16v6" />
                                     <path d="M8 19h6" />
                                 </svg>
-                                Gender: <strong>{{ $data->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</strong>
+                                Gender : <strong>{{ $data->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</strong>
                             </div>
                         </div>
                         <div class="col-sm-6 col-lg-6">
@@ -242,13 +231,13 @@
 
                         <div class="col-sm-6 col-lg-6">
                             <div class="mb-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2 text-secondary" width="24"
-                                    height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2 icon-tabler icon-tabler-map"
+                                    width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5"
+                                    stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
-                                    <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
-                                    <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                                    <path d="M3 7l6 -3l6 3l6 -3v13l-6 3l-6 -3l-6 3v-13" />
+                                    <path d="M9 4v13" />
+                                    <path d="M15 7v13" />
                                 </svg>
                                 Alamat : <strong>{{ $data->alamat }}</strong>
                             </div>

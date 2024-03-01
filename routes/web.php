@@ -75,14 +75,16 @@ Route::prefix('role')->controller(RoleController::class)->group(function () {
 
 Route::prefix('akun')->controller(UserController::class)->group(function () {
     Route::get('/siswa', 'akun_siswa')->name("akun_siswa")->middleware('auth');
+    Route::post('/store_use r_siswa', 'storeUserSiswa')->name("store_user_siswa")->middleware('auth');
+    Route::get('/data_user_siswa', 'dataUserSiswa')->name("data_user.siswa")->middleware('auth');
+
     Route::get('/guru', 'akun_guru')->name("akun_guru")->middleware('auth');
     Route::post('/store_user_guru', 'storeUserGuru')->name("store_user_guru")->middleware('auth');
-    Route::post('/store_user_siswa', 'storeUserSiswa')->name("store_user_siswa")->middleware('auth');
-    Route::delete('/delete/{id}', 'destroy')->name("delete_users")->middleware('auth');
-
     Route::get('/data_user_guru', 'dataUserGuru')->name("data_user.guru")->middleware('auth');
-    Route::get('/data_user_siswa', 'dataUserSiswa')->name("data_user.siswa")->middleware('auth');
     Route::get('/get_roles', 'roles')->name("data_user.roles")->middleware('auth');
+    Route::get('/show/{id}', 'show')->name("data_user.ids")->middleware('auth');
+
+    Route::delete('/delete/{id}', 'destroy')->name("delete_users")->middleware('auth');
 });
 
 

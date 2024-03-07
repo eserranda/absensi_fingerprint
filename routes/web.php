@@ -77,8 +77,9 @@ Route::prefix('role')->controller(RoleController::class)->group(function () {
 
 Route::prefix('akun')->controller(UserController::class)->group(function () {
     Route::get('/siswa', 'akun_siswa')->name("akun_siswa")->middleware('auth');
-    Route::post('/store_use r_siswa', 'storeUserSiswa')->name("store_user_siswa")->middleware('auth');
+    Route::post('/store_user_siswa', 'storeUserSiswa')->name("store_user_siswa")->middleware('auth');
     Route::get('/data_user_siswa', 'dataUserSiswa')->name("data_user.siswa")->middleware('auth');
+    Route::post('/update_akun_siswa', 'updateAkunSiswa')->name("update_data_siswa")->middleware('auth');
 
     Route::get('/guru', 'akun_guru')->name("akun_guru")->middleware('auth');
     Route::post('/store_user_guru', 'storeUserGuru')->name("store_user_guru")->middleware('auth');
@@ -128,10 +129,13 @@ Route::controller(DataSiswaController::class)->group(function () {
     Route::POST('/update_data_siswa', 'update')->name("update_data_siswa")->middleware('auth');
     Route::get('/data_siswa/edit/{id}', 'edit')->name("simpan_data_siswa")->middleware('auth');
     Route::get('/data_siswa/getid/{id}', 'getID')->name("getid_data_siswa")->middleware('auth');
+
+    Route::get('/siswa/get_kelas_siswa/{id}', 'getKelasSiswa')->name("get_kelas_siswa")->middleware('auth');
+
     Route::delete('/data_siswa/delete/{id}', 'destroy')->name("hapus_data_siswa")->middleware('auth');
     Route::get('/data_siswa_tes', 'tes');
     Route::get('/get_data_siswa', 'getDataSiswa')->name("get_data_siswa")->middleware('auth');
-    Route::get('/get_nisn_siswa/{id}', 'getNISNGuru')->name("get_nisn_guru")->middleware('auth');
+    Route::get('/get_nisn_siswa/{id}', 'getNISNSiswa')->name("get_nisn_siswa")->middleware('auth');
 });
 
 Route::controller(JadwalPelajaranController::class)->group(function () {
@@ -144,11 +148,13 @@ Route::controller(JadwalPelajaranController::class)->group(function () {
 
 Route::controller(KelasController::class)->group(function () {
     Route::get('/kelas', 'index')->name("kelas.data")->middleware('auth');
+    Route::get('/get_all_data_kelas', 'getAll')->name("get_all_data_kelas")->middleware('auth');
     Route::POST('/simpan_data_kelas', 'store')->name("simpan_data_kelas")->middleware('auth');
     Route::get('/data_kelas/getid/{id}', 'getID')->name("getid_data_kelas")->middleware('auth');
     Route::POST('/update_data_kelas', 'update')->name("update_data_kelas")->middleware('auth');
     Route::delete('/data_kelas/delete/{id}', 'destroy')->name("hapus_data_kelas")->middleware('auth');
-    Route::get('/get_data_kelas', 'getDataKelas')->name("get_data_kelas")->middleware('auth');
+
+    Route::get('/get_data_kelas', 'getDataKelas')->name("get_data_kelas")->middleware('auth'); // kayaknya tidak terpakai
 });
 
 Route::controller(JamAbsensiController::class)->group(function () {

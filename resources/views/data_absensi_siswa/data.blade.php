@@ -51,6 +51,7 @@
                                 <th>#</th>
                                 <th>Nama</th>
                                 <th>ID Finger</th>
+                                <th>Kelas</th>
                                 <th>Tanggal</th>
                                 <th>Jam Masuk</th>
                                 <th>Jam Keluar</th>
@@ -84,19 +85,29 @@
                                     <select class="form-select" id="id_siswa" name="id_siswa">
 
                                     </select>
+
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label">ID Finger</label>
-                                    <select class="form-select" id="id_finger" name="id_finger">
-                                        <option value="" selected disabled>Pilih ID Finger</option>
-                                    </select>
+                                    <label class="form-label">Kelas</label>
+                                    <input type="text" class="form-control" id="kelas" name="kelas">
+                                    <div class="invalid-feedback"></div>
+
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ID Finger</label>
+                                    <input type="number" class="form-control" id="id_finger" name="id_finger">
+                                    <div class="invalid-feedback"></div>
+
+                                </div>
+                            </div>
+
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Tanggal Absen</label>
@@ -177,32 +188,51 @@
                 $('#modal_add_data').modal('hide');
             }
 
-            $("#id_siswa").select2({
-                theme: "bootstrap-5",
-                placeholder: "Pilih nama siswa",
-                minimumInputLength: 1,
-                dropdownParent: $("#modal_add_data"),
-                ajax: {
-                    url: '/get_data_siswa',
-                    dataType: 'json',
-                    processResults: function(data) {
-                        if (data && data.length > 0) {
-                            var results = $.map(data, function(item) {
-                                return {
-                                    id: item.id,
-                                    text: item.nama
-                                };
-                            });
-                            return {
-                                results: results
-                            };
-                        }
-                    },
-                }
-            });
-
-
             $(document).ready(function() {
+                $("#id_siswa").select2({
+                    theme: "bootstrap-5",
+                    placeholder: "Pilih nama siswa",
+                    minimumInputLength: 1,
+                    dropdownParent: $("#modal_add_data"),
+                    ajax: {
+                        url: '/get_data_siswa',
+                        dataType: 'json',
+                        processResults: function(data) {
+                            if (data && data.length > 0) {
+                                var results = $.map(data, function(item) {
+                                    return {
+                                        id: item.id,
+                                        text: item.nama
+                                    };
+                                });
+                                return {
+                                    results: results
+                                };
+                            }
+                        },
+                    }
+                });
+
+
+                $("#id_siswa").on("change", async function() {
+                    var id = $(this).val();
+                    try {
+                        const response = await fetch('/siswa/get_kelas_siswa/' + id, {
+                            method: 'GET',
+                        });
+                        const responseData = await response.json();
+                        if (responseData) {
+                            var kelas = responseData;
+                            $('#kelas').val(kelas);
+                        } else {
+                            throw new Error('Gagal mendapatkan data Kelas');
+                        }
+                    } catch (error) {
+                        console.error('Terjadi kesalahan:', error);
+                    }
+                });
+
+
                 const myDataTable = $('.datatable').DataTable({
                     processing: true,
                     serverSide: true,
@@ -220,6 +250,10 @@
                         {
                             data: 'id_fingerprint',
                             name: 'id_fingerprint'
+                        },
+                        {
+                            data: 'kelas',
+                            name: 'kelas'
                         },
                         {
                             data: 'tanggal_absen',

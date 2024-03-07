@@ -61,9 +61,13 @@ class KelasController extends Controller
         return response()->json(['data' => $data]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function getAll()
+    {
+        $data = Kelas::all();
+        return response()->json($data);
+    }
+
+
     public function create()
     {
         //

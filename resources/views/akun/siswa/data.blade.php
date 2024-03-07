@@ -33,9 +33,7 @@
                 </button>
 
                 <div class="card-actions">
-                    <a href="#" class="btn btn-primary" id="add_data">
-                        Tambah Data
-                    </a>
+                    <button class="btn btn-primary" id ="add_data"> Tambah Data</button>
                 </div>
             </div>
 
@@ -108,13 +106,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="roles-container"></div>
 
                         <div class="modal-footer">
-                            <button href="" class="btn btn-primary ms-auto" type="submit">
+                            <button class="btn btn-primary ms-auto" type="submit">
                                 Simpan
                             </button>
                         </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -125,30 +123,56 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-
-                    <h5 class="modal-title">Edit Data </h5>
+                    <h5 class="modal-title">Edit Data User Siswa</h5>
                     <button type="button" class="btn-close" onclick="closeModalEdit()"></button>
-
                 </div>
-                <form action="" method="POST" id="form_edit_data_matpel">
+                <form action="" method="POST" id="form_edit_data">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Nama</label>
-                                    <input type="hidden" class="form-control" id="id" name="id">
-                                    <input type="text" class="form-control" id="edit_nama_matpel"
-                                        name="edit_nama_matpel">
+                                    <input type="hidden" class="form-control" id="edit_id" name="edit_id">
+                                    {{-- <input type="hidden" class="form-control" id="data_id_siswa" name="data_id_siswa"> --}}
+                                    <label class="form-label">Nama Lengkap</label>
+                                    <select class="form-select  text-bg-cyan" id="edit_id_siswa" name="edit_id_siswa">
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">NISN</label>
+                                    <input type="text" class="form-control text-bg-cyan" id="edit_username"
+                                        name="edit_username" readonly>
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button href="" class="btn btn-primary ms-auto" type="submit">
-                                Update
-                            </button>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="edit_email" name="edit_email">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="edit_password" name="edit_password">
+
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary ms-auto" type="submit">
+                            Update
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -253,111 +277,152 @@
                 });
             }
 
-            // async function edit(id) {
-            //     try {
-            //         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            async function edit(id) {
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                    const response = await fetch('/akun/show/' + id, {
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    const responseData = await response.json();
 
-            //         const response = await fetch('/data_matpel/getid/' + id, {
-            //             method: 'GET',
-            //             headers: {
-            //                 'X-CSRF-TOKEN': csrfToken,
-            //                 'Content-Type': 'application/json',
-            //             },
-            //         })
-            //         const responseData = await response.json();
+                    if (!response.status) {
+                        throw new Error('Gagal mengambil data');
+                    }
+                    console.log(response);
+                    const form = document.getElementById('form_edit_data');
+                    // form.elements['data_id_siswa'].value = responseData.data.id_siswa;
+                    form.elements['edit_id'].value = responseData.data.id;
+                    form.elements['edit_username'].value = responseData.data.username;
+                    form.elements['edit_email'].value = responseData.data.email;
 
-            //         if (!response.status) {
-            //             throw new Error('Gagal mengambil data');
-            //         }
-            //         console.log(response);
-            //         const form = document.getElementById('form_edit_data_matpel');
-            //         form.elements['id'].value = responseData.data.id;
-            //         form.elements['edit_nama_matpel'].value = responseData.data.nama_matpel;
-            //         $('#modal_edit_data').modal('show');
+                    var editIdSiswaSelect = document.getElementById('edit_id_siswa');
+                    fetch('/data_siswa/getid/' + responseData.data.id_siswa, {
+                            method: 'GET',
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Gagal mengambil data tambahan');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            updateOptionsAndSelect2Siswa(editIdSiswaSelect, data.data.id, data.data.nama);
+                        });
+                    $('#modal_edit_data').modal('show');
 
-            //     } catch (error) {
-            //         console.error('Terjadi kesalahan:', error);
-            //         throw error;
-            //     }
-            // }
+                } catch (error) {
+                    console.error('Terjadi kesalahan:', error);
+                    throw error;
+                }
 
-            // document.getElementById('form_edit_data_matpel').addEventListener('submit', async function(event) {
-            //     event.preventDefault();
+                // $("#edit_id_siswa").select2({
+                //     theme: "bootstrap-5",
+                //     placeholder: "Pilih Siswa",
+                //     minimumInputLength: 1,
+                //     dropdownParent: $("#modal_edit_data"),
+                //     ajax: {
+                //         url: '/get_data_siswa',
+                //         dataType: 'json',
+                //         processResults: function(data) {
+                //             if (data && data.length > 0) {
+                //                 var results = $.map(data, function(item) {
+                //                     return {
+                //                         id: item.id,
+                //                         text: item.nama
+                //                     };
+                //                 });
+                //                 return {
+                //                     results: results
+                //                 };
+                //             }
+                //         },
+                //     }
+                // });
+            }
 
-            //     try {
-            //         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-            //         const response = await fetch('/akun/update_data_matpel', {
-            //             method: 'POST',
-            //             body: new FormData(this),
-            //             headers: {
-            //                 'X-CSRF-TOKEN': csrfToken,
-            //             },
-            //         }).then(response => response.json());
-            //         if (response.errors) {
+            function updateOptionsAndSelect2Siswa(selectElement, id, namaSiswa) {
+                $(selectElement).empty();
 
-            //             Object.keys(response.errors).forEach(fieldName => {
-            //                 const inputField = document.getElementById(fieldName);
-            //                 inputField.classList.add('is-invalid');
-            //                 inputField.nextElementSibling.textContent = response.errors[fieldName][0];
-            //             });
+                var option = new Option(namaSiswa, id, true, true);
+                $(selectElement).append(option);
 
-            //             const validFields = document.querySelectorAll('.is-invalid');
-            //             validFields.forEach(validField => {
-            //                 const fieldName = validField.id;
-            //                 if (!response.errors[fieldName]) {
-            //                     validField.classList.remove('is-invalid');
-            //                     validField.nextElementSibling.textContent = '';
-            //                 }
-            //             });
-            //         } else {
-            //             console.log(response);
-            //             const invalidInputs = document.querySelectorAll('.is-invalid');
-            //             invalidInputs.forEach(invalidInput => {
-            //                 invalidInput.value = '';
-            //                 invalidInput.classList.remove('is-invalid');
-            //                 const errorNextSibling = invalidInput.nextElementSibling;
-            //                 if (errorNextSibling && errorNextSibling.classList.contains(
-            //                         'invalid-feedback')) {
-            //                     errorNextSibling.textContent = '';
-            //                 }
-            //             });
-            //             const form = document.getElementById('form_edit_data_matpel');
+                $(selectElement).trigger('change');
+            }
 
-            //             const rolesContainer = document.getElementById('roles-container');
-            //             rolesContainer.innerHTML = '';
+            document.getElementById('form_edit_data').addEventListener('submit', async function(event) {
+                event.preventDefault();
 
-            //             form.reset();
-            //             $('#modal_edit_data').modal('hide');
-            //             Swal.fire(
-            //                 'Tersimpan!',
-            //                 'Data mata pelajaran berhasil diupdate.',
-            //                 'success'
-            //             )
-            //             $('.datatable').DataTable().ajax.reload();
-            //         }
-            //     } catch (error) {
-            //         console.error('Terjadi kesalahan:', error);
-            //         throw error;
-            //     }
-            // });
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                    const response = await fetch('/akun/update_akun_siswa', {
+                        method: 'POST',
+                        body: new FormData(this),
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                    }).then(response => response.json());
+                    if (response.errors) {
+                        Object.keys(response.errors).forEach(fieldName => {
+                            const inputField = document.getElementById(fieldName);
+                            inputField.classList.add('is-invalid');
+                            inputField.nextElementSibling.textContent = response.errors[fieldName][0];
+                        });
 
-            // function closeModalEdit() {
-            //     const invalidInputs = document.querySelectorAll('.is-invalid');
-            //     invalidInputs.forEach(invalidInput => {
-            //         invalidInput.value = '';
-            //         invalidInput.classList.remove('is-invalid');
-            //         const errorNextSibling = invalidInput.nextElementSibling;
-            //         if (errorNextSibling && errorNextSibling.classList.contains(
-            //                 'invalid-feedback')) {
-            //             errorNextSibling.textContent = '';
-            //         }
-            //     });
-            //     const form = document.getElementById('form_edit_data_matpel');
-            //     const rolesContainer = document.getElementById('roles-container');
-            //     rolesContainer.innerHTML = '';
-            //     form.reset();
-            //     $('#modal_edit_data').modal('hide');
-            // }
+                        const validFields = document.querySelectorAll('.is-invalid');
+                        validFields.forEach(validField => {
+                            const fieldName = validField.id;
+                            if (!response.errors[fieldName]) {
+                                validField.classList.remove('is-invalid');
+                                validField.nextElementSibling.textContent = '';
+                            }
+                        });
+                    } else {
+                        console.log(response);
+                        const invalidInputs = document.querySelectorAll('.is-invalid');
+                        invalidInputs.forEach(invalidInput => {
+                            invalidInput.value = '';
+                            invalidInput.classList.remove('is-invalid');
+                            const errorNextSibling = invalidInput.nextElementSibling;
+                            if (errorNextSibling && errorNextSibling.classList.contains(
+                                    'invalid-feedback')) {
+                                errorNextSibling.textContent = '';
+                            }
+                        });
+                        const form = document.getElementById('form_edit_data');
+                        form.reset();
+                        $('#modal_edit_data').modal('hide');
+                        Swal.fire(
+                            'Tersimpan!',
+                            'Data mata pelajaran berhasil diupdate.',
+                            'success'
+                        )
+                        $('.datatable').DataTable().ajax.reload();
+                    }
+                } catch (error) {
+                    console.error('Terjadi kesalahan:', error);
+                    throw error;
+                }
+            });
+
+            function closeModalEdit() {
+                const invalidInputs = document.querySelectorAll('.is-invalid');
+                invalidInputs.forEach(invalidInput => {
+                    invalidInput.value = '';
+                    invalidInput.classList.remove('is-invalid');
+                    const errorNextSibling = invalidInput.nextElementSibling;
+                    if (errorNextSibling && errorNextSibling.classList.contains(
+                            'invalid-feedback')) {
+                        errorNextSibling.textContent = '';
+                    }
+                });
+                const form = document.getElementById('form_edit_data');
+                form.reset();
+                $('#modal_edit_data').modal('hide');
+            }
 
             function closeModalAdd() {
                 const invalidInputs = document.querySelectorAll('.is-invalid');

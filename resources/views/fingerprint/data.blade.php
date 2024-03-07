@@ -6,6 +6,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
+                <h5 class="card-title">Data Modul Fingerprint </h5>
                 <div class="card-actions">
                     <a class="btn btn-primary" id="add_data">
                         Tambah Data
@@ -77,8 +78,11 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Modul Fingerprint</label>
-                                    <input type="text" class="form-control" id="modul_fingerprint"
-                                        name="modul_fingerprint">
+                                    <select class="form-select" name="modul_fingerprint" id="modul_fingerprint">
+                                        <option value="" selected disabled>Pilih Modul Fingerprint</option>
+                                        <option value="guru">Guru Dan pegawai</option>
+                                    </select>
+
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -211,6 +215,28 @@
 
             document.getElementById('add_data').addEventListener('click', function() {
                 $('#modal_add_data').modal('show');
+                const selectElement = document.getElementById('modul_fingerprint');
+                fetch('/get_all_data_kelas', {
+                        method: 'GET',
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Gagal mengambil data kelas');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        data.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.nama_kelas;
+                            option.text = item.nama_kelas;
+                            selectElement.appendChild(option);
+                        });
+
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             });
 
             function closeModalAdd() {

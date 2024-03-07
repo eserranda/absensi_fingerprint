@@ -60,14 +60,24 @@ class DataSiswaController extends Controller
         return response()->json(['data' =>  $data, 'status' => true, 'message' => 'Data Siswa'], 200);
     }
 
-    public function getNISNGuru($id)
+    public function getNISNSiswa($id)
     {
         $data = DataSiswa::where('id', $id)->first();
         if ($data) {
             $nisn = $data->nisn;
-            return response()->json(['status' => true, 'data' => $nisn]);
+            return response()->json(['status' => true, 'data' => $nisn], 200);
         } else {
-            return response()->json(['status' => false, 'message' => 'NISN siswa tidak ditemukan']);
+            return response()->json(['status' => false, 'message' => 'NISN siswa tidak ditemukan'], 500);
+        }
+    }
+
+    public function getKelasSiswa($id)
+    {
+        $data = DataSiswa::where('id', $id)->first()->kelas;
+        if ($data) {
+            return response()->json($data, 200);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Kelas siswa tidak ditemukan'], 500);
         }
     }
 

@@ -13,6 +13,7 @@ class DataAbsensiSiswa extends Model
     protected $fillable = [
         'id_siswa',
         'id_fingerprint',
+        'kelas',
         'tanggal_absen',
         'jam_masuk',
         'jam_keluar',

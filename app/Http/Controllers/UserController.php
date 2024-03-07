@@ -96,6 +96,13 @@ class UserController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
+                    <button class="btn btn-sm btn-primary btn-icon" aria-label="Button" onclick="edit(' . $row->id . ')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                    </svg>
+                    </button>
+
                     <button class="btn btn-sm btn-danger btn-icon" aria-label="Button" onclick="hapus(' . $row->id . ')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
@@ -270,9 +277,46 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+    public function updateAkunSiswa(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'edit_id_siswa' => 'required ',
+            'edit_username' => 'required|string|max:255',
+            'edit_email' => 'required|string|email|max:255',
+            'edit_password' => 'required|string',
+        ], [
+            'edit_id_siswa.required' => 'Kolom NISN harus diisi.',
+            'edit_id_siswa.unique' => 'NISN sudah terdaftar.',
+            'edit_username.required' => 'Kolom username harus diisi.',
+            'edit_username.string' => 'Kolom username harus berupa teks.',
+            'edit_username.max' => 'Kolom username tidak boleh lebih dari :max karakter.',
+            'edit_username.unique' => 'NUPTK sudah digunakan.',
+
+            'edit_email.required' => 'Kolom email harus diisi.',
+            'edit_email.string' => 'Kolom email harus berupa teks.',
+            'edit_email.email' => 'Format email tidak valid.',
+            'edit_email.max' => 'Kolom email tidak boleh lebih dari :max karakter.',
+            'edit_email.unique' => 'Email sudah digunakan.',
+
+            'edit_password.required' => 'Kolom password harus diisi.',
+            'edit_password.string' => 'Kolom password harus berupa teks.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        User::where('id', $request->input('edit_id'))->update([
+            'id_siswa' => $request->input('edit_id_siswa'),
+            'username' => $request->input('edit_username'),
+            'email' => $request->input('edit_email'),
+            'password' => bcrypt($request->input('edit_password')),
+        ]);
+
+        return response()->json(['message' => 'Data siswa berhasil diperbarui'], 200);
+    }
+
+
     public function show(string $id)
     {
         $idUser = User::where('id', $id)->first();
@@ -283,17 +327,7 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         try {

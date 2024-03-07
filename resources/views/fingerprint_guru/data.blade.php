@@ -16,6 +16,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
+                <h5 class="card-title">Data Fingerprint Guru</h5>
                 <div class="card-actions">
                     <a href="/fingerprint_guru/add" class="btn btn-primary" id="add_data">
                         Tambah Data

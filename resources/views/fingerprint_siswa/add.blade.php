@@ -12,7 +12,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title">Tambah data Fingerprint Guru</h5>
+                <h5 class="card-title">Tambah data Fingerprint Siswa</h5>
             </div>
             <div class="card-body border-bottom py-3 ">
                 <form action=" " method="POST" id="form_data_fingerprint_guru">
@@ -122,13 +122,12 @@
                 $(document).ready(function() {
                     $("#id_siswa").select2({
                         theme: "bootstrap-5",
-                        placeholder: "Pilih siswa",
+                        placeholder: "Pilih nama siswa",
                         minimumInputLength: 1,
                         ajax: {
                             url: '/get_data_siswa',
                             dataType: 'json',
                             processResults: function(data) {
-                                console.log(data);
                                 if (data && data.length > 0) {
                                     kelas = data[0].kelas;
                                     $('#id_modul_fingerprint').val(kelas);

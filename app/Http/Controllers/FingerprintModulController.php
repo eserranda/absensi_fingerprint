@@ -19,6 +19,60 @@ use Illuminate\Support\Facades\Validator;
 class FingerprintModulController extends Controller
 {
 
+    public function statusFingerprint(Request $request)
+    {
+        $apiKey = $request->input('apiKey');
+        $finger = FingerprintModul::where('apiKey', $apiKey)->first();
+        $mode = $finger->status;
+
+        if ($apiKey == 'guru') {
+            $lastRecord = FingerprintGuru::latest()->first();
+            if (!$lastRecord) {
+                $lastID = 0;
+            } else {
+                $lastID = $lastRecord->id_fingerprint;
+            }
+
+            return response()->json(["mode" => $mode, "last_id" => $lastID]);
+        } else if ($apiKey == 'finger1') {
+            $cekMode = FingerprintModul::where('apiKey', $apiKey)->first();
+
+            if ($cekMode->status === "hapus") {
+                return response()->json(["mode" => $cekMode->status, "deleted_id" => $cekMode->deleted_id]);
+            } else {
+
+                $idModul = FingerprintModul::where('apiKey', $apiKey)->first()->id;
+                $lastRecord = FingerprintSiswa::where('id_modul_fingerprint', $idModul)->latest()->first();
+                if (!$lastRecord) {
+                    $lastID = 0;
+                } else {
+                    $lastID = $lastRecord->id_fingerprint;
+                }
+                return response()->json(["mode" => $mode, "last_id" => $lastID]);
+            }
+        } else if ($apiKey == 'finger2') {
+            $idModul = FingerprintModul::where('apiKey', $apiKey)->first()->id;
+            $lastRecord = FingerprintSiswa::where('id_modul_fingerprint', $idModul)->latest()->first();
+            if (!$lastRecord) {
+                $lastID = 0;
+            } else {
+                $lastID = $lastRecord->id_fingerprint;
+            }
+
+            return response()->json(["mode" => $mode, "last_id" => $lastID]);
+        } else if ($apiKey == 'finger3') {
+            $idModul = FingerprintModul::where('apiKey', $apiKey)->first()->id;
+            $lastRecord = FingerprintSiswa::where('id_modul_fingerprint', $idModul)->latest()->first();
+            if (!$lastRecord) {
+                $lastID = 0;
+            } else {
+                $lastID = $lastRecord->id_fingerprint;
+            }
+
+            return response()->json(["mode" => $mode, "last_id" => $lastID]);
+        }
+    }
+
     public function getFingerID(Request $request, $apiKey)
     {
         $fingerprintStatus = FingerprintTmp::where('apiKey', $apiKey)->first();
@@ -211,53 +265,7 @@ class FingerprintModulController extends Controller
         }
     }
 
-    public function statusFingerprint(Request $request)
-    {
-        $apiKey = $request->input('apiKey');
-        $finger = FingerprintModul::where('apiKey', $apiKey)->first();
-        $mode = $finger->status;
 
-        if ($apiKey == 'guru') {
-            $lastRecord = FingerprintGuru::latest()->first();
-            if (!$lastRecord) {
-                $lastID = 0;
-            } else {
-                $lastID = $lastRecord->id_fingerprint;
-            }
-
-            return response()->json(["mode" => $mode, "last_id" => $lastID]);
-        } else if ($apiKey == 'finger1') {
-            $idModul = FingerprintModul::where('apiKey', $apiKey)->first()->id;
-            $lastRecord = FingerprintSiswa::where('id_modul_fingerprint', $idModul)->latest()->first();
-            if (!$lastRecord) {
-                $lastID = 0;
-            } else {
-                $lastID = $lastRecord->id_fingerprint;
-            }
-
-            return response()->json(["mode" => $mode, "last_id" => $lastID]);
-        } else if ($apiKey == 'finger2') {
-            $idModul = FingerprintModul::where('apiKey', $apiKey)->first()->id;
-            $lastRecord = FingerprintSiswa::where('id_modul_fingerprint', $idModul)->latest()->first();
-            if (!$lastRecord) {
-                $lastID = 0;
-            } else {
-                $lastID = $lastRecord->id_fingerprint;
-            }
-
-            return response()->json(["mode" => $mode, "last_id" => $lastID]);
-        } else if ($apiKey == 'finger3') {
-            $idModul = FingerprintModul::where('apiKey', $apiKey)->first()->id;
-            $lastRecord = FingerprintSiswa::where('id_modul_fingerprint', $idModul)->latest()->first();
-            if (!$lastRecord) {
-                $lastID = 0;
-            } else {
-                $lastID = $lastRecord->id_fingerprint;
-            }
-
-            return response()->json(["mode" => $mode, "last_id" => $lastID]);
-        }
-    }
 
     public function index()
     {

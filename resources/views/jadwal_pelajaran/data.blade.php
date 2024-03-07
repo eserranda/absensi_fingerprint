@@ -16,12 +16,15 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <div class="btn-actions">
-                    <select class="form-select" id="filterKelas">
-                        <option value="X IPS 1">X IPS 1</option>
-                        <option value="XI MIPA 1">XI MIPA 1</option>
-                        <option value="XII IPS 1">XII IPS 1</option>
-                    </select>
+                <div class="btn-actions col-6">
+                    <label class="col-form-label mx-4">KELAS</label>
+                    <div class="col-3">
+                        <select class="form-select" id="filterKelas">
+                            <option value="X IPS 1">X IPS 1</option>
+                            <option value="XI MIPA 1">XI MIPA 1</option>
+                            <option value="XII IPS 1">XII IPS 1</option>
+                        </select>
+                    </div>
                 </div>
                 {{-- <button class="btn btn-success mx-2 " id="reload">Reload</button> --}}
                 <div class="card-actions">

@@ -1,9 +1,13 @@
 <?php
 
+use App\Models\JamAbsensi;
+use GuzzleHttp\Middleware;
 use App\Models\FingerprintGuru;
+use App\Models\DataAbsensiSiswa;
 use App\Models\FingerprintSiswa;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MatpelController;
@@ -11,6 +15,7 @@ use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\DataGuruController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataSiswaController;
+use App\Http\Controllers\JamAbsensiController;
 use App\Http\Controllers\DataAbsensiGuruController;
 use App\Http\Controllers\FingerprintGuruController;
 use App\Http\Controllers\JadwalPelajaranController;
@@ -18,9 +23,6 @@ use App\Http\Controllers\DataAbsensiSiswaController;
 use App\Http\Controllers\FingerprintModulController;
 use App\Http\Controllers\FingerprintSiswaController;
 use App\Http\Controllers\FingerprintStatusController;
-use App\Http\Controllers\RoleController;
-use App\Models\DataAbsensiSiswa;
-use GuzzleHttp\Middleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,11 +99,6 @@ Route::controller(MatpelController::class)->group(function () {
     Route::get('/get_data_matpel', 'getDataMatpel')->name("get_data_matpel")->middleware('auth');
 });
 
-
-
-
-
-
 Route::controller(AbsensiController::class)->group(function () {
     Route::get('/absensi', 'index')->name("absensi.data");
     // Route::get('/dashboard/count_data', 'count_data')->name("dashboard.count_data");
@@ -154,6 +151,15 @@ Route::controller(KelasController::class)->group(function () {
     Route::get('/get_data_kelas', 'getDataKelas')->name("get_data_kelas")->middleware('auth');
 });
 
+Route::controller(JamAbsensiController::class)->group(function () {
+    Route::get('/jam_absensi', 'index')->name("jam_absensi.data")->middleware('auth');
+    Route::POST('/simpan_data_jam_absensi', 'store')->name("simpan_data_jam_absensi")->middleware('auth');
+    Route::get('/jam_absensi/getid/{id}', 'getID')->name("getid_data_kelas")->middleware('auth');
+    Route::POST('/update_jam_absensi', 'update')->name("update_jam_absensi")->middleware('auth');
+    Route::delete('/jam_absensi/delete/{id}', 'destroy')->name("hapus_jam_absensi")->middleware('auth');
+    // Route::get('/get_data_kelas', 'getDataKelas')->name("get_data_kelas")->middleware('auth');
+});
+
 Route::controller(FingerprintGuruController::class)->group(function () {
     Route::get('/fingerprint_guru', 'index')->name("fingerprint_guru.data")->middleware('auth');
     Route::get('/fingerprint_guru/add', 'create')->name("fingerprint_guru.add")->middleware('auth');
@@ -173,8 +179,10 @@ Route::controller(FingerprintModulController::class)->group(function () {
     Route::post('/fingerprint/store', 'store')->name("fingerprint.store")->middleware('auth');
     Route::delete('/fingerprint/delete/{id}', 'destroy')->name("fingerprint.delete")->middleware('auth');
 
-    Route::post('/finger-status/update-status', 'updateStatus')->name("fingerprint.update_status")->middleware('auth');
+    Route::post('/finger-status/update-status-finger-guru', 'updateStatusFingerGuru')->name("fingerprint.update_status")->middleware('auth');
+    Route::post('/finger-status/update-status-finger-siswa', 'updateStatusFingerSiswa')->name("fingerprint.update_status")->middleware('auth');
     Route::get('/fingerprint/get-finger-id/{apiKey}', 'getFingerID')->middleware('auth');
+    Route::get('/fingerprint/get-finger-id-siswa/{apiKey}', 'getFingerIDSiswa')->middleware('auth');
 });
 
 // Route::controller(FingerprintStatusController::class)->group(function () {

@@ -24,4 +24,9 @@ class DataAbsensiGuru extends Model
     {
         return $this->belongsTo(DataGuru::class, 'id_guru', 'id');
     }
+
+    public function id_fingerprint(): BelongsTo
+    {
+        return $this->belongsTo(FingerprintGuru::class, 'id_guru', 'id');
+    }
 }

@@ -20,7 +20,7 @@
                                 <th>No</th>
                                 <th>Fingerprint</th>
                                 <th>Api Key</th>
-                                {{-- <th>Status</th> --}}
+                                <th>Status</th>
                                 <th>Opsi</th>
                             </tr>
                         </thead>
@@ -30,7 +30,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $d->modul_fingerprint }}</td>
                                     <td>{{ $d->apiKey }}</td>
-                                    {{-- <td>{{ $d->status }}</td> --}}
+                                    <td>{{ $d->status }}</td>
                                     <td>
                                         {{-- <button class="btn btn-sm btn-primary btn-icon" aria-label="Button"
                                             onclick="edit({{ $d->id }})">

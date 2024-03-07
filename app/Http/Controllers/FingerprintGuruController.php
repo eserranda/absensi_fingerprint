@@ -77,6 +77,11 @@ class FingerprintGuruController extends Controller
             'id_guru' => 'required|unique:fingerprint_gurus',
             'id_modul_fingerprint' => 'required',
             'id_fingerprint' => 'required|unique:fingerprint_gurus',
+        ], [
+            'id_guru.unique' => 'ID GURU sudah terdaftar',
+            'id_fingerprint.unique' => 'ID FINGERPRINT sudah terdaftar',
+            'id_fingerprint.required' => 'ID FINGERPRINT harus diisi',
+            'id_modul_fingerprint.required' => 'ID MODUL FINGERPRINT harus diisi',
         ]);
 
         if ($validator->fails()) {
@@ -84,13 +89,16 @@ class FingerprintGuruController extends Controller
         }
 
         $fingerprintTMP_Status = FingerprintTmp::where('apiKey', 'guru')->first();
-        $fingerprintTMP_Status->update(['id_finger' => null]);
+        // $fingerprintTMP_Status->update(['id_finger' => null]);
 
         $fingerprintGuru = FingerprintModul::where('apiKey', 'guru')->first();
         $fingerprintGuru->update(['status' => 'scan']);
 
-        FingerprintGuru::create($request->all());
-        return response()->json(['message' => 'Data berhasil disimpan'], 200);
+        $saveFingerGuru = FingerprintGuru::create($request->all());
+        if ($saveFingerGuru) {
+            $fingerprintTMP_Status->update(['id_finger' => null]);
+            return response()->json(['message' => 'Data berhasil disimpan'], 200);
+        }
     }
 
     /**

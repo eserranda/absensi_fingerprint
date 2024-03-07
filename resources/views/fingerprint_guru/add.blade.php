@@ -45,7 +45,7 @@
                                 <div class="mb-3 col-lg-9 mb-0">
                                     <label class="form-label">ID Fingerprint</label>
                                     <input type="text " class="form-control bg-white" id="id_fingerprint"
-                                        name="id_fingerprint">
+                                        name="id_fingerprint" readonly>
                                     <div class="invalid-feedback"></div>
                                 </div>
 
@@ -84,8 +84,9 @@
                         })
                         .then(response => response.json())
                         .then(data => {
+                            console.log(data);
                             const idFingerprintInput = document.getElementById('id_fingerprint');
-                            if (Object.keys(data).length === 0 && data.constructor === Object) {
+                            if (data.error) {
                                 idFingerprintInput.value = "Loading...";
                             } else {
                                 idFingerprintInput.value = data;
@@ -103,7 +104,7 @@
             document.getElementById('scan').addEventListener('click', function() {
                 const apiKey = 'guru';
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                fetch('/finger-status/update-status', {
+                fetch('/finger-status/update-status-finger-guru', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -143,21 +144,28 @@
                         console.log(data.message);
                         if (data.errors) {
                             Object.keys(data.errors).forEach(fieldName => {
-                                const inputField = document.getElementById(
-                                    fieldName);
-                                inputField.formSelect.add('is-invalid')
-                                inputField.classList.add('is-invalid');
-                                inputField.nextElementSibling.textContent = data
-                                    .errors[fieldName][0];
+                                const inputField = document.getElementById(fieldName);
+                                if (fieldName === 'id_guru') {
+                                    inputField.classList.add('is-invalid');
+                                } else {
+                                    inputField.classList.add('is-invalid');
+                                    inputField.nextElementSibling.textContent = data.errors[
+                                        fieldName][0];
+                                }
                             });
+
 
                             // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki
                             const validFields = form.querySelectorAll('.is-invalid');
                             validFields.forEach(validField => {
                                 const fieldName = validField.id;
                                 if (!data.errors[fieldName]) {
-                                    validField.classList.remove('is-invalid');
-                                    validField.nextElementSibling.textContent = '';
+                                    if (fieldName === 'id_guru') {
+                                        validField.classList.remove('is-invalid');
+                                    } else {
+                                        validField.classList.remove('is-invalid');
+                                        validField.nextElementSibling.textContent = '';
+                                    }
                                 }
                             });
                         } else {
@@ -173,7 +181,7 @@
                         console.error('Error:', error);
                         Swal.fire(
                             'Gagal!',
-                            'Terjadi kesalahan saat menambahkan  data.',
+                            'Terjadi kesalahan saat menambahkan data.' + errors,
                             'error'
                         );
                     });

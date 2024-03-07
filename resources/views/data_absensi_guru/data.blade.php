@@ -90,9 +90,10 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">ID Finger</label>
-                                    <select class="form-select" id="id_finger" name="id_finger">
+                                    <input type="text" class="form-control" id="edit_id_finger" name="edit_id_finger">
+                                    {{-- <select class="form-select" id="id_finger" name="id_finger">
                                         <option value="" selected disabled>Pilih ID Finger</option>
-                                    </select>
+                                    </select> --}}
                                 </div>
                             </div>
                         </div>
@@ -179,9 +180,10 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">ID Finger</label>
-                                    <select class="form-select" id="id_finger" name="id_finger">
+                                    <input type="text" class="form-control" id="id_finger" name="id_finger">
+                                    {{-- <select class="form-select" id="id_finger" name="id_finger">
                                         <option value="" selected disabled>Pilih ID Finger</option>
-                                    </select>
+                                    </select> --}}
                                 </div>
                             </div>
                         </div>
@@ -549,6 +551,11 @@
                     myDataTable.ajax.url('{{ route('data_absensi_guru.data') }}').load();
                 });
 
+                // function reloadData() {
+                //     myDataTable.ajax.reload(null, false);
+                // }
+
+                // setInterval(reloadData, 3000);
                 // Add Data 
                 const form = document.getElementById('form_add_data');
                 form.addEventListener('submit', function(event) {

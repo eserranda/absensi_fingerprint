@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataGuru;
 use App\Models\Fingerprint;
 use Illuminate\Http\Request;
+use App\Models\FingerprintTmp;
+use App\Models\DataAbsensiGuru;
+use App\Models\DataSiswa;
 use App\Models\FingerprintGuru;
 use App\Models\FingerprintModul;
+use App\Models\FingerprintSiswa;
 use App\Models\FingerprintStatus;
-use App\Models\FingerprintTmp;
+use App\Models\JamAbsensi;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class FingerprintModulController extends Controller
@@ -24,16 +30,49 @@ class FingerprintModulController extends Controller
             return response()->json(['error' => 'Data not found'], 404);
         }
     }
+    public function getFingerIDSiswa(Request $request, $apiKey)
+    {
+        $fingerprintModul = FingerprintModul::where('modul_fingerprint', $apiKey)->first()->apiKey;
 
-    public function updateStatus(Request $request)
+        $fingerprintStatus = FingerprintTmp::where('apiKey', $fingerprintModul)->first();
+        if (!$fingerprintStatus) {
+            $data = $fingerprintStatus->id_finger;
+            return response()->json($data);
+        } else {
+            // Tangani jika tidak ada data yang ditemukan
+            return response()->json(['error' => 'Data not found'], 404);
+        }
+    }
+
+    public function updateStatusFingerGuru(Request $request)
     {
         $apiKey = $request->input('apiKey');
 
         if ($apiKey === 'guru') {
             $fingerprintStatus = FingerprintModul::where('apiKey', 'guru')->first();
             $fingerprintStatus->update(['status' => 'daftar']);
-        } else if ($apiKey === '10ips1') {
-            $fingerprintStatus = FingerprintModul::where('apiKey', '10ips1')->first();
+        }
+
+        if ($fingerprintStatus) {
+            return response()->json(['message' => 'Data berhasil diperbarui'], 200);
+        } else {
+            return response()->json(['message' => 'Data gagal diperbarui'], 500);
+        }
+    }
+
+    public function updateStatusFingerSiswa(Request $request)
+    {
+        $apiKey = $request->input('kelas');
+        $fingerprintModul = FingerprintModul::where('modul_fingerprint', $apiKey)->first()->apiKey;
+
+        if ($fingerprintModul === 'finger1') {
+            $fingerprintStatus = FingerprintModul::where('apiKey', $fingerprintModul)->first();
+            $fingerprintStatus->update(['status' => 'daftar']);
+        } else if ($fingerprintModul === 'finger2') {
+            $fingerprintStatus = FingerprintModul::where('apiKey', $fingerprintModul)->first();
+            $fingerprintStatus->update(['status' => 'daftar']);
+        } else if ($fingerprintModul === 'finger3') {
+            $fingerprintStatus = FingerprintModul::where('apiKey', $fingerprintModul)->first();
             $fingerprintStatus->update(['status' => 'daftar']);
         }
 
@@ -49,44 +88,175 @@ class FingerprintModulController extends Controller
 
         if ($apiKey == "guru") {
             $id_finger = $request->input('id');
-            $fingerprintTmp = FingerprintTmp::where('apiKey', $apiKey)->first();
+            $fingerprintTmp = FingerprintTmp::updateOrCreate(
+                ['apiKey' => $apiKey], // Kriteria pencarian
+                ['id_finger' => $id_finger] // Data yang ingin diperbarui atau dibuat jika tidak ditemukan
+            );
 
             if ($fingerprintTmp) {
-                $fingerprintTmp->update(['id_finger' => $id_finger]);
-                // Balikin ke mode Scan
-                $fingerprintGuru = FingerprintModul::where('apiKey', 'guru')->first();
-                $fingerprintGuru->update(['status' => 'scan']);
-
                 return response()->json(['status' => 'success', 'message' => 'Data berhasil diperbarui', 'id_finger' =>  $id_finger], 200);
-            } else {
-                $saveData = FingerprintTmp::create(['apiKey' => $apiKey, 'id_finger' => $id_finger]);
-                return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan', 'id_finger' =>  $id_finger], 200);
+            }
+        } else if ($apiKey == "finger1") {
+            $id_finger = $request->input('id');
+
+            $fingerprintTmp = FingerprintTmp::updateOrCreate(
+                ['apiKey' => $apiKey], // Kriteria pencarian
+                ['id_finger' => $id_finger] // Data yang ingin diperbarui atau dibuat jika tidak ditemukan
+            );
+
+            if ($fingerprintTmp) {
+                return response()->json(['status' => 'success', 'message' => 'Data berhasil diperbarui', 'id_finger' =>  $id_finger], 200);
+            }
+        } else if ($apiKey == "finger2") {
+            $id_finger = $request->input('id');
+
+            $fingerprintTmp = FingerprintTmp::updateOrCreate(
+                ['apiKey' => $apiKey], // Kriteria pencarian
+                ['id_finger' => $id_finger] // Data yang ingin diperbarui atau dibuat jika tidak ditemukan
+            );
+
+            if ($fingerprintTmp) {
+                return response()->json(['status' => 'success', 'message' => 'Data berhasil diperbarui', 'id_finger' =>  $id_finger], 200);
+            }
+        } else if ($apiKey == "finger3") {
+            $id_finger = $request->input('id');
+
+            $fingerprintTmp = FingerprintTmp::updateOrCreate(
+                ['apiKey' => $apiKey], // Kriteria pencarian
+                ['id_finger' => $id_finger] // Data yang ingin diperbarui atau dibuat jika tidak ditemukan
+            );
+
+            if ($fingerprintTmp) {
+                return response()->json(['status' => 'success', 'message' => 'Data berhasil diperbarui', 'id_finger' =>  $id_finger], 200);
             }
         }
     }
-    public function status(Request $request)
+
+    public function absen(Request $request)
+    {
+        $apiKey = $request->input('apiKey');
+        $idFinger = $request->input('id_finger');
+
+        $getApiKey = FingerprintModul::where('apiKey', $apiKey)->first();
+        $apiKey =  $getApiKey->apiKey;
+
+        if ($apiKey === 'guru') {
+            $getIdGuru = FingerprintGuru::where('id_fingerprint', $idFinger)->first();
+            $getDataGuru = DataGuru::where('id', $getIdGuru->id_guru)->first();
+
+            $timezone = 'Asia/Makassar';
+            $now = Carbon::now();
+            $now->setTimezone($timezone);
+
+            $hari = Carbon::now()->locale('id')->dayName;
+
+            $tanggalAbsen = $now->toDateString();
+            $jamMasuk = $now->format('H:i');
+
+            $getHari = JamAbsensi::where('hari', $hari)->first();
+
+            if ($jamMasuk > $getHari->jam_masuk) {
+                $keterangan = 'Terlambat';
+            } else {
+                $keterangan = '-';
+            }
+
+            $saveData = DataAbsensiGuru::create([
+                'id_guru' => $getDataGuru->id,
+                'id_fingerprint' => $idFinger,
+                'tanggal_absen' => $tanggalAbsen,
+                'jam_masuk' => $jamMasuk,
+                'keterangan' => $keterangan,
+            ]);
+
+            if ($saveData) {
+                return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
+            } else {
+                return response()->json(['status' => false, 'message' => 'Data gagal disimpan'], 500);
+            }
+        } else if ($apiKey === 'finger1') { // finger X IPS I
+            $getIdSiswa = FingerprintSiswa::where('id_fingerprint', $idFinger)->first();
+            $getDataGuru = DataSiswa::where('id', $getIdSiswa->id_siswa)->first();
+
+            $timezone = 'Asia/Makassar';
+            $now = Carbon::now();
+            $now->setTimezone($timezone);
+
+            $hari = Carbon::now()->locale('id')->dayName;
+
+            $tanggalAbsen = $now->toDateString();
+            $jamMasuk = $now->format('H:i');
+
+            $getHari = JamAbsensi::where('hari', $hari)->first();
+
+            if ($jamMasuk > $getHari->jam_masuk) {
+                $keterangan = 'Terlambat';
+            } else {
+                $keterangan = '-';
+            }
+
+            $saveData = DataAbsensiGuru::create([
+                'id_guru' => $getDataGuru->id,
+                'id_fingerprint' => $idFinger,
+                'tanggal_absen' => $tanggalAbsen,
+                'jam_masuk' => $jamMasuk,
+                'keterangan' => $keterangan,
+            ]);
+
+            if ($saveData) {
+                return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
+            } else {
+                return response()->json(['status' => false, 'message' => 'Data gagal disimpan'], 500);
+            }
+        }
+    }
+
+    public function statusFingerprint(Request $request)
     {
         $apiKey = $request->input('apiKey');
         $finger = FingerprintModul::where('apiKey', $apiKey)->first();
-        return response()->json($finger->status);
+        $mode = $finger->status;
 
-        // $data = null; // Inisialisasi $data dengan null
+        if ($apiKey == 'guru') {
+            $lastRecord = FingerprintGuru::latest()->first();
+            if (!$lastRecord) {
+                $lastID = 0;
+            } else {
+                $lastID = $lastRecord->id_fingerprint;
+            }
 
-        // if ($finger) {
-        //     $data = $finger->status; // Mengambil nilai status dari $finger
-        //     return response()->json($data);
-        // } else {
-        //     return response()->json(['message' => 'Data tidak ditemukan'], 404);
-        // };
+            return response()->json(["mode" => $mode, "last_id" => $lastID]);
+        } else if ($apiKey == 'finger1') {
+            $idModul = FingerprintModul::where('apiKey', $apiKey)->first()->id;
+            $lastRecord = FingerprintSiswa::where('id_modul_fingerprint', $idModul)->latest()->first();
+            if (!$lastRecord) {
+                $lastID = 0;
+            } else {
+                $lastID = $lastRecord->id_fingerprint;
+            }
 
-        // $status = $fingerprintStatus->status;
-        // dd($fingerprintStatus);
+            return response()->json(["mode" => $mode, "last_id" => $lastID]);
+        } else if ($apiKey == 'finger2') {
+            $idModul = FingerprintModul::where('apiKey', $apiKey)->first()->id;
+            $lastRecord = FingerprintSiswa::where('id_modul_fingerprint', $idModul)->latest()->first();
+            if (!$lastRecord) {
+                $lastID = 0;
+            } else {
+                $lastID = $lastRecord->id_fingerprint;
+            }
 
-        // if ($fingerprintStatus) {
-        //     return response()->json($apiKey);
-        // } else {
-        //     return response()->json(['message' => 'Data tidak ditemukan'], 404);
-        // }
+            return response()->json(["mode" => $mode, "last_id" => $lastID]);
+        } else if ($apiKey == 'finger3') {
+            $idModul = FingerprintModul::where('apiKey', $apiKey)->first()->id;
+            $lastRecord = FingerprintSiswa::where('id_modul_fingerprint', $idModul)->latest()->first();
+            if (!$lastRecord) {
+                $lastID = 0;
+            } else {
+                $lastID = $lastRecord->id_fingerprint;
+            }
+
+            return response()->json(["mode" => $mode, "last_id" => $lastID]);
+        }
     }
 
     public function index()

@@ -72,7 +72,7 @@
                                 </svg>
                             </span>
                             <span class="nav-link-title">
-                                Monitoring Absensi
+                                Absensi
                             </span>
                         </a>
                     </li>
@@ -448,6 +448,9 @@
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="/matpel">
                                     Mata Pelajaran
+                                </a>
+                                <a class="dropdown-item" href="/jam_absensi">
+                                    Jam Absensi
                                 </a>
                                 <a class="dropdown-item" href="/kelas" rel="noopener">
                                     Kelas

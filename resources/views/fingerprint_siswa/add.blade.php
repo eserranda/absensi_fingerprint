@@ -29,15 +29,6 @@
 
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                {{-- <label class="form-label">Pilih Modul Fingerprint</label>
-                                <select class="form-select" id="id_modul_fingerprint" name="id_modul_fingerprint">
-                                    <option value="">Pilih Modul Fingerprint</option>
-                                    @foreach ($finger as $m)
-                                        <option value="{{ $m->id }}">{{ $m->modul_fingerprint }}</option>
-                                    @endforeach
-
-                                </select> --}}
-                                {{-- <label class="form-label">Modul Fingerprint</label> --}}
                                 <label class="form-label">Modul Fingerprint</label>
                                 <input type="text " class="form-control bg-white" id="id_modul_fingerprint"
                                     name="id_modul_fingerprint" readonly>
@@ -127,6 +118,7 @@
                         });
                 });
 
+                var kelas
                 $(document).ready(function() {
                     $("#id_siswa").select2({
                         theme: "bootstrap-5",
@@ -136,8 +128,9 @@
                             url: '/get_data_siswa',
                             dataType: 'json',
                             processResults: function(data) {
+                                console.log(data);
                                 if (data && data.length > 0) {
-                                    var kelas = data[0].kelas;
+                                    kelas = data[0].kelas;
                                     $('#id_modul_fingerprint').val(kelas);
                                     var results = $.map(data, function(item) {
                                         return {
@@ -152,6 +145,61 @@
                             },
                         }
                     });
+
+                    document.getElementById('scan').addEventListener('click', function() {
+                        const kelas_siswa = kelas;
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                        fetch('/finger-status/update-status-finger-siswa', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': csrfToken,
+                                },
+                                body: JSON.stringify({
+                                    kelas: kelas_siswa
+                                }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                // Lakukan sesuatu dengan data yang diterima
+                                console.log(data);
+                            })
+                            .catch(error => {
+                                // Tangani error jika terjadi
+                                console.error('Error:', error);
+                            });
+                    });
+                });
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    function getID_siswa() {
+                        const apiKey = kelas;
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+                        const idModulFingerprint = document.getElementById('id_modul_fingerprint').value;
+                        if (!idModulFingerprint) {
+                            console.error('Modul Fingerprint  masih kosong');
+                            return;
+                        }
+                        fetch('/fingerprint/get-finger-id-siswa/' + apiKey, {
+                                method: 'GET',
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(data);
+                                const idFingerprintInput = document.getElementById('id_fingerprint');
+                                if (data.error) {
+                                    idFingerprintInput.value = "Loading...";
+                                } else {
+                                    idFingerprintInput.value = data;
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    }
+                    getID_siswa();
+                    setInterval(getID_siswa, 3000);
                 });
             </script>
         @endpush

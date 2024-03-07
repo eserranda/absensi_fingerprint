@@ -64,23 +64,27 @@
         <div class="col-sm-6 col-lg-6">
             <div class="card bg-gray-300" style="height: 16rem">
                 <div class="card-body">
-                    <div class="col-lg-8 mx-4">
-                        <select type="text" class="form-select" id="select-users" name="bulan">
-                            <option value="" selected disabled>Pilih Bulan</option>
-                            <option value="01">Januari</option>
-                            <option value="02">Februari</option>
-                            <option value="03">Maret</option>
-                            <option value="04">April</option>
-                            <option value="05">Mei</option>
-                            <option value="06">Juni</option>
-                            <option value="07">Juli</option>
-                            <option value="08">Agustus</option>
-                            <option value="09">September</option>
-                            <option value="10">Oktober</option>
-                            <option value="11">November</option>
-                            <option value="12">Desember</option>
-                        </select>
+                    <div class="mb-3 row">
+                        <label class="col-3 col-form-label mx-4">Pilih Bulan</label>
+                        <div class="col mx-3 ">
+                            <select type="text" class="form-select" id="select-users" name="bulan">
+                                <option value="" selected disabled>Pilih Bulan</option>
+                                <option value="01">Januari</option>
+                                <option value="02">Februari</option>
+                                <option value="03">Maret</option>
+                                <option value="04">April</option>
+                                <option value="05">Mei</option>
+                                <option value="06">Juni</option>
+                                <option value="07">Juli</option>
+                                <option value="08">Agustus</option>
+                                <option value="09">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Desember</option>
+                            </select>
+                        </div>
                     </div>
+
                     <div class="divide-y m-4">
                         <div class="row ">
                             <div class="col">

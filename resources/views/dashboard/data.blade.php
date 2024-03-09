@@ -5,6 +5,32 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 @endpush
 @section('content')
+    <style>
+        #clock {
+            font-family: 'Verdana', sans-serif;
+            font-size: 25px;
+            /* font-weight: bold; */
+            /* Membuat huruf tebal */
+            text-align: center;
+            color: #000000;
+            /* Warna teks */
+            background-color: rgb(105, 202, 194);
+            /* Warna latar belakang */
+            padding: 8px;
+            /* Padding untuk menjaga jarak dari tepi */
+            border-radius: 10px;
+            /* Membuat sudut elemen lebih lembut */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            /* Menambahkan bayangan lembut */
+            width: 250px;
+            /* Lebar jam */
+            margin-left: auto;
+            margin-right: auto;
+            letter-spacing: 2px;
+            /* Menambahkan jarak antara karakter */
+        }
+    </style>
+
     <div class="col-12">
         <div class="card">
             <div class="card-stamp card-stamp-lg">
@@ -23,11 +49,11 @@
             </div>
             <div class="card-body">
                 <div class="row align-items-center">
-                    <div class="col-10">
-                        <h2 class="card-title mb-2">
+                    <div class="col">
+                        <h2 class="page-title mb-1">
                             SISTEM MONITORING ABSENSI, SMAN 1 SUMARORONG
                         </h2>
-                        <div class="markdown text-secondary">
+                        <div class="markdown text-secondary ">
                             @if (Auth::user()->roles->contains('name', 'admin') ||
                                     Auth::user()->roles->contains('name', 'guru_bk') ||
                                     Auth::user()->roles->contains('name', 'wali_kelas') ||
@@ -38,6 +64,10 @@
                             {{ Auth::user()->roles->pluck('name')->implode(', ') }}
                             </p>
                         </div>
+                    </div>
+                    <div class="col-auto ms-auto">
+                        <div id="clock"></div>
+
                     </div>
                 </div>
             </div>
@@ -102,103 +132,7 @@
         <div class="card mt-2">
             <div class="card-body">
                 <h3 class="card-title">Status Absensi Fingerprint</h3>
-                <div class="row row-deck row-cards">
-
-                    <div class="col-md-6 col-xl-3">
-                        <div class="card card-sm">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <span class="status-indicator status-green status-indicator-animated">
-                                            <span class="status-indicator-circle"></span>
-                                            <span class="status-indicator-circle"></span>
-                                            <span class="status-indicator-circle"></span>
-                                        </span>
-                                    </div>
-                                    <div class="col">
-                                        <h3 class="card-title mb-1">
-                                            Guru dan Pegawai
-                                        </h3>
-                                        <div class="text-secondary">
-                                            Absensi Online
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 col-xl-3">
-                        <div class="card card-sm">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <span class="status-indicator status-red status-indicator-animated">
-                                            <span class="status-indicator-circle"></span>
-                                            <span class="status-indicator-circle"></span>
-                                            <span class="status-indicator-circle"></span>
-                                        </span>
-                                    </div>
-                                    <div class="col">
-                                        <h3 class="card-title mb-1">
-                                            Kelas XI MIPA 1
-                                        </h3>
-                                        <div class="text-secondary">
-                                            Absensi Offline
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 col-xl-3">
-                        <div class="card card-sm">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <span class="status-indicator status-green status-indicator-animated">
-                                            <span class="status-indicator-circle"></span>
-                                            <span class="status-indicator-circle"></span>
-                                            <span class="status-indicator-circle"></span>
-                                        </span>
-                                    </div>
-                                    <div class="col">
-                                        <h3 class="card-title mb-1">
-                                            Kelas X IPS 1
-                                        </h3>
-                                        <div class="text-secondary">
-                                            Absensi Online
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 col-xl-3">
-                        <div class="card card-sm">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col-auto">
-                                        <span class="status-indicator status-green status-indicator-animated">
-                                            <span class="status-indicator-circle"></span>
-                                            <span class="status-indicator-circle"></span>
-                                            <span class="status-indicator-circle"></span>
-                                        </span>
-                                    </div>
-                                    <div class="col">
-                                        <h3 class="card-title mb-1">
-                                            Kelas XII IPS 1
-                                        </h3>
-                                        <div class="text-secondary">
-                                            Absensi Online
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="row row-deck row-cards" id="data-container">
 
                 </div>
             </div>
@@ -233,10 +167,9 @@
                             </div>
                             <div class="col-auto">
                                 <a href="/akun/guru" class="btn btn-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="icon icon-tabler icon-tabler-eye-search" width="24" height="24"
-                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                        stroke-linecap="round" stroke-linejoin="round">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-search"
+                                        width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                                         <path
@@ -537,19 +470,14 @@
                         <div class="row align-items-center">
                             <div class="col-auto">
                                 <span class="bg-info text-white avatar">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="icon icon-tabler icon-tabler-clipboard-list" width="24" height="24"
-                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                        stroke-linecap="round" stroke-linejoin="round">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home-edit"
+                                        width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5"
+                                        stroke="currentColor" fill="none" stroke-linecap="round"
+                                        stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path
-                                            d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
-                                        <path
-                                            d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
-                                        <path d="M9 12l.01 0" />
-                                        <path d="M13 12l2 0" />
-                                        <path d="M9 16l.01 0" />
-                                        <path d="M13 16l2 0" />
+                                        <path d="M9 21v-6a2 2 0 0 1 2 -2h2c.645 0 1.218 .305 1.584 .78" />
+                                        <path d="M20 11l-8 -8l-9 9h2v7a2 2 0 0 0 2 2h4" />
+                                        <path d="M18.42 15.61a2.1 2.1 0 0 1 2.97 2.97l-3.39 3.42h-3v-3l3.42 -3.39z" />
                                     </svg>
                                 </span>
                             </div>
@@ -706,6 +634,40 @@
 
     @push('script')
         <script>
+            function updateTime() {
+                var days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                var currentTime = new Date();
+                var hours = currentTime.getHours();
+                var minutes = currentTime.getMinutes();
+                var seconds = currentTime.getSeconds();
+                var day = days[currentTime.getDay()];
+
+                // Menambahkan angka 0 di depan angka tunggal
+                hours = (hours < 10 ? "0" : "") + hours;
+                minutes = (minutes < 10 ? "0" : "") + minutes;
+                seconds = (seconds < 10 ? "0" : "") + seconds;
+                timeZone = "  Wita";
+
+                // Format waktu
+                var timeString = hours + ":" + minutes + ":" + seconds + timeZone + "<br>" + day;
+
+                // Memasukkan waktu ke dalam elemen dengan id "clock"
+                document.getElementById("clock").innerHTML = timeString;
+            }
+
+            setInterval(updateTime, 1000);
+            updateTime();
+
+            // window.setTimeout("waktu()", 1000);
+
+            // function waktu() {
+            //     var waktu = new Date();
+            //     setTimeout("waktu()", 1000);
+            //     document.getElementById("jam").innerHTML = waktu.getHours();
+            //     document.getElementById("menit").innerHTML = waktu.getMinutes();
+            //     document.getElementById("detik").innerHTML = waktu.getSeconds();
+            // }
+
             document.addEventListener('DOMContentLoaded', function() {
                 async function getData() {
                     try {
@@ -730,6 +692,45 @@
                 }
                 getData()
                 setInterval(getData, 5000);
+
+                async function cekStatusModul() {
+                    try {
+                        const response = await fetch('/dashboard/cek-status-modul');
+                        const data = await response.json();
+
+                        // Membuat elemen untuk setiap data dan menambahkannya ke dalam container
+                        const container = document.getElementById('data-container');
+                        container.innerHTML = ''; // Bersihkan kontainer sebelum menambahkan elemen baru
+                        data.forEach(item => {
+                            const card = document.createElement('div');
+                            card.classList.add('col-md-6', 'col-xl-3');
+                            card.innerHTML = `
+                                <div class="card card-sm">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                                <span class="status-indicator status-${item.active ? 'green' : 'red'} status-indicator-animated">
+                                                    <span class="status-indicator-circle"></span>
+                                                    <span class="status-indicator-circle"></span>
+                                                    <span class="status-indicator-circle"></span>
+                                                </span>
+                                            </div>
+                                            <div class="col">
+                                                <h3 class="card-title mb-1">${item.modul_fingerprint}</h3>
+                                                <div class="text-secondary">${item.active ? 'Online' : 'Offline'}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            container.appendChild(card);
+                        });
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                }
+                cekStatusModul()
+                setInterval(cekStatusModul, 5000);
             });
         </script>
     @endpush

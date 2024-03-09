@@ -47,7 +47,7 @@
         </div>
 
         <div class="col-auto d-none d-md-flex">
-            <a href="/rekap-absensi-siswa" class="btn btn-primary">
+            <a class="btn btn-primary" onclick="goBack()">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-back" width="24"
                     height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -300,6 +300,10 @@
 
     @push('script')
         <script>
+            function goBack() {
+                window.history.back();
+            }
+
             document.addEventListener('DOMContentLoaded', async function() {
                 const id = {{ $data->id }};
 
@@ -381,7 +385,7 @@
                 window.TomSelect && (new TomSelect(el = document.getElementById('select-users'), {
                     copyClassesToDropdown: false,
                     dropdownParent: 'body',
-                    controlInput: '<input>',
+                    // controlInput: '<input>',
                     render: {
                         item: function(data, escape) {
                             if (data.customProperties) {

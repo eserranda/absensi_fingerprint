@@ -24,16 +24,6 @@ use App\Http\Controllers\FingerprintModulController;
 use App\Http\Controllers\FingerprintSiswaController;
 use App\Http\Controllers\FingerprintStatusController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/login', [AuthController::class, 'loginForm'])->name("login")->middleware('guest'); // Form login
 Route::post('/login', [AuthController::class, 'authenticate'])->name("login")->middleware('guest'); // Login
@@ -109,6 +99,7 @@ Route::controller(DashboardController::class)->group(function () {
     Route::get('/', 'index')->name("dashboard.data")->middleware('auth');
     Route::get('/dashboard', 'index')->name("dashboard.data")->middleware('auth');
     Route::get('/dashboard/count_data', 'count_data')->name("dashboard.count_data")->middleware('auth');
+    Route::get('/dashboard/cek-status-modul', 'cekStatusModul')->name("dashboard.cek-status-modul");
 
     // Route::POST('/detail', 'detail')->name("daftar_absensi.detail");
 });
@@ -129,9 +120,7 @@ Route::controller(DataSiswaController::class)->group(function () {
     Route::POST('/update_data_siswa', 'update')->name("update_data_siswa")->middleware('auth');
     Route::get('/data_siswa/edit/{id}', 'edit')->name("simpan_data_siswa")->middleware('auth');
     Route::get('/data_siswa/getid/{id}', 'getID')->name("getid_data_siswa")->middleware('auth');
-
     Route::get('/siswa/get_kelas_siswa/{id}', 'getKelasSiswa')->name("get_kelas_siswa")->middleware('auth');
-
     Route::delete('/data_siswa/delete/{id}', 'destroy')->name("hapus_data_siswa")->middleware('auth');
     Route::get('/data_siswa_tes', 'tes');
     Route::get('/get_data_siswa', 'getDataSiswa')->name("get_data_siswa")->middleware('auth');
@@ -171,26 +160,25 @@ Route::controller(FingerprintGuruController::class)->group(function () {
     Route::get('/fingerprint_guru/add', 'create')->name("fingerprint_guru.add")->middleware('auth');
     Route::post('/fingerprint_guru/store', 'store')->name("fingerprint_guru.store")->middleware('auth');
     Route::delete('/fingerprint_guru/delete/{id}', 'destroy')->name("fingerprint_guru.delete")->middleware('auth');
+    Route::get('/fingerprint_guru/detail/{id}', 'show')->name("fingerprint_guru.detail")->middleware('auth');
+    Route::post('/fingerprint_guru/deleted_id', 'deleted_id')->name("fingerprint_deleted_id")->middleware('auth');
+    Route::get('/fingerprint_guru/status_deleted/{modul}/{id_finger}', 'status_deleted')->name("fingerprint_status_deleted")->middleware('auth');
 });
 
 Route::controller(FingerprintSiswaController::class)->group(function () {
     Route::get('/fingerprint_siswa', 'index')->name("fingerprint_siswa.data")->middleware('auth');
     Route::get('/fingerprint_siswa/add', 'create')->name("fingerprint_siswa.add")->middleware('auth');
-
     Route::get('/fingerprint_siswa/detail/{id}', 'show')->name("fingerprint_siswa.detail")->middleware('auth');
-
     Route::post('/fingerprint_siswa/store', 'store')->name("fingerprint_siswa.store")->middleware('auth');
     Route::delete('/fingerprint_siswa/delete/{id}', 'destroy')->name("fingerprint_siswa.delete")->middleware('auth');
-
-    Route::post('/fingerprint_moduls/deleted_id', 'deleted_id')->name("fingerprint_deleted_id")->middleware('auth');
-    Route::get('/fingerprint_moduls/status_deleted/{modul}/{id_finger}', 'status_deleted')->name("fingerprint_status_deleted")->middleware('auth');
+    Route::post('/fingerprint_siswa/deleted_id', 'deleted_id')->name("fingerprint_deleted_id")->middleware('auth');
+    Route::get('/fingerprint_siswa/status_deleted/{modul}/{id_finger}', 'status_deleted')->name("fingerprint_status_deleted")->middleware('auth');
 });
 
 Route::controller(FingerprintModulController::class)->group(function () {
     Route::get('/fingerprint', 'index')->name("fingerprint.data")->middleware('auth');
     Route::post('/fingerprint/store', 'store')->name("fingerprint.store")->middleware('auth');
     Route::delete('/fingerprint/delete/{id}', 'destroy')->name("fingerprint.delete")->middleware('auth');
-
     Route::post('/finger-status/update-status-finger-guru', 'updateStatusFingerGuru')->name("fingerprint.update_status")->middleware('auth');
     Route::post('/finger-status/update-status-finger-siswa', 'updateStatusFingerSiswa')->name("fingerprint.update_status")->middleware('auth');
     Route::get('/fingerprint/get-finger-id/{apiKey}', 'getFingerID')->middleware('auth');

@@ -135,7 +135,8 @@
                                     <input type="hidden" class="form-control" id="edit_id" name="edit_id">
                                     {{-- <input type="hidden" class="form-control" id="data_id_siswa" name="data_id_siswa"> --}}
                                     <label class="form-label">Nama Lengkap</label>
-                                    <select class="form-select  text-bg-cyan" id="edit_id_siswa" name="edit_id_siswa">
+                                    <select class="form-select  text-bg-cyan cursor-not-allowed" id="edit_id_siswa"
+                                        name="edit_id_siswa">
 
                                     </select>
                                 </div>
@@ -143,8 +144,8 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">NISN</label>
-                                    <input type="text" class="form-control text-bg-cyan" id="edit_username"
-                                        name="edit_username" readonly>
+                                    <input type="text" class="form-control text-bg-cyan cursor-not-allowed"
+                                        id="edit_username" name="edit_username" readonly>
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>

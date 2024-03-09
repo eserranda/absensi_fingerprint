@@ -12,9 +12,6 @@ use Illuminate\Support\Facades\Validator;
 
 class FingerprintSiswaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -59,20 +56,12 @@ class FingerprintSiswaController extends Controller
         return view('fingerprint_siswa.data');
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $finger = FingerprintModul::all();
         return view('fingerprint_siswa.add', compact('finger'));
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $kelas =  $request->input('id_modul_fingerprint');
@@ -84,13 +73,12 @@ class FingerprintSiswaController extends Controller
         $validator = Validator::make($request->all(), [
             'id_siswa' => 'required|unique:fingerprint_siswas',
             'id_modul_fingerprint' => 'required',
-            'id_fingerprint' => 'required|unique:fingerprint_siswas',
+            'id_fingerprint' => 'required',
         ], [
             'id_siswa.required' => 'ID siswa tidak boleh kosong',
             'id_siswa.unique' => 'ID siswa sudah ada',
             'id_modul_fingerprint.required' => 'Modul Fingerprint tidak boleh kosong',
             'id_fingerprint.required' => 'Modul Fingerprint tidak boleh kosong',
-            'id_fingerprint.unique' => 'Modul Fingerprint sudah terdaftar',
         ]);
 
         if ($validator->fails()) {

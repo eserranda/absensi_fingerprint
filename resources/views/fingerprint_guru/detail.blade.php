@@ -11,27 +11,27 @@
 @section('content')
     <div class="card mb-3 ">
         <div class="card-header">
-            <h3 class="card-title">Base info siswa</h3>
+            <h3 class="card-title">Base info Guru</h3>
         </div>
         <div class="card-body">
             <div class="datagrid">
                 <div class="datagrid-item">
                     <div class="datagrid-title">Nama</div>
-                    <div class="datagrid-content">{{ $data->siswa->nama }}</div>
+                    <div class="datagrid-content">{{ $data->guru->nama }}</div>
                 </div>
                 <div class="datagrid-item">
                     <div class="datagrid-title">NISN</div>
-                    <div class="datagrid-content">{{ $data->siswa->nisn }}</div>
+                    <div class="datagrid-content">{{ $data->guru->nuptk }}</div>
                 </div>
                 <div class="datagrid-item">
-                    <div class="datagrid-title">Kelas</div>
-                    <div class="datagrid-content">{{ $data->siswa->kelas }}</div>
+                    <div class="datagrid-title">Status Pegawai</div>
+                    <div class="datagrid-content">{{ $data->guru->status_pegawai }}</div>
                 </div>
                 <div class="datagrid-item">
-                    <div class="datagrid-title">Gender</div>
-                    <div class="datagrid-content">{{ $data->siswa->jenis_kelamin }}</div>
+                    <div class="datagrid-title">Jenis PTK</div>
+                    <div class="datagrid-content">{{ $data->guru->jenis_ptk }}</div>
                 </div>
-                {{-- <br> --}}
+
                 <div class="datagrid-item">
                     <div class="datagrid-title">ID Fingerprint</div>
                     <div class="datagrid-content">
@@ -82,7 +82,10 @@
         <div class="col-12 col-md-9 d-flex flex-column">
             <div class="card-body">
                 <h2 class="mb-4">Delete ID Fingerprint</h2>
-                <h3 class="card-title  mb-1">ID Finger</h3>
+                <h3 class="card-title  mb-1">ID Finger
+                    <span class="form-help mx-2" data-bs-toggle="popover" data-bs-placement="top" data-bs-html="true"
+                        data-bs-content="<p>ID Finger yang terdaftar pada modul Fingerprint Guru dan Pegawai, jika tombol hapus di tekan maka akan  menghapus ID Finger yang ada pada modul</p>">?</span>
+                </h3>
                 <div>
                     <div class="row g-2">
 
@@ -105,31 +108,9 @@
                                     <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
                                 </svg>
                             </a>
-
                         </div>
                     </div>
                 </div>
-                {{-- <h3 class="card-title mt-4">Password</h3>
-                <p class="card-subtitle">You can set a permanent password if you don't want to use temporary login codes.
-                </p>
-                <div>
-                    <a href="#" class="btn">
-                        Set new password
-                    </a>
-                </div> --}}
-                {{-- <h3 class="card-title mt-4">Public profile</h3>
-                <p class="card-subtitle">Making your profile public means that anyone on the Dashkit network will be able
-                    to
-                    find
-                    you.</p>
-                <div>
-                    <label class="form-check form-switch form-switch-lg">
-                        <input class="form-check-input" type="checkbox">
-                        <span class="form-check-label form-check-label-on">You're currently visible</span>
-                        <span class="form-check-label form-check-label-off">You're
-                            currently invisible</span>
-                    </label>
-                </div> --}}
             </div>
         </div>
     </div>
@@ -151,6 +132,7 @@
                 }
             });
 
+
             function deleteData(id) {
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
@@ -164,7 +146,7 @@
                     if (result.isConfirmed) {
                         var csrfToken = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
-                            url: '/fingerprint_siswa/delete/' + id,
+                            url: '/fingerprint_guru/delete/' + id,
                             type: 'DELETE',
                             data: {
                                 _token: csrfToken
@@ -181,7 +163,7 @@
                                         confirmButtonText: 'OK'
                                     }).then((result) => {
                                         if (result.isConfirmed) {
-                                            window.location.href = '/fingerprint_siswa';
+                                            window.location.href = '/fingerprint_guru';
                                         }
                                     });
                                 } else {
@@ -227,7 +209,7 @@
                             id_finger: id_finger
                         };
 
-                        fetch('/fingerprint_siswa/deleted_id', {
+                        fetch('/fingerprint_guru/deleted_id', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -253,7 +235,7 @@
 
 
                 function getStatusDeleted(modul, id_finger) {
-                    fetch('/fingerprint_siswa/status_deleted/' + modul + '/' + id_finger, {
+                    fetch('/fingerprint_guru/status_deleted/' + modul + '/' + id_finger, {
                             method: 'GET',
                         })
                         .then(response => {

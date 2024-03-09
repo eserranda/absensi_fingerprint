@@ -7,6 +7,7 @@ use App\Models\Fingerprint;
 use Illuminate\Http\Request;
 use App\Models\FingerprintTmp;
 use App\Models\DataAbsensiGuru;
+use App\Models\DataAbsensiSiswa;
 use App\Models\DataSiswa;
 use App\Models\FingerprintGuru;
 use App\Models\FingerprintModul;
@@ -24,6 +25,13 @@ class FingerprintModulController extends Controller
         $apiKey = $request->input('apiKey');
         $finger = FingerprintModul::where('apiKey', $apiKey)->first();
         $mode = $finger->status;
+
+        // Atur zona waktu yang diinginkan
+        $timezone = 'Asia/Makassar';
+        $now = Carbon::now($timezone);
+        $finger->updated_at = $now;
+
+        $finger->update();
 
         if ($apiKey == 'guru') {
             $lastRecord = FingerprintGuru::latest()->first();
@@ -102,9 +110,31 @@ class FingerprintModulController extends Controller
     public function updateStatusFingerGuru(Request $request)
     {
         $apiKey = $request->input('apiKey');
-
         if ($apiKey === 'guru') {
             $fingerprintStatus = FingerprintModul::where('apiKey', 'guru')->first();
+            $fingerprintStatus->update(['status' => 'daftar']);
+        }
+
+        if ($fingerprintStatus) {
+            return response()->json(['message' => 'Data berhasil diperbarui'], 200);
+        } else {
+            return response()->json(['message' => 'Data gagal diperbarui'], 500);
+        }
+    }
+
+    public function updateStatusFingerSiswa(Request $request)
+    {
+        $apiKey = $request->input('kelas');
+        $fingerprintModul = FingerprintModul::where('modul_fingerprint', $apiKey)->first()->apiKey;
+
+        if ($fingerprintModul === 'finger1') {
+            $fingerprintStatus = FingerprintModul::where('apiKey', $fingerprintModul)->first();
+            $fingerprintStatus->update(['status' => 'daftar']);
+        } else if ($fingerprintModul === 'finger2') {
+            $fingerprintStatus = FingerprintModul::where('apiKey', $fingerprintModul)->first();
+            $fingerprintStatus->update(['status' => 'daftar']);
+        } else if ($fingerprintModul === 'finger3') {
+            $fingerprintStatus = FingerprintModul::where('apiKey', $fingerprintModul)->first();
             $fingerprintStatus->update(['status' => 'daftar']);
         }
 
@@ -137,32 +167,9 @@ class FingerprintModulController extends Controller
         // }
     }
 
-    public function updateStatusFingerSiswa(Request $request)
-    {
-        $apiKey = $request->input('kelas');
-        $fingerprintModul = FingerprintModul::where('modul_fingerprint', $apiKey)->first()->apiKey;
-
-        if ($fingerprintModul === 'finger1') {
-            $fingerprintStatus = FingerprintModul::where('apiKey', $fingerprintModul)->first();
-            $fingerprintStatus->update(['status' => 'daftar']);
-        } else if ($fingerprintModul === 'finger2') {
-            $fingerprintStatus = FingerprintModul::where('apiKey', $fingerprintModul)->first();
-            $fingerprintStatus->update(['status' => 'daftar']);
-        } else if ($fingerprintModul === 'finger3') {
-            $fingerprintStatus = FingerprintModul::where('apiKey', $fingerprintModul)->first();
-            $fingerprintStatus->update(['status' => 'daftar']);
-        }
-
-        if ($fingerprintStatus) {
-            return response()->json(['message' => 'Data berhasil diperbarui'], 200);
-        } else {
-            return response()->json(['message' => 'Data gagal diperbarui'], 500);
-        }
-    }
     public function saveID(Request $request)
     {
         $apiKey = $request->input('apiKey');
-
         if ($apiKey == "guru") {
             $id_finger = $request->input('id');
             $fingerprintTmp = FingerprintTmp::updateOrCreate(
@@ -215,9 +222,14 @@ class FingerprintModulController extends Controller
         $idFinger = $request->input('id_finger');
 
         $getApiKey = FingerprintModul::where('apiKey', $apiKey)->first();
-        $apiKey =  $getApiKey->apiKey;
 
-        if ($apiKey === 'guru') {
+        if ($getApiKey === null) {
+            return response()->json(['status' => false, 'message' => 'Data modul tidak ditemukan'], 404);
+        }
+
+        $apiKeyValue = $getApiKey->apiKey;
+
+        if ($apiKeyValue === 'guru') {
             $getIdGuru = FingerprintGuru::where('id_fingerprint', $idFinger)->first();
             $getDataGuru = DataGuru::where('id', $getIdGuru->id_guru)->first();
 
@@ -225,12 +237,16 @@ class FingerprintModulController extends Controller
             $now = Carbon::now();
             $now->setTimezone($timezone);
 
-            $hari = Carbon::now()->locale('id')->dayName;
+            $hari = $now->locale('id')->dayName;
 
             $tanggalAbsen = $now->toDateString();
-            $jamMasuk = $now->format('H:i');
+            $jamMasuk = $now->format('H:i:s');
 
             $getHari = JamAbsensi::where('hari', $hari)->first();
+
+            if ($getHari === null) {
+                return response()->json(['status' => false, 'message' => 'Belum ada hari terdafatar'], 404);
+            }
 
             if ($jamMasuk > $getHari->jam_masuk) {
                 $keterangan = 'Terlambat';
@@ -251,18 +267,29 @@ class FingerprintModulController extends Controller
             } else {
                 return response()->json(['status' => false, 'message' => 'Data gagal disimpan'], 500);
             }
-        } else if ($apiKey === 'finger1') { // finger X IPS I
-            $getIdSiswa = FingerprintSiswa::where('id_fingerprint', $idFinger)->first();
-            $getDataGuru = DataSiswa::where('id', $getIdSiswa->id_siswa)->first();
+        } else {
+            $getDataModul = FingerprintModul::where('apiKey', $apiKeyValue)->first()->id;
+
+            $getIdSiswa = FingerprintSiswa::where('id_fingerprint', $idFinger)
+                ->where('id_modul_fingerprint', $getDataModul)
+                ->first();
+
+            if ($getIdSiswa === null) {
+                return response()->json(['status' => false, 'message' => 'Data siswa tidak ditemukan'], 404);
+            }
+
+            $idSiswaValue  = $getIdSiswa->id_siswa;
+
+            $getDataSiswa = DataSiswa::where('id', $idSiswaValue)->first();
 
             $timezone = 'Asia/Makassar';
             $now = Carbon::now();
             $now->setTimezone($timezone);
 
-            $hari = Carbon::now()->locale('id')->dayName;
+            $hari = $now->locale('id')->dayName;
 
             $tanggalAbsen = $now->toDateString();
-            $jamMasuk = $now->format('H:i');
+            $jamMasuk = $now->format('H:i:s');
 
             $getHari = JamAbsensi::where('hari', $hari)->first();
 
@@ -272,8 +299,9 @@ class FingerprintModulController extends Controller
                 $keterangan = '-';
             }
 
-            $saveData = DataAbsensiGuru::create([
-                'id_guru' => $getDataGuru->id,
+            $saveData = DataAbsensiSiswa::create([
+                'id_siswa' => $getDataSiswa->id,
+                'kelas' => $getDataSiswa->kelas,
                 'id_fingerprint' => $idFinger,
                 'tanggal_absen' => $tanggalAbsen,
                 'jam_masuk' => $jamMasuk,
@@ -288,32 +316,27 @@ class FingerprintModulController extends Controller
         }
     }
 
-
-
     public function index()
     {
-
         $data = FingerprintModul::all();
         return view('fingerprint.data', compact('data'));
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'modul_fingerprint' => 'required|string',
-            'apiKey' => 'required',
+            'modul_fingerprint' => 'required|string|unique:fingerprint_moduls,modul_fingerprint',
+            'apiKey' => 'required|string|unique:fingerprint_moduls,apiKey',
+        ], [
+            'modul_fingerprint.required' => 'Modul Fingerprint harus diisi',
+            'modul_fingerprint.unique' => 'Modul Fingerprint sudah ada',
+            'apiKey.required' => 'API Key harus diisi',
+            'apiKey.unique' => 'API Key sudah ada',
         ]);
 
         if ($validator->fails()) {

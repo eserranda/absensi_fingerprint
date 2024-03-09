@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Kelas;
 use App\Models\Matpel;
@@ -12,13 +13,11 @@ use Illuminate\Http\Request;
 use App\Models\FingerprintGuru;
 use App\Models\JadwalPelajaran;
 use App\Models\DataAbsensiSiswa;
+use App\Models\FingerprintModul;
 use App\Models\FingerprintSiswa;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $siswa = DataAbsensiSiswa::where('keterangan', 'terlambat')
@@ -59,6 +58,26 @@ class DashboardController extends Controller
         $id = $request->input('id');
         $absensi = DataAbsensiSiswa::findOrFail($id);
         return response()->json($absensi);
+    }
+
+    public function cekStatusModul()
+    {
+        $statusModul = FingerprintModul::all();
+        $currentTime = Carbon::now('Asia/Makassar');
+
+        $fiveSecondsAgo = $currentTime->copy()->subSeconds(5);
+
+        foreach ($statusModul as $modul) {
+            $updatedAt = $modul->updated_at;
+
+            if ($updatedAt->greaterThanOrEqualTo($fiveSecondsAgo)) {
+                $modul->active = true;
+            } else {
+                $modul->active = false;
+            }
+        }
+
+        return response()->json($statusModul);
     }
 
     public function create()

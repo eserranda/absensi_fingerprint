@@ -11,6 +11,7 @@ class FingerprintModul extends Model
     protected $fillable = [
         'modul_fingerprint',
         'apiKey',
-        'status'
+        'status',
+        'updated_at'
     ];
 }

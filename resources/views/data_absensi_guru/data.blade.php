@@ -114,7 +114,7 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Jam Masuk</label>
-                                    <input type="time" class="form-control" id="edit_jam_masuk" name="edit_jam_masuk">
+                                    <input type="time-local" class="form-control" id="edit_jam_masuk" name="edit_jam_masuk">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -122,7 +122,8 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Jam Keluar</label>
-                                    <input type="time" class="form-control" id="edit_jam_keluar" name="edit_jam_keluar">
+                                    <input type="time-local" class="form-control" id="edit_jam_keluar"
+                                        name="edit_jam_keluar">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>

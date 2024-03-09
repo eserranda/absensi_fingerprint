@@ -56,7 +56,7 @@
                                 fingerprint </p>
                         </div>
                         <div class="row g-2 mb-4">
-                            <div class="col-md-4">
+                            <div class="col-6">
                                 <input type="text" class="form-control  bg-azure-lt text-dark" id="id_fingerprint"
                                     name="id_fingerprint" readonly>
                                 <div class="invalid-feedback"></div>

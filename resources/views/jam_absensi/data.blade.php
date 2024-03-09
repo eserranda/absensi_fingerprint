@@ -67,6 +67,7 @@
                                         <option value="Kamis">Kamis</option>
                                         <option value="Jumat">Jumat</option>
                                         <option value="Sabtu">Sabtu</option>
+                                        <option value="Minggu">Minggu</option>
                                     </select>
                                     <div class="invalid-feedback"></div>
 
@@ -128,6 +129,7 @@
                                         <option value="Kamis">Kamis</option>
                                         <option value="Jumat">Jumat</option>
                                         <option value="Sabtu">Sabtu</option>
+                                        <option value="Minggu">Minggu</option>
                                     </select>
                                     <div class="invalid-feedback"></div>
                                 </div>

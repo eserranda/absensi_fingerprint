@@ -80,7 +80,7 @@
                                     <label class="form-label">Modul Fingerprint</label>
                                     <select class="form-select" name="modul_fingerprint" id="modul_fingerprint">
                                         <option value="" selected disabled>Pilih Modul Fingerprint</option>
-                                        <option value="guru">Guru Dan pegawai</option>
+                                        <option value="Guru Dan pegawai">Guru Dan pegawai</option>
                                     </select>
 
                                     <div class="invalid-feedback"></div>

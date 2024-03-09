@@ -122,7 +122,7 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Jam Masuk</label>
-                                    <input type="time" class="form-control" id="jam_masuk" name="jam_masuk">
+                                    <input type="time-local" class="form-control" id="jam_masuk" name="jam_masuk">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -130,7 +130,7 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Jam Keluar</label>
-                                    <input type="time" class="form-control" id="jam_keluar" name="jam_keluar">
+                                    <input type="time-local" class="form-control" id="jam_keluar" name="jam_keluar">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>

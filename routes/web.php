@@ -176,8 +176,14 @@ Route::controller(FingerprintGuruController::class)->group(function () {
 Route::controller(FingerprintSiswaController::class)->group(function () {
     Route::get('/fingerprint_siswa', 'index')->name("fingerprint_siswa.data")->middleware('auth');
     Route::get('/fingerprint_siswa/add', 'create')->name("fingerprint_siswa.add")->middleware('auth');
+
+    Route::get('/fingerprint_siswa/detail/{id}', 'show')->name("fingerprint_siswa.detail")->middleware('auth');
+
     Route::post('/fingerprint_siswa/store', 'store')->name("fingerprint_siswa.store")->middleware('auth');
     Route::delete('/fingerprint_siswa/delete/{id}', 'destroy')->name("fingerprint_siswa.delete")->middleware('auth');
+
+    Route::post('/fingerprint_moduls/deleted_id', 'deleted_id')->name("fingerprint_deleted_id")->middleware('auth');
+    Route::get('/fingerprint_moduls/status_deleted/{modul}/{id_finger}', 'status_deleted')->name("fingerprint_status_deleted")->middleware('auth');
 });
 
 Route::controller(FingerprintModulController::class)->group(function () {

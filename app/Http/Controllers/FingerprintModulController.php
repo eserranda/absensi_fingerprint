@@ -73,7 +73,7 @@ class FingerprintModulController extends Controller
         }
     }
 
-    public function getFingerID(Request $request, $apiKey)
+    public function getFingerID($apiKey)
     {
         $fingerprintStatus = FingerprintTmp::where('apiKey', $apiKey)->first();
         if ($fingerprintStatus) {
@@ -84,14 +84,15 @@ class FingerprintModulController extends Controller
             return response()->json(['error' => 'Data not found'], 404);
         }
     }
-    public function getFingerIDSiswa(Request $request, $apiKey)
+    public function getFingerIDSiswa($apiKey)
     {
         $fingerprintModul = FingerprintModul::where('modul_fingerprint', $apiKey)->first()->apiKey;
-
-        $fingerprintStatus = FingerprintTmp::where('apiKey', $fingerprintModul)->first();
-        if (!$fingerprintStatus) {
-            $data = $fingerprintStatus->id_finger;
-            return response()->json($data);
+        $fingerprintStatus = FingerprintTmp::where('apiKey', $fingerprintModul)->first()->id_finger;
+        if ($fingerprintStatus != null) {
+            $resetModul = FingerprintModul::where('modul_fingerprint', $apiKey)->update(['status' => 'scan']);
+            if ($resetModul) {
+                return response()->json($fingerprintStatus);
+            }
         } else {
             // Tangani jika tidak ada data yang ditemukan
             return response()->json(['error' => 'Data not found'], 404);
@@ -112,6 +113,28 @@ class FingerprintModulController extends Controller
         } else {
             return response()->json(['message' => 'Data gagal diperbarui'], 500);
         }
+    }
+
+    public function deletedStatus(Request $request)
+    {
+        $apiKey = $request->input('apiKey');
+        $value = $request->input('value');
+        $updateDeletedStatus = FingerprintModul::where('apiKey', $apiKey)->update(['deleted_status' =>  $value]);
+        if ($updateDeletedStatus) {
+            return response()->json(['message' => 'Data berhasil diperbarui'], 200);
+        } else {
+            return response()->json(['message' => 'Data gagal diperbarui'], 500);
+        }
+        // dd($updateDeletedStatus);
+        // if ($apiKey === 'guru') {
+        //     $fingerprintStatus->update(['status' => 'daftar']);
+        // }
+
+        // if ($fingerprintStatus) {
+        //     return response()->json(['message' => 'Data berhasil diperbarui'], 200);
+        // } else {
+        //     return response()->json(['message' => 'Data gagal diperbarui'], 500);
+        // }
     }
 
     public function updateStatusFingerSiswa(Request $request)

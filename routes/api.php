@@ -26,6 +26,7 @@ Route::controller(FingerprintModulController::class)->group(function () {
     Route::post('/fingerprint-status', 'statusFingerprint')->name("fingerprint.status");
     Route::post('/save-id', 'saveID')->name("fingerprint.save_id");
     Route::post('/absen', 'absen')->name("fingerprint.absen");
+    Route::post('/deleted-status', 'deletedStatus');
     // Route::post('/finger-status/update-status', 'updateStatus')->name("fingerprint.update_status");
 });
 

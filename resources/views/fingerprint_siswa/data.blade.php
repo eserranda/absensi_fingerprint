@@ -40,7 +40,11 @@
 
     @push('script')
         <script type="text/javascript">
-            function hapus(id) {
+            function detail(id) {
+                alert(id);
+            }
+
+            function hapus(id, modul, id_finger) {
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
                     text: 'Data akan dihapus permanen!',
@@ -52,38 +56,65 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                        $.ajax({
-                            url: '/fingerprint_siswa/delete/' + id,
-                            type: 'DELETE',
-                            data: {
-                                _token: csrfToken
-                            },
-                            success: function(response) {
-                                console.log('Response:', response);
-                                if (response.status) {
-                                    Swal.fire(
-                                        'Terhapus!',
-                                        'Data berhasil dihapus.',
-                                        'success'
-                                    );
-                                    $('.datatable').DataTable().ajax.reload();
-                                } else {
-                                    Swal.fire(
-                                        'Gagal!',
-                                        'Terjadi kesalahan saat menghapus data.',
-                                        'error'
-                                    );
+                        var data = {
+                            id_finger: id,
+                            modul_fingerprint: modul,
+                            id_finger: id_finger
+                        };
+
+                        fetch('/fingerprint_moduls/deleted_id', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': csrfToken
+                                },
+                                body: JSON.stringify(data)
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Gagal menghapus data');
                                 }
-                            },
-                            error: function(error) {
-                                console.log(error);
-                                Swal.fire(
-                                    'Gagal!',
-                                    'Terjadi kesalahan saat menghapus data.',
-                                    'error'
-                                );
-                            }
-                        });
+                                return response.json();
+                            })
+                            .then(responseData => {
+                                // Lanjutkan dengan menghapus data
+                                $.ajax({
+                                    url: '/fingerprint_siswa/delete/' + id,
+                                    type: 'DELETE',
+                                    data: {
+                                        _token: csrfToken
+                                    },
+                                    success: function(response) {
+                                        console.log('Response:', response);
+                                        if (response.status) {
+                                            Swal.fire(
+                                                'Terhapus!',
+                                                'Data berhasil dihapus.',
+                                                'success'
+                                            );
+                                            $('.datatable').DataTable().ajax.reload();
+                                        } else {
+                                            Swal.fire(
+                                                'Gagal!',
+                                                'Terjadi kesalahan saat menghapus data.',
+                                                'error'
+                                            );
+                                        }
+                                    },
+                                    error: function(jqXHR, textStatus, errorThrown) {
+                                        console.error('Error:', errorThrown);
+                                        Swal.fire(
+                                            'Gagal!',
+                                            'Terjadi kesalahan saat menghapus data.',
+                                            'error'
+                                        );
+                                    }
+                                });
+                            })
+                            .catch(error => {
+                                // Tangani kesalahan jika ada
+                                console.error('Error:', error);
+                            });
                     }
                 });
             }

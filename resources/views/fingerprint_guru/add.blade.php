@@ -30,7 +30,7 @@
 
                             <div class="col-lg-12">
                                 <div class="mb-3">
-                                    <label class="form-label">ID Fingerprint</label>
+                                    <label class="form-label">Modul Fingerprint</label>
                                     <input type="hidden" class="form-control bg-white" id="id_modul_fingerprint"
                                         name="id_modul_fingerprint" value="{{ $finger->id }}">
                                     <input type="text" class="form-control bg-white"

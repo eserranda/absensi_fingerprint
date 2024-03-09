@@ -427,12 +427,10 @@
                             console.log(data.message);
                             if (data.errors) {
                                 Object.keys(data.errors).forEach(fieldName => {
-                                    const inputField = document.getElementById(
-                                        fieldName);
+                                    const inputField = document.getElementById(fieldName);
                                     inputField.classList.add('is-invalid');
-                                    inputField.nextElementSibling.textContent = data
-                                        .errors[
-                                            fieldName][0];
+                                    inputField.nextElementSibling.textContent = data.errors[
+                                        fieldName][0];
                                 });
 
                                 // Hapus kelas 'is-invalid' dari elemen formulir yang telah diperbaiki

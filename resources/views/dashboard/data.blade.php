@@ -573,8 +573,8 @@
                             </div>
 
                             <div class="col-md-6" id="status-absen">
-                                <h3 class="card-title">Status Absensi</h3>
-                                <div class="card bg-gray-300" style="height: 6rem">
+                                <h3 class="card-title">Jumlah Absensi</h3>
+                                <div class="card bg-gray-300" style="height: 7rem">
                                     <div class="card-body">
                                         <div class="col-auto">
                                             <div class="text-secondary">Telah Absen</div>
@@ -621,7 +621,16 @@
 
         <div class="card mt-2">
             <div class="card-header">
-                <h3 class="card-title">Data Absensi Siswa</h3>
+                <h3 class="card-title">Data Absensi Mata Pelajaran {{ $dataMatpel->data_matpel->nama_matpel ?? '' }}</h3>
+
+                <div class="card-actions">
+                    {{-- <a href="#" class="btn btn-success">
+                        Exel
+                    </a> --}}
+                    <a href="absensi-matpel" class="btn btn-primary">
+                        Rekap absensi
+                    </a>
+                </div>
             </div>
             <div class="card-body border-bottom py-3">
                 <div class="table-responsive">
@@ -809,18 +818,19 @@
                         "{{ $dataMatpel ? ($dataMatpel->data_matpel ? $dataMatpel->data_matpel->id : '') : '' }}";
                     const id_guru = "{{ $dataMatpel ? ($dataMatpel->data_guru ? $dataMatpel->data_guru->id : '') : '' }}";
 
+                    if (id_matpel && id_guru) {
+                        try {
+                            const response = await fetch('/fingerprint-modul/get-data-today' + '/' + id_matpel + '/' +
+                                id_guru);
+                            const responseData = await response.json();
+                            if (responseData.message === "success") {
+                                const data = responseData.data;
+                                const table = document.getElementById('data-absensi');
+                                const tableBody = table.querySelector('tbody');
+                                tableBody.innerHTML = '';
 
-                    try {
-                        const response = await fetch('/fingerprint-modul/get-data-today' + '/' + id_matpel + '/' + id_guru);
-                        const responseData = await response.json();
-                        if (responseData.message === "success") {
-                            const data = responseData.data;
-                            const table = document.getElementById('data-absensi');
-                            const tableBody = table.querySelector('tbody');
-                            tableBody.innerHTML = '';
-
-                            data.forEach((item, index) => {
-                                const row = `
+                                data.forEach((item, index) => {
+                                    const row = `
                                 <tr>
                                     <td>${index + 1}</td>
                                     <td>${new Date(item.tanggal).toLocaleDateString('en-GB')}</td>
@@ -832,17 +842,19 @@
                                     <td>${item.keterangan}</td>
                                 </tr>
                             `;
-                                tableBody.innerHTML += row; // Tambahkan baris ke tabel
-                            });
+                                    tableBody.innerHTML += row; // Tambahkan baris ke tabel
+                                });
 
-                            const countElement = document.getElementById('data-count');
-                            countElement.innerText = responseData.count;
+                                const countElement = document.getElementById('data-count');
+                                countElement.innerText = responseData.count;
 
-                        } else {
-                            console.error('Data tidak berhasil diambil');
+                            } else {
+                                console.error('Data tidak berhasil diambil');
+                            }
+
+                        } catch (error) {
+                            return error;
                         }
-                    } catch (error) {
-                        return error;
                     }
                 }
 
@@ -851,18 +863,19 @@
 
                 const modul = "{{ $dataMatpel ? $dataMatpel->kelas : '' }}";
                 async function cekOneStatusModul() {
-                    try {
-                        const response = await fetch('/dashboard/cek-one-status-modul' + '/' + modul);
-                        const data = await response.json();
-                        const container = document.getElementById('status-modul');
-                        container.innerHTML = '';
+                    if (modul) {
+                        try {
+                            const response = await fetch('/dashboard/cek-one-status-modul' + '/' + modul);
+                            const data = await response.json();
+                            const container = document.getElementById('status-modul');
+                            container.innerHTML = '';
 
-                        // Buat elemen baru untuk menampilkan status modul
-                        const statusCard = document.createElement('div');
-                        statusCard.className = 'card bg-gray-300 card-sm';
-                        statusCard.style.height = '6rem';
+                            // Buat elemen baru untuk menampilkan status modul
+                            const statusCard = document.createElement('div');
+                            statusCard.className = 'card bg-gray-300 card-sm';
+                            // statusCard.style.height = '6rem';
 
-                        statusCard.innerHTML = `
+                            statusCard.innerHTML = `
                             <div class="card-body">
                                 <div class="row align-items-center">
                                     <div class="col-auto">
@@ -874,16 +887,17 @@
                                     </div>
                                     <div class="col">
                                         <h3 class="card-title mb-1">${data.modul_fingerprint} </h3>
-                                        <span class="badge text-white bg-${data.active ? 'green' : 'red'}">${data.active ? 'Online/Terhubung' : 'Offline'}</span> <br>
-                                        <p class="text-muted mt-1">${data.status=== 'matpel' ? 'mode : Absen Matpel' : data.status === 'scan' ? 'mode : Absen Harian' : data.status === 'daftar' ? 'mode : Daftar Finger' : data.status === 'hapus' ? 'mode : Hapus Finger' : ''}</p>
+                                        <span class="badge text-white bg-${data.active ? 'green' : 'red'}">${data.active ? 'Online/Terhubung' : 'Offline'}</span>  
+                                        <p class="text-muted my-1">${data.status=== 'matpel' ? 'mode : Absen Matpel' : data.status === 'scan' ? 'mode : Absen Harian' : data.status === 'daftar' ? 'mode : Daftar Finger' : data.status === 'hapus' ? 'mode : Hapus Finger' : ''}</p>
                                     </div>
                                 </div>
                             </div>
                         `;
-                        // Tambahkan elemen statusCard ke dalam container
-                        container.appendChild(statusCard);
-                    } catch (error) {
-                        console.error('Error:', error);
+                            // Tambahkan elemen statusCard ke dalam container
+                            container.appendChild(statusCard);
+                        } catch (error) {
+                            console.error('Error:', error);
+                        }
                     }
                 }
                 cekOneStatusModul();

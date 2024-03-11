@@ -29,7 +29,7 @@ class DashboardController extends Controller
 
             $now = Carbon::now();
             $hari = $now->isoFormat('dddd');
-            // $hari = "Selasa";
+            // $hari = "Jumat";
 
             $dataMatpel = JadwalPelajaran::where('hari', $hari)
                 ->where('id_guru', $idGuru)

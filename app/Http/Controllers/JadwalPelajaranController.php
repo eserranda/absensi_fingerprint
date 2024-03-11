@@ -19,6 +19,7 @@ class JadwalPelajaranController extends Controller
             $isAdmin = Auth::user()->roles->contains('name', 'admin');
 
             $kelasFilter = $request->input('kelas');
+
             $query = JadwalPelajaran::query();
             if ($kelasFilter) {
                 $query->where('kelas', $kelasFilter);

@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MatpelController;
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\AbsensiMatpelController;
 use App\Http\Controllers\DataGuruController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataSiswaController;
@@ -23,7 +24,7 @@ use App\Http\Controllers\DataAbsensiSiswaController;
 use App\Http\Controllers\FingerprintModulController;
 use App\Http\Controllers\FingerprintSiswaController;
 use App\Http\Controllers\FingerprintStatusController;
-
+use App\Models\AbsensiMatpel;
 
 Route::get('/login', [AuthController::class, 'loginForm'])->name("login")->middleware('guest'); // Form login
 Route::post('/login', [AuthController::class, 'authenticate'])->name("login")->middleware('guest'); // Login
@@ -57,6 +58,13 @@ Route::prefix('rekap-absensi-siswa')->controller(DataAbsensiSiswaController::cla
     // Route::delete('/delete/{id}', 'destroy')->name("delete_role")->middleware('auth');
 });
 
+
+Route::prefix('absensi-matpel')->controller(AbsensiMatpelController::class)->group(function () {
+    Route::get('', 'index')->name("absensi-matpel.data")->middleware('auth');
+
+    // Route::POST('/store', 'store')->name("save_role")->middleware('auth');
+    // Route::delete('/delete/{id}', 'destroy')->name("delete_role")->middleware('auth');
+});
 
 Route::prefix('role')->controller(RoleController::class)->group(function () {
     Route::get('', 'index')->name("data_role.data")->middleware('auth');

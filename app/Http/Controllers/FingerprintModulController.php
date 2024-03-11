@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AbsensiMatpel;
 use App\Models\DataGuru;
 use App\Models\Fingerprint;
 use Illuminate\Http\Request;
@@ -13,7 +14,9 @@ use App\Models\FingerprintGuru;
 use App\Models\FingerprintModul;
 use App\Models\FingerprintSiswa;
 use App\Models\FingerprintStatus;
+use App\Models\JadwalPelajaran;
 use App\Models\JamAbsensi;
+use App\Models\Matpel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
@@ -47,8 +50,9 @@ class FingerprintModulController extends Controller
 
             if ($cekMode->status === "hapus") {
                 return response()->json(["mode" => $cekMode->status, "deleted_id" => $cekMode->deleted_id]);
+            } else if ($cekMode->status === "matpel") {
+                return response()->json(["mode" => $cekMode->status, "matpel" => $cekMode->matpel]);
             } else {
-
                 $idModul = FingerprintModul::where('apiKey', $apiKey)->first()->id;
                 $lastRecord = FingerprintSiswa::where('id_modul_fingerprint', $idModul)->latest()->first();
                 if (!$lastRecord) {
@@ -59,26 +63,95 @@ class FingerprintModulController extends Controller
                 return response()->json(["mode" => $mode, "last_id" => $lastID]);
             }
         } else if ($apiKey == 'finger2') {
-            $idModul = FingerprintModul::where('apiKey', $apiKey)->first()->id;
-            $lastRecord = FingerprintSiswa::where('id_modul_fingerprint', $idModul)->latest()->first();
-            if (!$lastRecord) {
-                $lastID = 0;
-            } else {
-                $lastID = $lastRecord->id_fingerprint;
-            }
+            $cekMode = FingerprintModul::where('apiKey', $apiKey)->first();
 
-            return response()->json(["mode" => $mode, "last_id" => $lastID]);
+            if ($cekMode->status === "hapus") {
+                return response()->json(["mode" => $cekMode->status, "deleted_id" => $cekMode->deleted_id]);
+            } else if ($cekMode->status === "matpel") {
+                return response()->json(["mode" => $cekMode->status, "matpel" => $cekMode->matpel]);
+            } else {
+                $idModul = FingerprintModul::where('apiKey', $apiKey)->first()->id;
+                $lastRecord = FingerprintSiswa::where('id_modul_fingerprint', $idModul)->latest()->first();
+                if (!$lastRecord) {
+                    $lastID = 0;
+                } else {
+                    $lastID = $lastRecord->id_fingerprint;
+                }
+                return response()->json(["mode" => $mode, "last_id" => $lastID]);
+            }
         } else if ($apiKey == 'finger3') {
-            $idModul = FingerprintModul::where('apiKey', $apiKey)->first()->id;
-            $lastRecord = FingerprintSiswa::where('id_modul_fingerprint', $idModul)->latest()->first();
-            if (!$lastRecord) {
-                $lastID = 0;
-            } else {
-                $lastID = $lastRecord->id_fingerprint;
-            }
+            $cekMode = FingerprintModul::where('apiKey', $apiKey)->first();
 
-            return response()->json(["mode" => $mode, "last_id" => $lastID]);
+            if ($cekMode->status === "hapus") {
+                return response()->json(["mode" => $cekMode->status, "deleted_id" => $cekMode->deleted_id]);
+            } else if ($cekMode->status === "matpel") {
+                return response()->json(["mode" => $cekMode->status, "matpel" => $cekMode->matpel]);
+            } else {
+                $idModul = FingerprintModul::where('apiKey', $apiKey)->first()->id;
+                $lastRecord = FingerprintSiswa::where('id_modul_fingerprint', $idModul)->latest()->first();
+                if (!$lastRecord) {
+                    $lastID = 0;
+                } else {
+                    $lastID = $lastRecord->id_fingerprint;
+                }
+                return response()->json(["mode" => $mode, "last_id" => $lastID]);
+            }
         }
+    }
+
+    public function getDataToday($id_matpel, $id_guru)
+    {
+        $dataToday = AbsensiMatpel::with(['guru', 'siswa', 'matpel'])
+            ->where('id_matpel', $id_matpel)
+            ->where('id_guru', $id_guru)
+            ->whereDate('created_at', Carbon::today())
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        $countDataToday = AbsensiMatpel::where('id_matpel', $id_matpel)
+            ->where('id_guru', $id_guru)
+            ->whereDate('created_at', Carbon::today())
+            ->count();
+
+        if ($dataToday->isEmpty()) {
+            return response()->json(['message' => 'Data gagal diperbarui'], 500);
+        }
+
+        return response()->json(['message' => 'success', 'data' => $dataToday, 'count' => $countDataToday], 200);
+    }
+
+    public function updateStatusToMatpel(Request $request)
+    {
+        $modul   = $request->input('kelas');
+        $matpel = $request->input('matpel');
+
+        $updateModul = FingerprintModul::where('modul_fingerprint', $modul)->update([
+            'status' => 'matpel',
+            'matpel' => $matpel,
+        ]);
+
+        if (!$updateModul) {
+            return response()->json(['message' => 'Data gagal diperbarui'], 500);
+        }
+
+        return response()->json(['message' => 'Data berhasil diperbarui', 'status' => $updateModul], 200);
+    }
+
+    public function resetModul(Request $request)
+    {
+        $modul   = $request->input('kelas');
+
+        $resetModul = FingerprintModul::where('modul_fingerprint', $modul)->update([
+            'status' => 'scan',
+            'matpel' => null,
+        ]);
+
+        if (!$resetModul) {
+            return response()->json(['message' => 'Data gagal diperbarui'], 500);
+        }
+
+        return response()->json(['message' => 'Data berhasil diperbarui', 'status' => $resetModul], 200);
     }
 
     public function getFingerID($apiKey)
@@ -228,10 +301,16 @@ class FingerprintModulController extends Controller
         }
 
         $apiKeyValue = $getApiKey->apiKey;
+        $getMode =  $getApiKey->status;
 
-        if ($apiKeyValue === 'guru') {
+        if ($apiKeyValue === 'guru' && $getMode === 'scan') {
             $getIdGuru = FingerprintGuru::where('id_fingerprint', $idFinger)->first();
-            $getDataGuru = DataGuru::where('id', $getIdGuru->id_guru)->first();
+
+            if ($getIdGuru === null) {
+                return response()->json(['status' => false, 'message' => 'Data guru tidak ditemukan'], 404);
+            }
+
+            $getDataGuru = DataGuru::where('id',  $getIdGuru->id_guru)->first();
 
             $timezone = 'Asia/Makassar';
             $now = Carbon::now();
@@ -266,6 +345,50 @@ class FingerprintModulController extends Controller
                 return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
             } else {
                 return response()->json(['status' => false, 'message' => 'Data gagal disimpan'], 500);
+            }
+        } else if ($apiKeyValue != 'guru' && $getMode === 'matpel') {
+            $modul = FingerprintModul::where('apiKey', $apiKeyValue)->first();
+
+            $getIdSiswa = FingerprintSiswa::where('id_fingerprint', $idFinger)
+                ->where('id_modul_fingerprint', $modul->id)
+                ->first();
+
+            if ($getIdSiswa === null) {
+                return response()->json(['status' => false, 'message' => 'Data siswa tidak ditemukan'], 404);
+            }
+
+            $idMatepel = Matpel::where('nama_matpel', $modul->matpel)->first();
+
+            $getIdGuru = JadwalPelajaran::where('id_matpel', $idMatepel->id)->first();
+
+            $now = Carbon::now();
+            $tanggal  = $now->toDateString();
+            $hari = $now->dayName;
+            $id_siswa = $getIdSiswa->id_siswa;
+            $kelas =  $getIdSiswa->siswa->kelas;
+            $id_guru = $getIdGuru->id_guru;
+            $id_matpel = $idMatepel->id;
+            $keterangan = "Hadir";
+
+            //  tambah data jika datanya belum ada
+            $absensi = AbsensiMatpel::firstOrCreate(
+                [
+                    'id_siswa' => $id_siswa,
+                    'kelas' => $kelas,
+                    'tanggal' => $tanggal,
+                    'id_matpel' => $id_matpel
+                ],
+                [
+                    'hari' => $hari,
+                    'id_guru' => $id_guru,
+                    'keterangan' => $keterangan
+                ]
+            );
+
+            if ($absensi->wasRecentlyCreated) {
+                return response()->json(['status' => true, 'message' => 'Data absen matpel berhasil disimpan'], 200);
+            } else {
+                return response()->json(['status' => false, 'message' => 'Data absen matpel sudah ada'], 200);
             }
         } else {
             $getDataModul = FingerprintModul::where('apiKey', $apiKeyValue)->first()->id;

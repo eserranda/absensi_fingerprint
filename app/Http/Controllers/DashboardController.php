@@ -10,20 +10,44 @@ use App\Models\DataGuru;
 use App\Models\Dashboard;
 use App\Models\DataSiswa;
 use Illuminate\Http\Request;
+use App\Models\AbsensiMatpel;
 use App\Models\FingerprintGuru;
 use App\Models\JadwalPelajaran;
 use App\Models\DataAbsensiSiswa;
 use App\Models\FingerprintModul;
 use App\Models\FingerprintSiswa;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $siswa = DataAbsensiSiswa::where('keterangan', 'terlambat')
-            ->orWhere('keterangan', 'tanpa_keterangan')->get();
 
-        return view('dashboard.data', compact('siswa'));
+        if (Auth::user()->roles->contains('name', 'guru')) {
+            $data = User::where('id', Auth::user()->id)->first();
+            $idGuru = $data->guru->id;
+            // echo $idGuru;
+
+            // $now = Carbon::now();
+            // $hari = $now->isoFormat('dddd');
+            $hari = "Selasa";
+
+            $dataMatpel = JadwalPelajaran::where('hari', $hari)
+                ->where('id_guru', $idGuru)
+                ->first();
+
+            return view('dashboard.data', compact('dataMatpel'));
+        } else {
+            return view('dashboard.data');
+        }
+        // if (auth()->user()->role == 'guru') {
+        //     $dataGuru = DataGuru::where('id_user', auth()->user()->id)->first();
+        //     return view('dashboard.data', compact('dataGuru'));
+        // }
+        // $siswa = DataAbsensiSiswa::where('keterangan', 'terlambat')
+        //     ->orWhere('keterangan', 'tanpa_keterangan')->get();
+
+        // return view('dashboard.data', compact('siswa'));
     }
 
     // DashboardController.php
@@ -37,9 +61,8 @@ class DashboardController extends Controller
         $totalFingerprintGuru = FingerprintGuru::count();
         $totalFingerprintSiswa = FingerprintSiswa::count();
         $totalUsers = User::count();
-        // $totalJadwal = JadwalPelajaran::count();
-        $totalJadwal = JadwalPelajaran::where('id_matpel', '!=', 28)->count();
-
+        $totalAbsensiMatpel = AbsensiMatpel::count();
+        $totalJadwal = JadwalPelajaran::where('id_matpel', '!=', 28)->count(); // 28 adalah id untuk "Istirahat"
 
         return response()->json([
             'totalGuru' => $totalGuru,
@@ -49,6 +72,7 @@ class DashboardController extends Controller
             'totalKelas' => $totalKelas,
             'totalFingerprintGuru' => $totalFingerprintGuru,
             'totalFingerprintSiswa' => $totalFingerprintSiswa,
+            'totalAbsensiMatpel' => $totalAbsensiMatpel,
             'totalUsers' => $totalUsers
         ]);
     }
@@ -75,6 +99,24 @@ class DashboardController extends Controller
             } else {
                 $modul->active = false;
             }
+        }
+
+        return response()->json($statusModul);
+    }
+
+    public function cekOneStatusModul($modul)
+    {
+        $statusModul = FingerprintModul::where('modul_fingerprint', $modul)->first();
+        $currentTime = Carbon::now('Asia/Makassar');
+
+        $fiveSecondsAgo = $currentTime->copy()->subSeconds(5);
+
+        $updatedAt = $statusModul->updated_at;
+
+        if ($updatedAt->greaterThanOrEqualTo($fiveSecondsAgo)) {
+            $statusModul->active = true;
+        } else {
+            $statusModul->active = false;
         }
 
         return response()->json($statusModul);

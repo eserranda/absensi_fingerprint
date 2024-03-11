@@ -29,9 +29,21 @@
             letter-spacing: 2px;
             /* Menambahkan jarak antara karakter */
         }
+
+        @media (max-width: 600px) {
+            #clock {
+                display: none;
+            }
+        }
+
+        @media (min-width: 768px) {
+            #desktop-card {
+                height: 18rem;
+            }
+        }
     </style>
 
-    <div class="col-12">
+    <div class="col-12 mb-2">
         <div class="card">
             <div class="card-stamp card-stamp-lg">
                 <div class="card-stamp-icon bg-primary">
@@ -74,64 +86,11 @@
         </div>
     </div>
 
-
-    @if (Auth::user()->roles->contains('name', 'guru_bk'))
-        <div class="card mt-2">
-            <div class="card-header">
-                <h3 class="card-title">Data Siwa Terlambat, Bolos, Tanpa Keterangan</h3>
-                {{-- <div class="btn-actions">
-                <select class="form-select" id="filterRoles">
-                    <option value="terlambat">Terlambat</option>
-                    <option value="bolos">Bolos</option>
-                    <option value="bolos">Tanpa Keterangan</option>
-                </select>
-            </div>
-
-            <button class="btn btn-icon mx-2" id="reload"> <svg xmlns="http://www.w3.org/2000/svg" class="icon"
-                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
-                    <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
-                </svg>
-            </button> --}}
-            </div>
-
-            <div class="card-body border-bottom py-3">
-                <div class="table-responsive">
-                    <table class="table card-table table-vcenter text-nowrap datatable">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Nama</th>
-                                <th>NISN</th>
-                                <th>Kelas</th>
-                                <th>Tanggal</th>
-                                <th>Keterangan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($siswa as $d)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $d->siswa->nama }}</td>
-                                    <td>{{ $d->siswa->nisn }}</td>
-                                    <td>{{ $d->siswa->kelas }}</td>
-                                    <td>{{ $d->tanggal_absen }}</td>
-                                    <td>{{ $d->keterangan }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    @endif
-
+    {{-- @if (Auth::user()->roles->contains('name', 'admin') || Auth::user()->roles->contains('name', 'guru')) --}}
     @if (Auth::user()->roles->contains('name', 'admin'))
         <div class="card mt-2">
             <div class="card-body">
-                <h3 class="card-title">Status Absensi Fingerprint</h3>
+                <h3 class="card-title">Status Modul Fingerprint</h3>
                 <div class="row row-deck row-cards" id="data-container">
 
                 </div>
@@ -139,7 +98,6 @@
         </div>
 
         <div class="row row-deck row-cards mt-2">
-
             <div class="col-md-6 col-xl-3">
                 <div class="card card-sm">
                     <div class="card-body">
@@ -209,10 +167,10 @@
                             </div>
                             <div class="col-auto">
                                 <a href="/data_guru" class="btn btn-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="icon icon-tabler icon-tabler-eye-search" width="24" height="24"
-                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                        stroke-linecap="round" stroke-linejoin="round">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-search"
+                                        width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                        stroke="currentColor" fill="none" stroke-linecap="round"
+                                        stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                                         <path
@@ -509,202 +467,470 @@
                 </div>
             </div>
 
+            <div class="col-md-6 col-xl-3">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span class="bg-info text-white avatar">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-clipboard-data" width="24" height="24"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path
+                                            d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+                                        <path
+                                            d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+                                        <path d="M9 17v-4" />
+                                        <path d="M12 17v-1" />
+                                        <path d="M15 17v-2" />
+                                        <path d="M12 17v-1" />
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <h3 class="card-title mb-1">
+                                    <span id="totalAbsensiMatpel">0</span>
+                                </h3>
+                                <div class="text-secondary">
+                                    Absensi Matpel
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                {{-- <a href="/kelas" class="btn btn-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-eye-search" width="24" height="24"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                        <path
+                                            d="M12 18c-.328 0 -.652 -.017 -.97 -.05c-3.172 -.332 -5.85 -2.315 -8.03 -5.95c2.4 -4 5.4 -6 9 -6c3.465 0 6.374 1.853 8.727 5.558" />
+                                        <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                                        <path d="M20.2 20.2l1.8 1.8" />
+                                    </svg>
+                                </a> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
     @endif
-    {{-- <div class="row row-deck row-cards mt-2">
-        <div class="col-sm-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <h3>Jumlah Data Guru</h3>
+
+    @if (Auth::user()->roles->contains('name', 'guru'))
+        <div class="row row-cards mt-2">
+            <div class="col-md-6">
+                <div class="card" id="desktop-card">
+                    <div class="card-body">
+                        <h3 class="card-title">Jadwal Mengajar Anda Hari ini</h3>
+                        <p class="card-subtitle" id="date"></p>
+
+                        <div class="hr-text  hr-text-left my-4">Detail</div>
+
+                        <div class="datagrid">
+                            <div class="datagrid-item">
+                                <div class="datagrid-title">Mata Pelajaran</div>
+                                <div class="datagrid-content fw-bold">
+                                    {{ $dataMatpel->data_matpel->nama_matpel ?? 'Tidak ada jadwal' }}
+                                </div>
+                            </div>
+                            <div class="datagrid-item">
+                                <div class="datagrid-title">Guru/Pengajar</div>
+                                <div class="datagrid-content fw-bold">
+                                    {{ $dataMatpel->data_guru->nama ?? 'Tidak ada jadwal' }} </div>
+                            </div>
+                            <div class="datagrid-item">
+                                <div class="datagrid-title">Kelas</div>
+                                <div class="datagrid-content fw-bold">{{ $dataMatpel->kelas ?? 'Tidak ada jadwal' }}</div>
+                            </div>
+                            <div class="datagrid-item">
+                                <div class="datagrid-title">Waktu</div>
+                                <div class="datagrid-content fw-bold">
+                                    {{ $dataMatpel->jam_mulai ?? '  ' }} - {{ $dataMatpel->jam_selesai ?? ' ' }}
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                    <div class="h1 mb-3">3</div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="subheader">Revenue</div>
-                        <div class="ms-auto lh-1">
-                            <div class="dropdown">
-                                <a class="dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item active" href="#">Last 7 days</a>
-                                    <a class="dropdown-item" href="#">Last 30 days</a>
-                                    <a class="dropdown-item" href="#">Last 3 months</a>
+
+            <div class="col-md-6" style="display: {{ $dataMatpel ? 'block' : 'none' }}">
+                <div class="card" id="desktop-card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="card-title">Status Modul Fingerprint</h3>
+                                <div class="row row-deck row-cards mb-1" id="status-modul">
+                                </div>
+                                {{-- <span class="text-danger text-sm">*Pastikan Modul dalam kondisi Online sebelum melakukan
+                                    proses absensi
+                                </span> --}}
+                            </div>
+
+                            <div class="col-md-6" id="status-absen">
+                                <h3 class="card-title">Status Absensi</h3>
+                                <div class="card bg-gray-300" style="height: 6rem">
+                                    <div class="card-body">
+                                        <div class="col-auto">
+                                            <div class="text-secondary">Telah Absen</div>
+                                            {{-- <h3 class="card-title my-2" id="data-count">0
+                                                <span class="text-muted small mx-2">Siswa</span>
+                                            </h3> --}}
+                                            <h3 class="card-title my-1">
+                                                <span id="data-count">0</span>
+                                                <span class="text-muted small mx-2">Siswa</span>
+                                            </h3>
+
+                                            <div class="progress progress-sm">
+                                                <div class="progress-bar progress-bar-indeterminate" id="progress"
+                                                    style="display: none"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="hr-text  hr-text-right my-4">Action</div>
+
+                        <div class="row">
+                            <span class="col fw-bold p-2">Klik Tombol Absen Untuk Memulai Proses Absen</span>
+                            <div class="col-auto">
+                                <div class="btn-list">
+                                    <a class="btn btn-primary {{ $dataMatpel ? '' : 'disabled' }}" id="btn-absen"
+                                        onclick="absen('{{ $dataMatpel ? $dataMatpel->kelas : '' }}', '{{ $dataMatpel ? $dataMatpel->data_matpel->nama_matpel : '' }}')">
+                                        Absen
+                                    </a>
+                                    <a class="btn btn-success {{ !$dataMatpel ? 'disabled' : '' }}" id="btn-reset"
+                                        onclick="reset_modul('{{ $dataMatpel ? $dataMatpel->kelas : '' }}')">Selesai
+                                    </a>
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex align-items-baseline">
-                        <div class="h1 mb-0 me-2">$4,300</div>
-                        <div class="me-auto">
-                            <span class="text-green d-inline-flex align-items-center lh-1">
-                                8% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24"
-                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M3 17l6 -6l4 4l8 -8" />
-                                    <path d="M14 7l7 0l0 7" />
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div id="chart-revenue-bg" class="chart-sm"></div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="subheader">New clients</div>
-                        <div class="ms-auto lh-1">
-                            <div class="dropdown">
-                                <a class="dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item active" href="#">Last 7 days</a>
-                                    <a class="dropdown-item" href="#">Last 30 days</a>
-                                    <a class="dropdown-item" href="#">Last 3 months</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-baseline">
-                        <div class="h1 mb-3 me-2">6,782</div>
-                        <div class="me-auto">
-                            <span class="text-yellow d-inline-flex align-items-center lh-1">
-                                0% <!-- Download SVG icon from http://tabler-icons.io/i/minus -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24"
-                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M5 12l14 0" />
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                    <div id="chart-new-clients" class="chart-sm"></div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="subheader">Active users</div>
-                        <div class="ms-auto lh-1">
-                            <div class="dropdown">
-                                <a class="dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">Last 7 days</a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item active" href="#">Last 7 days</a>
-                                    <a class="dropdown-item" href="#">Last 30 days</a>
-                                    <a class="dropdown-item" href="#">Last 3 months</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-baseline">
-                        <div class="h1 mb-3 me-2">2,986</div>
-                        <div class="me-auto">
-                            <span class="text-green d-inline-flex align-items-center lh-1">
-                                4% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24"
-                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M3 17l6 -6l4 4l8 -8" />
-                                    <path d="M14 7l7 0l0 7" />
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                    <div id="chart-active-users" class="chart-sm"></div>
+
+        <div class="card mt-2">
+            <div class="card-header">
+                <h3 class="card-title">Data Absensi Siswa</h3>
+            </div>
+            <div class="card-body border-bottom py-3">
+                <div class="table-responsive">
+                    <table id="data-absensi" class="table card-table table-vcenter text-nowrap absensi-today">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tanggal</th>
+                                <th>Hari</th>
+                                <th>Nama Siswa</th>
+                                <th>Kelas</th>
+                                <th>Nama Guru</th>
+                                <th>Matpel</th>
+                                <th>Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </div> --}}
+    @endif
+
+    @if (Auth::user()->roles->contains('name', 'guru_bk'))
+        <div class="card mt-2">
+            <div class="card-header">
+                <h3 class="card-title">Data Siwa Terlambat, Bolos, Tanpa Keterangan</h3>
+                {{-- <div class="btn-actions">
+                <select class="form-select" id="filterRoles">
+                    <option value="terlambat">Terlambat</option>
+                    <option value="bolos">Bolos</option>
+                    <option value="bolos">Tanpa Keterangan</option>
+                </select>
+            </div>
+
+            <button class="btn btn-icon mx-2" id="reload"> <svg xmlns="http://www.w3.org/2000/svg" class="icon"
+                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                    <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                </svg>
+            </button> --}}
+            </div>
+
+            <div class="card-body border-bottom py-3">
+                <div class="table-responsive">
+                    <table class="table card-table table-vcenter text-nowrap datatable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nama</th>
+                                <th>NISN</th>
+                                <th>Kelas</th>
+                                <th>Tanggal</th>
+                                <th>Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($siswa as $d)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $d->siswa->nama }}</td>
+                                    <td>{{ $d->siswa->nisn }}</td>
+                                    <td>{{ $d->siswa->kelas }}</td>
+                                    <td>{{ $d->tanggal_absen }}</td>
+                                    <td>{{ $d->keterangan }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    @endif
 
     @push('script')
         <script>
             function updateTime() {
                 var days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                var months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September',
+                    'Oktober', 'November', 'Desember'
+                ];
                 var currentTime = new Date();
                 var hours = currentTime.getHours();
                 var minutes = currentTime.getMinutes();
                 var seconds = currentTime.getSeconds();
                 var day = days[currentTime.getDay()];
+                var date = currentTime.getDate();
+                var month = months[currentTime.getMonth()];
+                var year = currentTime.getFullYear();
 
                 // Menambahkan angka 0 di depan angka tunggal
                 hours = (hours < 10 ? "0" : "") + hours;
                 minutes = (minutes < 10 ? "0" : "") + minutes;
                 seconds = (seconds < 10 ? "0" : "") + seconds;
-                timeZone = "  Wita";
 
                 // Format waktu
-                var timeString = hours + ":" + minutes + ":" + seconds + timeZone + "<br>" + day;
+                var timeString = hours + ":" + minutes + ":" + seconds + " Wita" + "<br>" + day;
 
                 // Memasukkan waktu ke dalam elemen dengan id "clock"
                 document.getElementById("clock").innerHTML = timeString;
+
+                // Menampilkan hari dan tanggal
+                @if (Auth::user()->roles->contains('name', 'guru'))
+                    var dateString = day + ", " + date + " " + month + " " + year;
+                    document.getElementById("date").innerHTML = dateString;
+                @endif
             }
 
             setInterval(updateTime, 1000);
             updateTime();
 
-            // window.setTimeout("waktu()", 1000);
+            function getFormattedDate(date) {
+                const year = date.getFullYear().toString();
+                let month = (date.getMonth() + 1).toString();
+                let day = date.getDate().toString();
 
-            // function waktu() {
-            //     var waktu = new Date();
-            //     setTimeout("waktu()", 1000);
-            //     document.getElementById("jam").innerHTML = waktu.getHours();
-            //     document.getElementById("menit").innerHTML = waktu.getMinutes();
-            //     document.getElementById("detik").innerHTML = waktu.getSeconds();
-            // }
+                // Tambahkan 0 di depan bulan dan tanggal jika nilainya kurang dari 10
+                if (month.length < 2) {
+                    month = '0' + month;
+                }
+                if (day.length < 2) {
+                    day = '0' + day;
+                }
 
-            document.addEventListener('DOMContentLoaded', function() {
-                async function getData() {
+                return year + month + day;
+            }
+
+            @if (Auth::user()->roles->contains('name', 'guru'))
+                async function absen(kelas, matpel) {
                     try {
-                        const data = fetch('/dashboard/count_data')
-                            .then(response => response.json())
-                            .then(data => {
-                                document.getElementById('totalGuru').textContent = data.totalGuru;
-                                document.getElementById('totalSiswa').textContent = data.totalSiswa;
-                                document.getElementById('totalMatpel').textContent = data.totalMatpel;
-                                document.getElementById('totalJadwal').textContent = data.totalJadwal;
-                                document.getElementById('totalKelas').textContent = data.totalKelas;
-                                document.getElementById('totalFingerprintGuru').textContent = data
-                                    .totalFingerprintGuru;
-                                document.getElementById('totalFingerprintSiswa').textContent = data
-                                    .totalFingerprintSiswa;
-                                document.getElementById('totalUsers').textContent = data
-                                    .totalUsers;
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                        const response = await fetch('/fingerprint-modul/status-matpel', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                kelas: kelas,
+                                matpel: matpel
                             })
+                        });
+                        const data = await response.json();
+                        if (data.status) {
+                            document.getElementById('btn-reset').classList.remove('disabled');
+                            document.getElementById('progress').style.display = 'block';
+
+                            // document.getElementById('status-absen').style.display = 'block';
+                        }
+                        console.log(data);
                     } catch (error) {
-                        return error
+                        return error;
                     }
                 }
-                getData()
-                setInterval(getData, 5000);
 
-                async function cekStatusModul() {
+                async function reset_modul(kelas) {
                     try {
-                        const response = await fetch('/dashboard/cek-status-modul');
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                        const response = await fetch('/fingerprint-modul/reset-modul', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                kelas: kelas,
+                            })
+                        });
                         const data = await response.json();
+                        if (data.status) {
+                            document.getElementById('progress').style.display = 'none';
+                        }
+                        console.log(data);
+                    } catch (error) {
+                        return error;
+                    }
+                }
 
-                        // Membuat elemen untuk setiap data dan menambahkannya ke dalam container
-                        const container = document.getElementById('data-container');
-                        container.innerHTML = ''; // Bersihkan kontainer sebelum menambahkan elemen baru
-                        data.forEach(item => {
-                            const card = document.createElement('div');
-                            card.classList.add('col-md-6', 'col-xl-3');
-                            card.innerHTML = `
+                async function getDataAbsensi() {
+                    const id_matpel =
+                        "{{ $dataMatpel ? ($dataMatpel->data_matpel ? $dataMatpel->data_matpel->id : '') : '' }}";
+                    const id_guru = "{{ $dataMatpel ? ($dataMatpel->data_guru ? $dataMatpel->data_guru->id : '') : '' }}";
+
+
+                    try {
+                        const response = await fetch('/fingerprint-modul/get-data-today' + '/' + id_matpel + '/' + id_guru);
+                        const responseData = await response.json();
+                        if (responseData.message === "success") {
+                            const data = responseData.data;
+                            const table = document.getElementById('data-absensi');
+                            const tableBody = table.querySelector('tbody');
+                            tableBody.innerHTML = '';
+
+                            data.forEach((item, index) => {
+                                const row = `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${new Date(item.tanggal).toLocaleDateString('en-GB')}</td>
+                                    <td>${item.hari}</td>
+                                    <td>${item.siswa.nama}</td>  
+                                    <td>${item.kelas}</td>
+                                    <td>${item.guru.nama}</td>  
+                                    <td>${item.matpel.nama_matpel}</td>
+                                    <td>${item.keterangan}</td>
+                                </tr>
+                            `;
+                                tableBody.innerHTML += row; // Tambahkan baris ke tabel
+                            });
+
+                            const countElement = document.getElementById('data-count');
+                            countElement.innerText = responseData.count;
+
+                        } else {
+                            console.error('Data tidak berhasil diambil');
+                        }
+                    } catch (error) {
+                        return error;
+                    }
+                }
+
+                setInterval(getDataAbsensi, 5000);
+                getDataAbsensi();
+
+                const modul = "{{ $dataMatpel ? $dataMatpel->kelas : '' }}";
+                async function cekOneStatusModul() {
+                    try {
+                        const response = await fetch('/dashboard/cek-one-status-modul' + '/' + modul);
+                        const data = await response.json();
+                        const container = document.getElementById('status-modul');
+                        container.innerHTML = '';
+
+                        // Buat elemen baru untuk menampilkan status modul
+                        const statusCard = document.createElement('div');
+                        statusCard.className = 'card bg-gray-300 card-sm';
+                        statusCard.style.height = '6rem';
+
+                        statusCard.innerHTML = `
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span class="status-indicator status-${data.active ? 'green' : 'red'} status-indicator-animated">
+                                            <span class="status-indicator-circle"></span>
+                                            <span class="status-indicator-circle"></span>
+                                            <span class="status-indicator-circle"></span>
+                                        </span>
+                                    </div>
+                                    <div class="col">
+                                        <h3 class="card-title mb-1">${data.modul_fingerprint} </h3>
+                                        <span class="badge text-white bg-${data.active ? 'green' : 'red'}">${data.active ? 'Online/Terhubung' : 'Offline'}</span> <br>
+                                        <p class="text-muted mt-1">${data.status=== 'matpel' ? 'mode : Absen Matpel' : data.status === 'scan' ? 'mode : Absen Harian' : data.status === 'daftar' ? 'mode : Daftar Finger' : data.status === 'hapus' ? 'mode : Hapus Finger' : ''}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        // Tambahkan elemen statusCard ke dalam container
+                        container.appendChild(statusCard);
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                }
+                cekOneStatusModul();
+                setInterval(cekOneStatusModul, 5000);
+            @endif
+
+
+
+            @if (Auth::user()->roles->contains('name', 'admin'))
+                document.addEventListener('DOMContentLoaded', function() {
+                    async function getData() {
+                        try {
+                            const data = fetch('/dashboard/count_data')
+                                .then(response => response.json())
+                                .then(data => {
+                                    document.getElementById('totalGuru').textContent = data.totalGuru;
+                                    document.getElementById('totalSiswa').textContent = data.totalSiswa;
+                                    document.getElementById('totalMatpel').textContent = data.totalMatpel;
+                                    document.getElementById('totalJadwal').textContent = data.totalJadwal;
+                                    document.getElementById('totalKelas').textContent = data.totalKelas;
+                                    document.getElementById('totalFingerprintGuru').textContent = data
+                                        .totalFingerprintGuru;
+                                    document.getElementById('totalFingerprintSiswa').textContent = data
+                                        .totalFingerprintSiswa;
+                                    document.getElementById('totalAbsensiMatpel').textContent = data
+                                        .totalAbsensiMatpel;
+                                    document.getElementById('totalUsers').textContent = data
+                                        .totalUsers;
+                                })
+                        } catch (error) {
+                            return error
+                        }
+                    }
+                    getData()
+                    setInterval(getData, 5000);
+
+                    async function cekStatusModul() {
+                        try {
+                            const response = await fetch('/dashboard/cek-status-modul');
+                            const data = await response.json();
+                            // Membuat elemen untuk setiap data dan menambahkannya ke dalam container
+                            const container = document.getElementById('data-container');
+                            container.innerHTML = ''; // Bersihkan kontainer sebelum menambahkan elemen baru
+                            data.forEach(item => {
+                                const card = document.createElement('div');
+                                card.classList.add('col-md-6', 'col-xl-3');
+                                card.innerHTML = `
                                 <div class="card card-sm">
                                     <div class="card-body">
                                         <div class="row align-items-center">
@@ -717,21 +943,23 @@
                                             </div>
                                             <div class="col">
                                                 <h3 class="card-title mb-1">${item.modul_fingerprint}</h3>
-                                                <div class="text-secondary">${item.active ? 'Online' : 'Offline'}</div>
+                                               <span class="badge text-white bg-${item.active ? 'green' : 'red'}">${item.active ? 'Online' : 'Offline'}</span>  
+                                              <p class="text-muted mt-1 mb-0">${item.status=== 'matpel' ? 'mode : Absen Matpel' : item.status === 'scan' ? 'mode : Absen Harian' :item.status === 'daftar' ? 'mode : Daftar Finger' : item.status === 'hapus' ? 'mode : Hapus Finger' : ''}</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             `;
-                            container.appendChild(card);
-                        });
-                    } catch (error) {
-                        console.error('Error:', error);
+                                container.appendChild(card);
+                            });
+                        } catch (error) {
+                            console.error('Error:', error);
+                        }
                     }
-                }
-                cekStatusModul()
-                setInterval(cekStatusModul, 5000);
-            });
+                    cekStatusModul()
+                    setInterval(cekStatusModul, 5000);
+                });
+            @endif
         </script>
     @endpush
 @endsection

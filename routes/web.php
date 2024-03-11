@@ -69,7 +69,7 @@ Route::prefix('akun')->controller(UserController::class)->group(function () {
     Route::get('/siswa', 'akun_siswa')->name("akun_siswa")->middleware('auth');
     Route::post('/store_user_siswa', 'storeUserSiswa')->name("store_user_siswa")->middleware('auth');
     Route::get('/data_user_siswa', 'dataUserSiswa')->name("data_user.siswa")->middleware('auth');
-    Route::post('/update_akun_siswa', 'updateAkunSiswa')->name("update_data_siswa")->middleware('auth');
+    Route::post('/update_akun_siswa', 'updateAkunSiswa')->name("update_akun_siswa")->middleware('auth');
 
     Route::get('/guru', 'akun_guru')->name("akun_guru")->middleware('auth');
     Route::post('/store_user_guru', 'storeUserGuru')->name("store_user_guru")->middleware('auth');
@@ -92,14 +92,16 @@ Route::controller(MatpelController::class)->group(function () {
 
 Route::controller(AbsensiController::class)->group(function () {
     Route::get('/absensi', 'index')->name("absensi.data");
-    // Route::get('/dashboard/count_data', 'count_data')->name("dashboard.count_data");
 });
 
 Route::controller(DashboardController::class)->group(function () {
+    // Route::get('/', 'index')->name("dashboard.data");
+    // Route::get('/dashboard', 'index')->name("dashboard.data");
     Route::get('/', 'index')->name("dashboard.data")->middleware('auth');
     Route::get('/dashboard', 'index')->name("dashboard.data")->middleware('auth');
     Route::get('/dashboard/count_data', 'count_data')->name("dashboard.count_data")->middleware('auth');
     Route::get('/dashboard/cek-status-modul', 'cekStatusModul')->name("dashboard.cek-status-modul");
+    Route::get('/dashboard/cek-one-status-modul/{modul}', 'cekOneStatusModul')->name("dashboard.cek-one-status-modul");
 
     // Route::POST('/detail', 'detail')->name("daftar_absensi.detail");
 });
@@ -183,6 +185,10 @@ Route::controller(FingerprintModulController::class)->group(function () {
     Route::post('/finger-status/update-status-finger-siswa', 'updateStatusFingerSiswa')->name("fingerprint.update_status")->middleware('auth');
     Route::get('/fingerprint/get-finger-id/{apiKey}', 'getFingerID')->middleware('auth');
     Route::get('/fingerprint/get-finger-id-siswa/{apiKey}', 'getFingerIDSiswa')->middleware('auth');
+
+    Route::post('/fingerprint-modul/status-matpel', 'updateStatusToMatpel')->middleware('auth');
+    Route::post('/fingerprint-modul/reset-modul', 'resetModul')->middleware('auth');
+    Route::get('/fingerprint-modul/get-data-today/{id_matpel}/{id_guru}', 'getDataToday');
 });
 
 // Route::controller(FingerprintStatusController::class)->group(function () {

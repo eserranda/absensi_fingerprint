@@ -561,7 +561,7 @@
                 const form = document.getElementById('edit_data_siswa');
                 const formData = new FormData(form);
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                fetch('/update_akun_siswa', {
+                fetch('/update_data_siswa', {
                         method: 'POST',
                         body: formData,
                         headers: {

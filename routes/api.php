@@ -24,7 +24,7 @@ use App\Http\Controllers\FingerprintStatusController;
 // });
 Route::controller(FingerprintModulController::class)->group(function () {
     Route::post('/fingerprint-status', 'statusFingerprint');
-    Route::post('/save-id', 'saveID')->name("fingerprint.save_id");
+    Route::post('/save-id', 'saveID');
     Route::post('/absen', 'absen');
     Route::post('/deleted-status', 'deletedStatus');
     // Route::post('/finger-status/update-status', 'updateStatus')->name("fingerprint.update_status");

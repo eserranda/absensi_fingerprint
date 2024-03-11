@@ -26,11 +26,10 @@ class DashboardController extends Controller
         if (Auth::user()->roles->contains('name', 'guru')) {
             $data = User::where('id', Auth::user()->id)->first();
             $idGuru = $data->guru->id;
-            // echo $idGuru;
 
-            // $now = Carbon::now();
-            // $hari = $now->isoFormat('dddd');
-            $hari = "Selasa";
+            $now = Carbon::now();
+            $hari = $now->isoFormat('dddd');
+            // $hari = "Selasa";
 
             $dataMatpel = JadwalPelajaran::where('hari', $hari)
                 ->where('id_guru', $idGuru)

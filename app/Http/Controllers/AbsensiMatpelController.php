@@ -14,8 +14,8 @@ class AbsensiMatpelController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $filterTanggal = $request->input('tanggal');
             $kelasFilter = $request->input('kelas');
+            $filterTanggal = $request->input('tanggal');
 
             $idGuru = Auth::user()->roles->contains('name', 'guru');
 
@@ -31,11 +31,6 @@ class AbsensiMatpelController extends Controller
             }
 
             if ($filterTanggal) {
-                $query->whereDate('tanggal', $filterTanggal);
-            } else {
-                $now = Carbon::now();
-                $filterTanggal = $now->toDateString();
-
                 $query->whereDate('tanggal', $filterTanggal);
             }
 
@@ -65,7 +60,6 @@ class AbsensiMatpelController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
-                    <a href="/rekap-absensi-guru/absensi/' . $row->guru->id . '" class="detail btn btn-primary btn-sm">Rekap Absensi</a>
                     
                     <button class="btn btn-sm btn-info btn-icon" aria-label="Button" onclick="edit(' . $row->id . ')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -113,8 +107,15 @@ class AbsensiMatpelController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AbsensiMatpel $absensiMatpel)
+    public function destroy(AbsensiMatpel $absensiMatpel, $id)
     {
-        //
+        try {
+            $del_siswa = AbsensiMatpel::findOrFail($id);
+            $del_siswa->delete();
+
+            return response()->json(['status' => true, 'message' => 'Data berhasil dihapus'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => 'Gagal menghapus data'], 500);
+        }
     }
 }

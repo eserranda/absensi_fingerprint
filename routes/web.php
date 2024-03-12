@@ -61,9 +61,9 @@ Route::prefix('rekap-absensi-siswa')->controller(DataAbsensiSiswaController::cla
 
 Route::prefix('absensi-matpel')->controller(AbsensiMatpelController::class)->group(function () {
     Route::get('', 'index')->name("absensi-matpel.data")->middleware('auth');
+    Route::delete('/delete/{id}', 'destroy')->name("delete_absensi_matpel")->middleware('auth');
 
     // Route::POST('/store', 'store')->name("save_role")->middleware('auth');
-    // Route::delete('/delete/{id}', 'destroy')->name("delete_role")->middleware('auth');
 });
 
 Route::prefix('role')->controller(RoleController::class)->group(function () {

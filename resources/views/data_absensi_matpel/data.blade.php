@@ -16,20 +16,44 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                {{-- <h5 class="card-title">Rekap Data Absensi Mata Pelajaran</h5> --}}
-                <div class="btn-actions col-6">
-                    <div class="col-3">
-                        <select class="form-select" id="filterKelas">
-                            <option value="X IPS 1">X IPS 1</option>
-                            <option value="XI MIPA 1">XI MIPA 1</option>
-                            <option value="XII IPS 1">XII IPS 1</option>
-                        </select>
+                <div class="btn-list">
+                    <div class="btn-actions col-12">
+                        <div class="col-6">
+                            <select class="form-select" id="filterKelas">
+                                <option value="" selected disabled>Pilih Kelas</option>
+                                <option value="X IPS 1">X IPS 1</option>
+                                <option value="XI MIPA 1">XI MIPA 1</option>
+                                <option value="XII IPS 1">XII IPS 1</option>
+                            </select>
+                        </div>
+
+                        <div class="col-7 mx-2">
+                            <input type="date" class="form-control  " id="filterTanggal">
+                        </div>
+
+                        <a href="#" class="btn btn-icon" aria-label="Button" id="search">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <circle cx="10" cy="10" r="7" />
+                                <line x1="21" y1="21" x2="15" y2="15" />
+                            </svg>
+                        </a>
                     </div>
                 </div>
+
+
                 <div class="card-actions">
-                    {{-- <a class="btn btn-primary" id="add_data">
-                        Tambah Data
-                    </a> --}}
+                    <button class="btn   btn-icon mx-2" id="reload">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                            <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                        </svg>
+                    </button>
                 </div>
             </div>
             <div class="card-body border-bottom py-3 ">
@@ -113,7 +137,8 @@
                                 <div class="mb-3">
                                     <label class="form-label">Nama Kelas</label>
                                     <input type="hidden" class="form-control" id="edit_id" name="edit_id">
-                                    <input type="text" class="form-control" id="edit_nama_kelas" name="edit_nama_kelas">
+                                    <input type="text" class="form-control" id="edit_nama_kelas"
+                                        name="edit_nama_kelas">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -129,7 +154,8 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" tabindex="2" class="btn btn-primary" onclick="updateData()">Update</button>
+                        <button type="button" tabindex="2" class="btn btn-primary"
+                            onclick="updateData()">Update</button>
                     </div>
                 </form>
             </div>
@@ -269,53 +295,53 @@
 
             // }
 
-            // function hapus(id) {
-            //     Swal.fire({
-            //         title: 'Apakah Anda yakin?',
-            //         text: 'Data akan dihapus permanen!',
-            //         icon: 'warning',
-            //         showCancelButton: true,
-            //         confirmButtonColor: '#d33',
-            //         cancelButtonColor: '#3085d6',
-            //         confirmButtonText: 'Ya, hapus!'
-            //     }).then((result) => {
-            //         if (result.isConfirmed) {
-            //             var csrfToken = $('meta[name="csrf-token"]').attr('content');
-            //             $.ajax({
-            //                 url: '/data_kelas/delete/' + id,
-            //                 type: 'DELETE',
-            //                 data: {
-            //                     _token: csrfToken
-            //                 },
-            //                 success: function(response) {
-            //                     console.log('Response:', response);
-            //                     if (response.status) {
-            //                         Swal.fire(
-            //                             'Terhapus!',
-            //                             'Data berhasil dihapus.',
-            //                             'success'
-            //                         );
-            //                         $('.datatable').DataTable().ajax.reload();
-            //                     } else {
-            //                         Swal.fire(
-            //                             'Gagal!',
-            //                             'Terjadi kesalahan saat menghapus data.',
-            //                             'error'
-            //                         );
-            //                     }
-            //                 },
-            //                 error: function(error) {
-            //                     console.log(error);
-            //                     Swal.fire(
-            //                         'Gagal!',
-            //                         'Terjadi kesalahan saat menghapus data.',
-            //                         'error'
-            //                     );
-            //                 }
-            //             });
-            //         }
-            //     });
-            // }
+            function hapus(id) {
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: 'Data akan dihapus permanen!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                        $.ajax({
+                            url: '/absensi-matpel/delete/' + id,
+                            type: 'DELETE',
+                            data: {
+                                _token: csrfToken
+                            },
+                            success: function(response) {
+                                console.log('Response:', response);
+                                if (response.status) {
+                                    Swal.fire(
+                                        'Terhapus!',
+                                        'Data berhasil dihapus.',
+                                        'success'
+                                    );
+                                    $('.datatable').DataTable().ajax.reload();
+                                } else {
+                                    Swal.fire(
+                                        'Gagal!',
+                                        'Terjadi kesalahan saat menghapus data.',
+                                        'error'
+                                    );
+                                }
+                            },
+                            error: function(error) {
+                                console.log(error);
+                                Swal.fire(
+                                    'Gagal!',
+                                    'Terjadi kesalahan saat menghapus data.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            }
 
             // $(document).ready(function() {
             //     $('#modal_add_data').on('shown.bs.modal', function() {
@@ -435,7 +461,6 @@
                 const myDataTable = $('.datatable').DataTable({
                     processing: true,
                     serverSide: true,
-
                     ajax: "{{ route('absensi-matpel.data') }}",
                     columns: [{
                             data: 'DT_RowIndex',
@@ -444,7 +469,14 @@
                         },
                         {
                             data: 'tanggal',
-                            name: 'tanggal'
+                            name: 'tanggal',
+                            render: function(data, type, full, meta) {
+                                if (type === 'display') {
+                                    return formatDate(
+                                        data);
+                                }
+                                return data;
+                            }
                         },
                         {
                             data: 'hari',
@@ -479,13 +511,28 @@
                         },
                     ]
                 });
+
+                $('#search').on('click', function() {
+                    const selectedKelas = $('#filterKelas').val();
+                    const selectedTanggal = $('#filterTanggal').val();
+                    const url = '{{ route('absensi-matpel.data') }}?kelas=' + selectedKelas + '&tanggal=' +
+                        selectedTanggal;
+                    myDataTable.ajax.url(url).load();
+                });
+
+                $('#reload').on('click', function() {
+                    $('#filterTanggal').val('');
+                    $('#filterKelas').val('');
+                    myDataTable.ajax.url('{{ route('absensi-matpel.data') }}').load();
+                });
+
             });
 
-            $('#filterKelas').on('change', function() {
-                const selectedKelas = $(this).val();
-                myDataTable.ajax.url('{{ route('absensi-matpel.data') }}?kelas=' + selectedKelas)
-                    .load();
-            });
+            function formatDate(dateString) {
+                const parts = dateString.split('-');
+                const dateObject = new Date(parts[0], parts[1] - 1, parts[2]);
+                return `${dateObject.toLocaleDateString('en-GB')}`;
+            }
 
             // function updateOptionsAndSelect2Guru(selectElement, id, namaGuru) {
             //     // Hapus semua opsi yang ada di elemen <select>

@@ -81,9 +81,6 @@ class DataSiswaController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
@@ -109,8 +106,9 @@ class DataSiswaController extends Controller
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string',
             'nisn' => 'required|numeric|unique:data_siswas,nisn',
-            'tempat_lahir' => 'required|string',
-            'tanggal_lahir' => 'required|string',
+            // 'tempat_lahir' => 'required|string',
+            'tempat_lahir' => 'required|string|regex:/^[a-zA-Z]+$/u',
+            'tanggal_lahir' => 'required|date|after_or_equal:2000-01-01',
             'jenis_kelamin' => 'required|string',
             'agama' => 'required|string',
             'kelas' => 'required|string',
@@ -125,7 +123,10 @@ class DataSiswaController extends Controller
             'nisn.required' => 'NISN harus diisi',
             'tempat_lahir.required' => 'Tempat lahir harus diisi',
             'tempat_lahir.string' => 'Tempat lahir harus berupa string',
+            'tempat_lahir.regex' => 'Tempat lahir harus berupa huruf',
             'tanggal_lahir.required' => 'Tanggal lahir harus diisi',
+            'tanggal_lahir.date' => 'Tanggal lahir harus berupa tanggal',
+            'tanggal_lahir.after_or_equal' => 'Tahun kelahiran harus di atas 2000',
             'tanggal_lahir.string' => 'Tanggal lahir harus berupa string',
             'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
             'kelas.required' => 'Kelas harus diisi',
@@ -185,13 +186,34 @@ class DataSiswaController extends Controller
         $validator = Validator::make($request->all(), [
             'edit_nama' => 'required|string',
             'edit_nisn' => 'required|numeric',
-            'edit_tempat_lahir' => 'required|string',
-            'edit_tanggal_lahir' => 'required|date',
+            'edit_tempat_lahir' => 'required|string|regex:/^[a-zA-Z]+$/u',
+            'edit_tanggal_lahir' => 'required|date|after_or_equal:2000-01-01',
             'edit_jenis_kelamin' => 'required| string',
             'edit_agama' => 'required|string',
             'edit_kelas' => 'required|string',
             'edit_alamat' => 'required|string',
             'edit_keterangan' => 'required|string',
+        ], [
+            'edit_nama.required' => 'Nama harus diisi',
+            'edit_nama.string' => 'Nama harus berupa string',
+            'edit_nisn.unique' => 'NISN sudah terdaftar',
+            'edit_nisn.string' => 'NISN harus berupa string',
+            'edit_nisn.numeric' => 'NISN harus berupa angka',
+            'edit_nisn.required' => 'NISN harus diisi',
+            'edit_tempat_lahir.required' => 'Tempat lahir harus diisi',
+            'edit_tempat_lahir.string' => 'Tempat lahir harus berupa string',
+            'edit_tempat_lahir.regex' => 'Tempat lahir harus berupa huruf',
+            'edit_tanggal_lahir.required' => 'Tanggal lahir harus diisi',
+            'edit_tanggal_lahir.date' => 'Tanggal lahir harus berupa tanggal',
+            'edit_tanggal_lahir.after_or_equal' => 'Tahun kelahiran harus di atas 2000',
+            'edit_tanggal_lahir.string' => 'Tanggal lahir harus berupa string',
+            'edit_jenis_kelamin.required' => 'Jenis kelamin harus diisi',
+            'edit_kelas.required' => 'Kelas harus diisi',
+            'edit_kelas.string' => 'Kelas harus berupa string',
+            'edit_alamat.required' => 'Alamat harus diisi',
+            'edit_alamat.string' => 'Alamat harus berupa string',
+            'edit_keterangan.required' => 'Keterangan harus diisi',
+            'edit_agama.required' => 'Agama harus diisi',
         ]);
 
         if ($validator->fails()) {

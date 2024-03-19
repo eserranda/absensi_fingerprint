@@ -67,9 +67,32 @@
                             <a href="#" class="dropdown-item">Feedback</a> --}}
                                 <div class="dropdown-divider"></div>
                                 {{-- <a href="./settings.html" class="dropdown-item">Settings</a> --}}
+                                {{-- <a href="/fingerprint-modul/reset-all-modul" class="dropdown-item">Reset Modul</a> --}}
+                                <a href="#" id="resetModulLink" class="dropdown-item">Reset Modul</a>
                                 <a href="/logout" class="dropdown-item">Logout</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </header>
+
+
+            <script>
+                $(document).ready(function() {
+                    $('#resetModulLink').click(function(e) {
+                        e.preventDefault(); // Mencegah tautan mengarahkan ke URL
+
+                        $.ajax({
+                            url: '/fingerprint-modul/reset-all-modul',
+                            type: 'GET',
+                            success: function(response) {
+                                alert(response.message); // Menampilkan pesan respons dari server
+                            },
+                            error: function(xhr, status, error) {
+                                console.error(xhr.responseText); // Menampilkan pesan error jika ada
+                                alert('Terjadi kesalahan saat memperbarui modul.');
+                            }
+                        });
+                    });
+                });
+            </script>

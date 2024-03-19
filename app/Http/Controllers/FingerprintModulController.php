@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AbsensiMatpel;
+use Carbon\Carbon;
+use App\Models\Matpel;
 use App\Models\DataGuru;
+use App\Models\DataSiswa;
+use App\Models\JamAbsensi;
 use App\Models\Fingerprint;
 use Illuminate\Http\Request;
+use App\Models\AbsensiMatpel;
 use App\Models\FingerprintTmp;
 use App\Models\DataAbsensiGuru;
-use App\Models\DataAbsensiSiswa;
-use App\Models\DataSiswa;
 use App\Models\FingerprintGuru;
+use App\Models\JadwalPelajaran;
+use App\Models\DataAbsensiSiswa;
 use App\Models\FingerprintModul;
 use App\Models\FingerprintSiswa;
 use App\Models\FingerprintStatus;
-use App\Models\JadwalPelajaran;
-use App\Models\JamAbsensi;
-use App\Models\Matpel;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class FingerprintModulController extends Controller
@@ -121,6 +122,30 @@ class FingerprintModulController extends Controller
         return response()->json(['message' => 'success', 'data' => $dataToday, 'count' => $countDataToday], 200);
     }
 
+    // mode absen Masuk dan Pulang
+    public function modeAbsen(Request $request)
+    {
+        $modul   = $request->input('modul');
+        $mode_absen = $request->input('mode_absen');
+
+        // $updateModul = FingerprintModul::where('apiKey', $modul)->update([
+        //     'status' => 'scan',
+        //     'mode_absen' => $mode_absen,
+        // ]);
+
+        $updateModul = FingerprintModul::where('apiKey', $modul)->update([
+            'status' => 'scan',
+            'mode_absen' => $mode_absen,
+            'updated_at' => DB::raw('updated_at') // Menggunakan nilai 'updated_at' yang ada, tidak melakukan perubahan
+        ]);
+
+        if (!$updateModul) {
+            return response()->json(['message' => 'Data gagal diperbarui'], 500);
+        }
+
+        return response()->json(['message' => 'Data berhasil diperbarui', 'status' => $updateModul], 200);
+    }
+
     public function updateStatusToMatpel(Request $request)
     {
         $modul   = $request->input('kelas');
@@ -138,6 +163,26 @@ class FingerprintModulController extends Controller
         return response()->json(['message' => 'Data berhasil diperbarui', 'status' => $updateModul], 200);
     }
 
+    // reser all modul kembali ke mode Scan Mode Absen "Masuk"
+    public function resetAllModul(FingerprintModul $fingerprintModul)
+    {
+        $resetModul = FingerprintModul::query()->update([
+            'status' => 'scan',
+            'mode_absen' => 0,
+            'matpel' => null,
+            'deleted_id' => 0,
+            'deleted_status' => 0,
+            'response' => null,
+            'updated_at' => DB::raw('updated_at') // Menggunakan nilai 'updated_at' yang ada, tidak melakukan perubahan
+        ]);
+
+        if (!$resetModul) {
+            return response()->json(['message' => 'Data gagal diperbarui'], 500);
+        }
+
+        return response()->json(['message' => 'Modul Berhasi di reset'], 200);
+    }
+
     public function resetModul(Request $request)
     {
         $modul   = $request->input('kelas');
@@ -145,6 +190,7 @@ class FingerprintModulController extends Controller
         $resetModul = FingerprintModul::where('modul_fingerprint', $modul)->update([
             'status' => 'scan',
             'matpel' => null,
+            'updated_at' => DB::raw('updated_at') // Menggunakan nilai 'updated_at' yang ada, tidak melakukan perubahan
         ]);
 
         if (!$resetModul) {
@@ -185,7 +231,10 @@ class FingerprintModulController extends Controller
         $apiKey = $request->input('apiKey');
         if ($apiKey === 'guru') {
             $fingerprintStatus = FingerprintModul::where('apiKey', 'guru')->first();
-            $fingerprintStatus->update(['status' => 'daftar']);
+            $fingerprintStatus->update([
+                'status' => 'daftar',
+                'updated_at' => DB::raw('updated_at') // Menggunakan nilai 'updated_at' yang ada, tidak melakukan perubahan
+            ]);
         }
 
         if ($fingerprintStatus) {
@@ -333,13 +382,32 @@ class FingerprintModulController extends Controller
                 $keterangan = '-';
             }
 
-            $saveData = DataAbsensiGuru::create([
-                'id_guru' => $getDataGuru->id,
-                'id_fingerprint' => $idFinger,
-                'tanggal_absen' => $tanggalAbsen,
-                'jam_masuk' => $jamMasuk,
-                'keterangan' => $keterangan,
-            ]);
+
+            $cek_Mode_absen = DataAbsensiGuru::where('id_guru', $getDataGuru->id)->where('tanggal_absen', $tanggalAbsen)->first();
+            if ($cek_Mode_absen === null) {
+                $saveData = DataAbsensiGuru::create(
+                    [
+                        'id_guru' => $getDataGuru->id,
+                        'id_fingerprint' => $idFinger,
+                        'tanggal_absen' => $tanggalAbsen,
+                        'jam_masuk' => $jamMasuk,
+                        'keterangan' => $keterangan,
+                        'mode_absen' => 0
+                    ]
+                );
+            }
+
+            $saveData = DataAbsensiGuru::firstOrCreate(
+                [
+                    'id_guru' => $getDataGuru->id,
+                    'id_fingerprint' => $idFinger,
+                    'tanggal_absen' => $tanggalAbsen
+                ],
+                [
+                    'jam_masuk' => $jamMasuk,
+                    'keterangan' => $keterangan
+                ]
+            );
 
             if ($saveData) {
                 return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);

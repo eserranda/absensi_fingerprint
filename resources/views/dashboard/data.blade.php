@@ -94,6 +94,94 @@
                 <div class="row row-deck row-cards" id="data-container">
 
                 </div>
+
+                <div class="row row-deck row-cards mt-1">
+
+                    <div class="col-md-6 col-xl-3 ">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <label class="form-label">Mode Absen</label>
+                                <div class="row g-2 mb-4">
+                                    <div class="col-8">
+                                        <select type="text" class="form-select mode_absen">
+                                            <option value="0">Masuk</option>
+                                            <option value="1">Pulang</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-auto">
+                                        <a class="btn btn-indigo finger" data-finger="guru">
+                                            OK
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-xl-3 ">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <label class="form-label">Mode Absen</label>
+                                <div class="row g-2 mb-4">
+                                    <div class="col-8">
+                                        <select type="text" class="form-select mode_absen">
+                                            <option value="0">Masuk</option>
+                                            <option value="1">Pulang</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-auto">
+                                        <a class="btn btn-indigo finger" data-finger="finger1">
+                                            OK
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-xl-3 ">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <label class="form-label">Mode Absen</label>
+                                <div class="row g-2 mb-4">
+                                    <div class="col-8">
+                                        <select type="text" class="form-select mode_absen">
+                                            <option value="0">Masuk</option>
+                                            <option value="1">Pulang</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-auto">
+                                        <a class="btn btn-indigo finger" data-finger="finger2">
+                                            OK
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-xl-3 ">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <label class="form-label">Mode Absen</label>
+                                <div class="row g-2 mb-4">
+                                    <div class="col-8">
+                                        <select type="text" class="form-select mode_absen">
+                                            <option value="0">Masuk</option>
+                                            <option value="1">Pulang</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-auto">
+                                        <a class="btn btn-indigo finger" data-finger="finger3">
+                                            OK
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
 
@@ -106,7 +194,8 @@
                                 <span class="bg-info text-white avatar">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users"
                                         width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5"
-                                        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        stroke="currentColor" fill="none" stroke-linecap="round"
+                                        stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
                                         <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
@@ -125,9 +214,10 @@
                             </div>
                             <div class="col-auto">
                                 <a href="/akun/guru" class="btn btn-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-search"
-                                        width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-                                        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-eye-search" width="24" height="24"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                                         <path
@@ -167,10 +257,10 @@
                             </div>
                             <div class="col-auto">
                                 <a href="/data_guru" class="btn btn-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-search"
-                                        width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-                                        stroke="currentColor" fill="none" stroke-linecap="round"
-                                        stroke-linejoin="round">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-eye-search" width="24" height="24"
+                                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                                         <path
@@ -958,7 +1048,7 @@
                                             <div class="col">
                                                 <h3 class="card-title mb-1">${item.modul_fingerprint}</h3>
                                                <span class="badge text-white bg-${item.active ? 'green' : 'red'}">${item.active ? 'Online' : 'Offline'}</span>  
-                                              <p class="text-muted mt-1 mb-0">${item.status=== 'matpel' ? 'mode : Absen Matpel' : item.status === 'scan' ? 'mode : Absen Harian' :item.status === 'daftar' ? 'mode : Daftar Finger' : item.status === 'hapus' ? 'mode : Hapus Finger' : ''}</p>
+                                              <p class="text-muted mt-1 mb-0">${item.status=== 'matpel' ? 'mode : Absen Matpel' : (item.status === 'scan' && item.mode_absen === 1) ? 'mode : Absen Pulang': (item.status === 'scan' && item.mode_absen === 0) ? 'mode : Absen Masuk' :item.status === 'daftar' ? 'mode : Daftar Finger' : item.status === 'hapus' ? 'mode : Hapus Finger' : ''}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -974,6 +1064,39 @@
                     setInterval(cekStatusModul, 5000);
                 });
             @endif
+
+            $('.finger').click(function() {
+                var modeAbsen = $(this).closest('.card-body').find('.mode_absen').val();
+
+
+                var fingerType = $(this).data('finger');
+
+                // Objek data yang akan dikirim ke server
+                var dataToSend = {
+                    _token: '{{ csrf_token() }}',
+                    modul: fingerType,
+                    mode_absen: modeAbsen,
+                };
+
+                console.log(dataToSend)
+
+                $.ajax({
+                    url: '/fingerprint-modul/mode-absen',
+                    type: 'POST',
+                    data: dataToSend,
+                    success: function(response) {
+                        Swal.fire(
+                            'Updated!',
+                            'Data berhasil diupdate!',
+                            'success'
+                        );
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+
+            });
         </script>
     @endpush
 @endsection

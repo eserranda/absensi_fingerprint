@@ -195,9 +195,14 @@ Route::controller(FingerprintModulController::class)->group(function () {
     Route::get('/fingerprint/get-finger-id-siswa/{apiKey}', 'getFingerIDSiswa')->middleware('auth');
 
     Route::post('/fingerprint-modul/get-all-kelas', 'getAllKelas')->middleware('auth');
-    // Route::post('/fingerprint-modul/status-matpel', 'updateStatusToMatpel')->middleware('auth');
-    // Route::post('/fingerprint-modul/reset-modul', 'resetModul')->middleware('auth');
-    // Route::get('/fingerprint-modul/get-data-today/{id_matpel}/{id_guru}', 'getDataToday');
+
+    Route::post('/fingerprint-modul/mode-absen', 'modeAbsen')->middleware('auth');
+
+    Route::get('/fingerprint-modul/reset-all-modul', 'resetAllModul')->middleware('auth');
+
+    Route::post('/fingerprint-modul/status-matpel', 'updateStatusToMatpel')->middleware('auth');
+    Route::post('/fingerprint-modul/reset-modul', 'resetModul')->middleware('auth');
+    Route::get('/fingerprint-modul/get-data-today/{id_matpel}/{id_guru}', 'getDataToday');
 });
 
 // Route::controller(FingerprintStatusController::class)->group(function () {

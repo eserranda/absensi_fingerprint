@@ -122,7 +122,7 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Jam Masuk</label>
-                                    <input type="time-local" class="form-control" id="jam_masuk" name="jam_masuk">
+                                    <input type="time" class="form-control" id="jam_masuk" name="jam_masuk">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -130,7 +130,7 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Jam Keluar</label>
-                                    <input type="time-local" class="form-control" id="jam_keluar" name="jam_keluar">
+                                    <input type="time" class="form-control" id="jam_keluar" name="jam_keluar">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
@@ -164,8 +164,250 @@
         </div>
     </div>
 
+    {{-- Edit data  --}}
+    <div class="modal modal-blur fade" id="modal_edit_data" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Data</h5>
+                    <button type="button" class="btn-close" onclick="closeModalEdit()"></button>
+                </div>
+                <form action="" method="POST" id="form_edit_data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nama Siswa</label>
+                                    <input type="hidden" class="form-control" id="edit_id" name="edit_id">
+                                    <select class="form-select" id="edit_id_siswa" name="edit_id_siswa">
+
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Kelas</label>
+                                    <input type="text" class="form-control" id="edit_kelas" name="edit_kelas">
+                                    <div class="invalid-feedback"></div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">ID Finger</label>
+                                    <input type="number" class="form-control" id="edit_id_finger"
+                                        name="edit_id_finger">
+                                    <div class="invalid-feedback"></div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Tanggal Absen</label>
+                                    <input type="date" class="form-control" id="edit_tanggal_absen"
+                                        name="edit_tanggal_absen">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Jam Masuk</label>
+                                    <input type="time-local" class="form-control" id="edit_jam_masuk"
+                                        name="edit_jam_masuk">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Jam Keluar</label>
+                                    <input type="time-local" class="form-control" id="edit_jam_keluar"
+                                        name="edit_jam_keluar">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Keterangan</label>
+                                    <select class="form-select" id="edit_keterangan" name="edit_keterangan">
+                                        <option value="" selected disabled>- Pilih Keterangan -</option>
+                                        <option value="Hadir">Hadir</option>
+                                        <option value="Izin">Izin</option>
+                                        <option value="Sakit">Sakit</option>
+                                        <option value="Terlambat">Terlambat</option>
+                                        <option value="Tanpa Keterangan">Tanpa Keterangan</option>
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-primary ms-auto" type="submit">
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     @push('script')
         <script>
+            async function edit(id) {
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+                    const response = await fetch('/rekap-absensi-siswa/edit/' + id);
+                    const responseData = await response.json();
+
+                    if (!response.status) {
+                        throw new Error('Gagal mengambil data');
+                    }
+                    console.log(response);
+                    const form = document.getElementById('form_edit_data');
+                    form.elements['edit_id'].value = responseData.data.id;
+                    form.elements['edit_kelas'].value = responseData.data.kelas;
+                    form.elements['edit_id_finger'].value = responseData.data.id_finger;
+                    form.elements['edit_tanggal_absen'].value = responseData.data.tanggal_absen;
+                    form.elements['edit_jam_masuk'].value = responseData.data.jam_masuk;
+                    form.elements['edit_jam_keluar'].value = responseData.data.jam_keluar;
+                    form.elements['edit_keterangan'].value = responseData.data.keterangan;
+
+
+                    var editIdPengajarSelect = document.getElementById('edit_id_siswa');
+                    fetch('/data_siswa/getid/' + responseData.data.id_siswa, {
+                            method: 'GET',
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Gagal mengambil data tambahan');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            updateOptionsAndSelect2Guru(editIdPengajarSelect, data.data.id, data.data.nama);
+                        });
+
+                    $('#modal_edit_data').modal('show');
+
+                } catch (error) {
+                    console.error('Terjadi kesalahan:', error);
+                    throw error;
+                }
+
+                $("#edit_id_siswa").select2({
+                    theme: "bootstrap-5",
+                    placeholder: "Pilih siswa",
+                    minimumInputLength: 1,
+                    dropdownParent: $("#modal_edit_data"),
+                    ajax: {
+                        url: '/get_data_siswa',
+                        dataType: 'json',
+                        processResults: function(data) {
+                            if (data && data.length > 0) {
+                                var results = $.map(data, function(item) {
+                                    return {
+                                        id: item.id,
+                                        text: item.nama
+                                    };
+                                });
+                                return {
+                                    results: results
+                                };
+                            }
+                        },
+                    }
+                });
+            }
+
+
+            function updateOptionsAndSelect2Guru(selectElement, id, namaSiswa) {
+                $(selectElement).empty();
+
+                var option = new Option(namaSiswa, id, true, true);
+                $(selectElement).append(option);
+
+                $(selectElement).trigger('change');
+            }
+
+            document.getElementById('form_edit_data').addEventListener('submit', async function(event) {
+                event.preventDefault();
+
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                    const response = await fetch('/rekap-absensi-siswa/update', {
+                        method: 'POST',
+                        body: new FormData(this),
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                    }).then(response => response.json());
+                    if (response.errors) {
+                        Object.keys(response.errors).forEach(fieldName => {
+                            const inputField = document.getElementById(fieldName);
+                            if (fieldName === 'id_siswa') {
+                                inputField.classList.add('is-invalid');
+                            } else {
+                                inputField.classList.add('is-invalid');
+                                inputField.nextElementSibling.textContent = data.errors[fieldName][0];
+                            }
+                        });
+
+                        const validFields = document.querySelectorAll('.is-invalid');
+                        validFields.forEach(validField => {
+                            const fieldName = validField.id;
+                            if (!response.errors[fieldName]) {
+                                if (fieldName === 'id_siswa') {
+                                    validField.classList.remove('is-invalid');
+                                } else {
+                                    validField.classList.remove('is-invalid');
+                                    validField.nextElementSibling.textContent = '';
+                                }
+                            }
+                        });
+                    } else {
+                        console.log(response);
+                        const invalidInputs = document.querySelectorAll('.is-invalid');
+                        invalidInputs.forEach(invalidInput => {
+                            invalidInput.value = '';
+                            invalidInput.classList.remove('is-invalid');
+                            const errorNextSibling = invalidInput.nextElementSibling;
+                            if (errorNextSibling && errorNextSibling.classList.contains(
+                                    'invalid-feedback')) {
+                                errorNextSibling.textContent = '';
+                            }
+                        });
+                        const form = document.getElementById('form_edit_data');
+                        form.reset();
+                        $('#modal_edit_data').modal('hide');
+                        Swal.fire(
+                            'Tersimpan!',
+                            'Data  berhasil diupdate.',
+                            'success'
+                        )
+                        $('.datatable').DataTable().ajax.reload();
+                    }
+                } catch (error) {
+                    console.error('Terjadi kesalahan:', error);
+                    throw error;
+                }
+            });
+
             document.getElementById('add_data').addEventListener('click', function() {
                 $('#modal_add_data').modal('show');
             });
@@ -401,6 +643,22 @@
                         });
                     }
                 });
+            }
+
+            function closeModalEdit() {
+                const invalidInputs = document.querySelectorAll('.is-invalid');
+                invalidInputs.forEach(invalidInput => {
+                    invalidInput.value = '';
+                    invalidInput.classList.remove('is-invalid');
+                    const errorNextSibling = invalidInput.nextElementSibling;
+                    if (errorNextSibling && errorNextSibling.classList.contains(
+                            'invalid-feedback')) {
+                        errorNextSibling.textContent = '';
+                    }
+                });
+                const form = document.getElementById('form_edit_data');
+                form.reset();
+                $('#modal_edit_data').modal('hide');
             }
         </script>
     @endpush

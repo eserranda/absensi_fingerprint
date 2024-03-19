@@ -192,12 +192,11 @@ class DataAbsensiSiswaController extends Controller
         return view('data_absensi_siswa.absensi', compact('data'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(DataAbsensiSiswa $dataAbsensiSiswa)
+
+    public function edit(DataAbsensiSiswa $dataAbsensiSiswa, $id)
     {
-        //
+        $data = $dataAbsensiSiswa::find($id);
+        return response()->json(['status' => true, 'data' => $data]);
     }
 
     /**
@@ -205,7 +204,40 @@ class DataAbsensiSiswaController extends Controller
      */
     public function update(Request $request, DataAbsensiSiswa $dataAbsensiSiswa)
     {
-        //
+        $id = $request->input('edit_id');
+        $idSiswa = $request->input('id_siswa');
+
+        $validator = Validator::make($request->all(), [
+            'edit_id_siswa' => 'required',
+            'edit_tanggal_absen' => [
+                'required',
+                'date',
+                Rule::unique('data_absensi_siswas', 'tanggal_absen')
+                    ->ignore($dataAbsensiSiswa->id)
+                    ->where(function ($query) use ($idSiswa) {
+                        return $query->where('id_siswa', $idSiswa);
+                    })
+            ]
+        ], [
+            'edit_tanggal_absen.required' => 'Tidak boleh kosong',
+            'edit_tanggal_absen.date' => 'Format tanggal salah',
+            'edit_tanggal_absen.unique' => 'Data absensi sudah ada',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $dataAbsensiSiswa->find($id)->update([
+            'id_siswa' => $request->input('edit_id_siswa'),
+            'id_fingerprint' => $request->input('edit_id_finger'),
+            'tanggal_absen' => $request->input('edit_tanggal_absen'),
+            'jam_masuk' => $request->input('edit_jam_masuk'),
+            'jam_keluar' => $request->input('edit_jam_keluar'),
+            'keterangan' => $request->input('edit_keterangan'),
+        ]);
+
+        return response()->json(['status' => true, 'message' => 'Data Siswa berhasil diperbarui', $dataAbsensiSiswa], 200);
     }
 
     /**

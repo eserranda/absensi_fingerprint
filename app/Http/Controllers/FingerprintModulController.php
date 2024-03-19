@@ -373,7 +373,7 @@ class FingerprintModulController extends Controller
             $getHari = JamAbsensi::where('hari', $hari)->first();
 
             if ($getHari === null) {
-                return response()->json(['status' => false, 'message' => 'Belum ada hari terdafatar'], 404);
+                return response()->json(['status' => false, 'message' => 'Belum ada hari terdaftar'], 404);
             }
 
             if ($jamMasuk > $getHari->jam_masuk) {
@@ -382,32 +382,42 @@ class FingerprintModulController extends Controller
                 $keterangan = '-';
             }
 
+            $cek_mode_absen = FingerprintModul::where('apiKey', $apiKey)->first();
 
-            $cek_Mode_absen = DataAbsensiGuru::where('id_guru', $getDataGuru->id)->where('tanggal_absen', $tanggalAbsen)->first();
-            if ($cek_Mode_absen === null) {
-                $saveData = DataAbsensiGuru::create(
+            if ($cek_mode_absen->status === 'scan' && $cek_mode_absen->mode_absen === 0) { // Mode absen Masuk
+                $saveData = DataAbsensiGuru::firstOrcreate(
                     [
                         'id_guru' => $getDataGuru->id,
                         'id_fingerprint' => $idFinger,
                         'tanggal_absen' => $tanggalAbsen,
+                    ],
+                    [
                         'jam_masuk' => $jamMasuk,
                         'keterangan' => $keterangan,
                         'mode_absen' => 0
                     ]
                 );
-            }
+            } else if ($cek_mode_absen->status === 'scan' && $cek_mode_absen->mode_absen === 1) { // Mode absen Keluar
+                $saveData = DataAbsensiGuru::where('id_guru', $getDataGuru->id)
+                    ->where('tanggal_absen', $tanggalAbsen)
+                    ->first();
 
-            $saveData = DataAbsensiGuru::firstOrCreate(
-                [
-                    'id_guru' => $getDataGuru->id,
-                    'id_fingerprint' => $idFinger,
-                    'tanggal_absen' => $tanggalAbsen
-                ],
-                [
-                    'jam_masuk' => $jamMasuk,
-                    'keterangan' => $keterangan
-                ]
-            );
+                // Periksa jika data ditemukan dan jam_keluar masih kosong
+                if ($saveData &&  !$saveData->jam_keluar) {
+                    $saveData->update([
+                        'jam_keluar' => $jamMasuk
+                    ]);
+                }
+                // $saveData = DataAbsensiGuru::updateOrCreate(
+                //     [
+                //         'id_guru' => $getDataGuru->id,
+                //         'tanggal_absen' => $tanggalAbsen,
+                //     ],
+                //     [
+                //         'jam_keluar' => DB::raw('IFNULL(jam_keluar, "' . $jamMasuk . '")'),
+                //     ]
+                // );
+            }
 
             if ($saveData) {
                 return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
@@ -484,20 +494,44 @@ class FingerprintModulController extends Controller
 
             $getHari = JamAbsensi::where('hari', $hari)->first();
 
+            if ($getHari === null) {
+                return response()->json(['status' => false, 'message' => 'Belum ada hari terdaftar'], 404);
+            }
+
             if ($jamMasuk > $getHari->jam_masuk) {
                 $keterangan = 'Terlambat';
             } else {
                 $keterangan = '-';
             }
 
-            $saveData = DataAbsensiSiswa::create([
-                'id_siswa' => $getDataSiswa->id,
-                'kelas' => $getDataSiswa->kelas,
-                'id_fingerprint' => $idFinger,
-                'tanggal_absen' => $tanggalAbsen,
-                'jam_masuk' => $jamMasuk,
-                'keterangan' => $keterangan,
-            ]);
+            $cek_mode_absen = FingerprintModul::where('apiKey', $apiKey)->first();
+
+            if ($cek_mode_absen->status === 'scan' && $cek_mode_absen->mode_absen === 0) { // Mode absen Masuk
+                $saveData = DataAbsensiSiswa::firstOrcreate(
+                    [
+                        'id_siswa' => $getDataSiswa->id,
+                        'kelas' => $getDataSiswa->kelas,
+                        'id_fingerprint' => $idFinger,
+                        'tanggal_absen' => $tanggalAbsen,
+                    ],
+                    [
+                        'jam_masuk' => $jamMasuk,
+                        'keterangan' => $keterangan,
+                        'mode_absen' => 0
+                    ]
+                );
+            } else if ($cek_mode_absen->status === 'scan' && $cek_mode_absen->mode_absen === 1) { // Mode absen Pulang
+                $saveData = DataAbsensiSiswa::where('id_siswa', $getDataSiswa->id)
+                    ->where('tanggal_absen', $tanggalAbsen)
+                    ->first();
+
+                // Periksa jika data ditemukan dan jam_keluar masih kosong
+                if ($saveData &&  !$saveData->jam_keluar) {
+                    $saveData->update([
+                        'jam_keluar' => $jamMasuk
+                    ]);
+                }
+            }
 
             if ($saveData) {
                 return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);

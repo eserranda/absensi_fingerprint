@@ -50,6 +50,9 @@ Route::prefix('rekap-absensi-siswa')->controller(DataAbsensiSiswaController::cla
     Route::POST('/filter-bulan', 'filterAbsensi')->name("rekap-absensi-siswa.filter-bulan")->middleware('auth');
     Route::delete('/delete/{id}', 'destroy')->name("hapus_rekap_absensi_siswa")->middleware('auth');
 
+    Route::get('/edit/{id}', 'edit')->name("data_absensi_siswa.edit");
+    Route::POST('/update', 'update')->name("data_absensi_siswa.update")->middleware('auth');
+
 
     // Route::get('/data-absensi/{id}', 'absensi')->name("rekap-absensi-siswa.data-absensi")->middleware('auth');
     // Route::get('/count-absensi/{id}', 'countAbsensi')->name("rekap-absensi-siswa.count-absensi")->middleware('auth');

@@ -37,16 +37,11 @@ class DashboardController extends Controller
 
             return view('dashboard.data', compact('dataMatpel'));
         } else {
-            return view('dashboard.data');
-        }
-        // if (auth()->user()->role == 'guru') {
-        //     $dataGuru = DataGuru::where('id_user', auth()->user()->id)->first();
-        //     return view('dashboard.data', compact('dataGuru'));
-        // }
-        // $siswa = DataAbsensiSiswa::where('keterangan', 'terlambat')
-        //     ->orWhere('keterangan', 'tanpa_keterangan')->get();
+            $siswa = DataAbsensiSiswa::where('keterangan', 'terlambat')
+                ->orWhere('keterangan', 'tanpa_keterangan')->get();
 
-        // return view('dashboard.data', compact('siswa'));
+            return view('dashboard.data', compact('siswa'));
+        }
     }
 
     // DashboardController.php

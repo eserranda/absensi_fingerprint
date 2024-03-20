@@ -429,8 +429,6 @@ class FingerprintModulController extends Controller
                 //     ]
                 // );
 
-            } else {
-                return response()->json(['status' => false, 'message' => 'Data absensi gagal diperbarui'], 500);
             }
         } else if ($apiKeyValue != 'guru' && $getMode === 'matpel') {
             $modul = FingerprintModul::where('apiKey', $apiKeyValue)->first();

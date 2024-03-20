@@ -418,11 +418,13 @@ class FingerprintModulController extends Controller
                 // );
             }
 
-            if ($saveData) {
-                return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
-            } else {
-                return response()->json(['status' => false, 'message' => 'Data gagal disimpan'], 500);
-            }
+            return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
+
+            // if ($saveData) {
+            //     return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
+            // } else {
+            //     return response()->json(['status' => false, 'message' => 'Data gagal disimpan'], 500);
+            // }
         } else if ($apiKeyValue != 'guru' && $getMode === 'matpel') {
             $modul = FingerprintModul::where('apiKey', $apiKeyValue)->first();
 

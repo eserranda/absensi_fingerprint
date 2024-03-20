@@ -233,7 +233,6 @@ class FingerprintModulController extends Controller
             $fingerprintStatus = FingerprintModul::where('apiKey', 'guru')->first();
             $fingerprintStatus->update([
                 'status' => 'daftar',
-                'updated_at' => DB::raw('updated_at') // Menggunakan nilai 'updated_at' yang ada, tidak melakukan perubahan
             ]);
         }
 

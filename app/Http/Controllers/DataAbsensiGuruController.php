@@ -188,7 +188,6 @@ class DataAbsensiGuruController extends Controller
         $id = $request->input('id');
         $idGuru = $request->input('id_guru');
 
-
         $validator = Validator::make($request->all(), [
             'edit_id_guru' => 'required',
             'edit_tanggal_absen' => [

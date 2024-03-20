@@ -531,12 +531,13 @@ class FingerprintModulController extends Controller
                     ]);
                 }
             }
+            return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
 
-            if ($saveData) {
-                return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
-            } else {
-                return response()->json(['status' => false, 'message' => 'Data gagal disimpan'], 500);
-            }
+            // if ($saveData) {
+            //     return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
+            // } else {
+            //     return response()->json(['status' => false, 'message' => 'Data gagal disimpan'], 500);
+            // }
         }
     }
 

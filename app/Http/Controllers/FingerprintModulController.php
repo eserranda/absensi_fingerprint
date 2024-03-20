@@ -384,7 +384,7 @@ class FingerprintModulController extends Controller
             $cek_mode_absen = FingerprintModul::where('apiKey', $apiKey)->first();
 
             if ($cek_mode_absen->status === 'scan' && $cek_mode_absen->mode_absen === 0) { // Mode absen Masuk
-                $saveData = DataAbsensiGuru::firstOrcreate(
+                $addData = DataAbsensiGuru::firstOrcreate(
                     [
                         'id_guru' => $getDataGuru->id,
                         'id_fingerprint' => $idFinger,
@@ -396,17 +396,29 @@ class FingerprintModulController extends Controller
                         'mode_absen' => 0
                     ]
                 );
+
+                if ($addData) {
+                    return response()->json(['status' => true, 'message' => 'Data berhasil Tambah'], 200);
+                } else {
+                    return response()->json(['status' => false, 'message' => 'Data gagal Tambah'], 500);
+                }
             } else if ($cek_mode_absen->status === 'scan' && $cek_mode_absen->mode_absen === 1) { // Mode absen Keluar
-                $saveData = DataAbsensiGuru::where('id_guru', $getDataGuru->id)
+                $updateData = DataAbsensiGuru::where('id_guru', $getDataGuru->id)
                     ->where('tanggal_absen', $tanggalAbsen)
                     ->first();
 
                 // Periksa jika data ditemukan dan jam_keluar masih kosong
-                if ($saveData &&  !$saveData->jam_keluar) {
-                    $saveData->update([
+                if ($updateData &&  !$updateData->jam_keluar) {
+                    $updateData->update([
                         'jam_keluar' => $jamMasuk
                     ]);
                 }
+                if ($updateData) {
+                    return response()->json(['status' => true, 'message' => 'Jam Keluar Berhasil di tambah'], 200);
+                } else {
+                    return response()->json(['status' => false, 'message' => 'Jam Keluar gagal Tambah'], 500);
+                }
+
                 // $saveData = DataAbsensiGuru::updateOrCreate(
                 //     [
                 //         'id_guru' => $getDataGuru->id,
@@ -416,15 +428,10 @@ class FingerprintModulController extends Controller
                 //         'jam_keluar' => DB::raw('IFNULL(jam_keluar, "' . $jamMasuk . '")'),
                 //     ]
                 // );
+
+            } else {
+                return response()->json(['status' => false, 'message' => 'Data absensi gagal diperbarui'], 500);
             }
-
-            return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
-
-            // if ($saveData) {
-            //     return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
-            // } else {
-            //     return response()->json(['status' => false, 'message' => 'Data gagal disimpan'], 500);
-            // }
         } else if ($apiKeyValue != 'guru' && $getMode === 'matpel') {
             $modul = FingerprintModul::where('apiKey', $apiKeyValue)->first();
 
@@ -521,25 +528,32 @@ class FingerprintModulController extends Controller
                         'mode_absen' => 0
                     ]
                 );
+
+                if ($saveData) {
+                    return response()->json(['status' => true, 'message' => 'Data Siswa berhasil tambah'], 200);
+                } else {
+                    return response()->json(['status' => false, 'message' => 'Data  siswa gagal disimpan'], 500);
+                }
             } else if ($cek_mode_absen->status === 'scan' && $cek_mode_absen->mode_absen === 1) { // Mode absen Pulang
-                $saveData = DataAbsensiSiswa::where('id_siswa', $getDataSiswa->id)
+                $updateData = DataAbsensiSiswa::where('id_siswa', $getDataSiswa->id)
                     ->where('tanggal_absen', $tanggalAbsen)
                     ->first();
 
                 // Periksa jika data ditemukan dan jam_keluar masih kosong
-                if ($saveData &&  !$saveData->jam_keluar) {
-                    $saveData->update([
+                if ($updateData &&  !$updateData->jam_keluar) {
+                    $updateData->update([
                         'jam_keluar' => $jamMasuk
                     ]);
                 }
-            }
-            return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
 
-            // if ($saveData) {
-            //     return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
-            // } else {
-            //     return response()->json(['status' => false, 'message' => 'Data gagal disimpan'], 500);
-            // }
+                if ($updateData) {
+                    return response()->json(['status' => true, 'message' => 'Jam Keluar berhasil tambah'], 200);
+                } else {
+                    return response()->json(['status' => false, 'message' => 'Jam Keluar gagal tambah'], 500);
+                }
+            } else {
+                return response()->json(['status' => false, 'message' => 'Mode absen tidak ditemukan'], 404);
+            }
         }
     }
 

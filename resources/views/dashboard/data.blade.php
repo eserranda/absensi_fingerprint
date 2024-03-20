@@ -1048,7 +1048,7 @@
                                             <div class="col">
                                                 <h3 class="card-title mb-1">${item.modul_fingerprint}</h3>
                                                <span class="badge text-white bg-${item.active ? 'green' : 'red'}">${item.active ? 'Online' : 'Offline'}</span>  
-                                              <p class="text-muted mt-1 mb-0">${item.status=== 'matpel' ? 'mode : Absen Matpel' : (item.status === 'scan' && item.mode_absen === 1) ? 'mode : Absen Pulang': (item.status === 'scan' && item.mode_absen === 0) ? 'mode : Absen Masuk' :item.status === 'daftar' ? 'mode : Daftar Finger' : item.status === 'hapus' ? 'mode : Hapus Finger' : ''}</p>
+                                              <p class="text-muted mt-1 mb-0">${item.status=== 'matpel' ? 'mode : Absen Matpel' : (item.status === 'scan' && item.mode_absen === "1") ? 'mode : Absen Pulang': (item.status === 'scan' && item.mode_absen === "0") ? 'mode : Absen Masuk' :item.status === 'daftar' ? 'mode : Daftar Finger' : item.status === 'hapus' ? 'mode : Hapus Finger' : ''}</p>
                                             </div>
                                         </div>
                                     </div>

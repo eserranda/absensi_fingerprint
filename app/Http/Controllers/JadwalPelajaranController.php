@@ -86,20 +86,54 @@ class JadwalPelajaranController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'hari' => 'required|string',
-            // 'id_matpel' => 'required|string',
+            'id_matpel' => 'required|string',
             'jam_mulai' => 'required|string',
             'jam_selesai' => 'required|string',
-            // 'id_guru' => 'required|string',
-            // 'kelas' => 'required|string',
-            // 'ruangan' => 'required|string',
+            'id_guru' => 'required|string',
+            'kelas' => 'required|string',
+            'ruangan' => 'required|string',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ], 422);
         }
 
-        JadwalPelajaran::create($request->all());
-        return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
+        // Validasi kustom untuk memastikan guru tidak mengajar di dua kelas pada waktu yang sama
+        $conflict = JadwalPelajaran::where('hari', $request->hari)
+            ->where('id_guru', $request->id_guru)
+            ->where(function ($query) use ($request) {
+                $query->whereBetween('jam_mulai', [$request->jam_mulai, $request->jam_selesai])
+                    ->orWhereBetween('jam_selesai', [$request->jam_mulai, $request->jam_selesai])
+                    ->orWhere(function ($query) use ($request) {
+                        $query->where('jam_mulai', '<=', $request->jam_mulai)
+                            ->where('jam_selesai', '>=', $request->jam_selesai);
+                    });
+            })->exists();
+
+        if ($conflict) {
+            return response()->json([
+                'status' => false,
+                'errors' => 'Guru telah mengajar di jam tersebut',
+                'message' => 'Guru telah mengajar di jam tersebut'
+            ], 409);
+        }
+
+        $save = JadwalPelajaran::create($request->all());
+
+        if ($save) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Data berhasil disimpan'
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data gagal disimpan'
+            ], 500);
+        }
     }
 
     /**

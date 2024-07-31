@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @push('headcss')
+    <!-- data table -->
     <link href="{{ asset('assets') }}/dist/css/dataTables-bootstrap5.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
@@ -38,7 +39,8 @@
             </div>
             <div class="card-body border-bottom py-3 ">
                 <div class="table-responsive">
-                    <table class="table card-table table-vcenter text-nowrap datatable">
+                    <table class="table card-table table-vcenter text-nowrap datatable"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -383,7 +385,7 @@
                     $("#id_matpel").select2({
                         theme: "bootstrap-5",
                         placeholder: "Pilih Matpel",
-                        minimumInputLength: 1,
+                        // minimumInputLength: 1,
                         dropdownParent: $("#modal_add_jadwal"),
                         ajax: {
                             url: '/get_data_matpel',
@@ -422,10 +424,18 @@
                                 'X-CSRF-TOKEN': csrfToken,
                             },
                         })
-                        .then(response => response.json())
+                        .then(response => {
+                            if (!response.ok) {
+                                return response.json().then(errorData => {
+                                    throw new Error(errorData.message);
+                                });
+                            }
+                            return response.json();
+                        })
                         .then(data => {
                             console.log(data.message);
                             if (data.errors) {
+
                                 Object.keys(data.errors).forEach(fieldName => {
                                     const inputField = document.getElementById(fieldName);
                                     inputField.classList.add('is-invalid');
@@ -455,10 +465,9 @@
                             }
                         })
                         .catch(error => {
-                            console.error('Error:', error);
                             Swal.fire(
                                 'Gagal!',
-                                'Terjadi kesalahan saat menambahkan  jadwal pelajaran.',
+                                error.message || 'Terjadi kesalahan saat menambahkan Jadwal pelajaran.',
                                 'error'
                             );
                         });
@@ -513,6 +522,32 @@
                                 searchable: false
                             },
                         @endif
+                    ],
+
+                    dom: "<'row'<'col-lg-3'l> <'col-lg-4 mt-2'B> <'col-lg-5'f>>" +
+                        "<'row'<'col-sm-12 py-lg-2'tr>>" +
+                        "<'row'<'col-sm-12 col-lg-5'i><'col-sm-12 col-lg-7'p>>",
+                    "buttons": [{
+                            extend: 'csv',
+                            className: 'btn btn-secondary',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6]
+                            }
+                        },
+                        {
+                            extend: 'excel',
+                            className: 'btn btn-secondary',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6]
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            className: 'btn btn-secondary',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6]
+                            }
+                        }
                     ]
                 });
 
@@ -589,7 +624,7 @@
                 $("#edit_id_matpel").select2({
                     theme: "bootstrap-5",
                     placeholder: "Pilih Matpel",
-                    minimumInputLength: 1,
+                    // minimumInputLength: 1,
                     dropdownParent: $("#modal_edit_data"),
                     ajax: {
                         url: '/get_data_matpel',

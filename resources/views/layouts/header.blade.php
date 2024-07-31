@@ -10,6 +10,9 @@
     <title>Sistem Absensi</title>
     <!-- CSS files -->
     @stack('headcss')
+    <!-- DataTables button -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.bootstrap5.min.css">
+
 
     <link href="{{ asset('assets') }}/dist/css/tabler.min.css?1692870487" rel="stylesheet" />
     <link href="{{ asset('assets') }}/dist/css/tabler-flags.min.css?1692870487" rel="stylesheet" />

@@ -27,9 +27,9 @@
                 </button>
 
                 <div class="card-actions">
-                    <a class="btn btn-success">
+                    {{-- <a class="btn btn-success">
                         Exel
-                    </a>
+                    </a> --}}
                     <a class="btn btn-primary" id="add_data">
                         Tambah Data
                     </a>
@@ -38,7 +38,8 @@
 
             <div class="card-body border-bottom py-3">
                 <div class="table-responsive">
-                    <table class="table card-table table-vcenter text-nowrap datatable">
+                    <table class="table card-table table-vcenter text-nowrap datatable"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -541,10 +542,9 @@
                                 errorNextSibling.textContent = '';
                             }
                         });
-                        // Close modal
-                        $('#modal_add_data').modal('hide');
                         const form = document.getElementById('form_data_guru');
                         form.reset();
+                        // Close modal
                         $('#modal_add_data').modal('hide');
                         Swal.fire(
                             'Tersimpan!',
@@ -637,6 +637,31 @@
                             orderable: false,
                             searchable: false
                         },
+                    ],
+                    dom: "<'row'<'col-lg-3'l> <'col-lg-4 mt-2'B> <'col-lg-5'f>>" +
+                        "<'row'<'col-sm-12 py-lg-2'tr>>" +
+                        "<'row'<'col-sm-12 col-lg-5'i><'col-sm-12 col-lg-7'p>>",
+                    "buttons": [{
+                            extend: 'csv',
+                            className: 'btn btn-secondary',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                            }
+                        },
+                        {
+                            extend: 'excel',
+                            className: 'btn btn-secondary',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            className: 'btn btn-secondary',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                            }
+                        }
                     ]
                 });
 

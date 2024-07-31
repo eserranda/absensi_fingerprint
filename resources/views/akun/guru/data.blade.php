@@ -321,6 +321,7 @@
                         errorNextSibling.textContent = '';
                     }
                 });
+
                 const form = document.getElementById('form_edit_data_matpel');
                 const rolesContainer = document.getElementById('roles-container');
                 rolesContainer.innerHTML = '';
@@ -526,9 +527,6 @@
             document.getElementById('add_data').addEventListener('click', function() {
                 $('#modal_add_data').modal('show');
             });
-
-
-
 
             $(document).ready(function() {
                 const myDataTable = $('.datatable').DataTable({

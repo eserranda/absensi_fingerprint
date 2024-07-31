@@ -41,6 +41,9 @@ class DataAbsensiSiswaController extends Controller
                         return '-';
                     }
                 })
+                ->editColumn('tanggal_absen', function ($row) {
+                    return date('d-m-Y', strtotime($row->tanggal_absen));
+                })
                 ->addColumn('action', function ($row) {
                     $actionBtn =
                         '

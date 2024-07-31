@@ -39,6 +39,10 @@ class DataAbsensiGuruController extends Controller
                         return '-';
                     }
                 })
+                ->editColumn('tanggal_absen', function ($row) {
+                    return date('d-m-Y', strtotime($row->tanggal_absen));
+                })
+
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
                     <a href="/rekap-absensi-guru/absensi/' . $row->guru->id . '" class="detail btn btn-primary btn-sm">Rekap Absensi</a>

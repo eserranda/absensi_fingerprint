@@ -3,16 +3,79 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\DataGuru;
 use App\Models\DataSiswa;
+use App\Models\TahunAjaran;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\DataAbsensiSiswa;
 use App\Models\FingerprintSiswa;
+use App\Models\Kelas;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
 class DataAbsensiSiswaController extends Controller
 {
+
+    public function rekapKehadiranSiswaPerSemester(Request $request)
+    {
+        $id_guru = Auth::user()->id_guru;
+        $kelas = Kelas::where('id_guru', $id_guru)->first();
+
+        return view('rekap-absensi-kehadiran.index', compact('kelas'));
+    }
+
+
+    public function getWithFilterKelas(Request $request, $kelas)
+    {
+        if ($request->ajax()) {
+            $semester = $request->input('semester');
+            $tahunAjaran = $request->input('tahun_ajaran');
+
+            // Query dasar
+            $query = DataAbsensiSiswa::where('kelas', $kelas);
+            if ($semester) {
+                $query->where('semester', $semester);
+            }
+            if ($tahunAjaran) {
+                $query->where('tahun_ajaran', $tahunAjaran);
+            }
+            // Eksekusi query dan ambil data
+            $data = $query->latest('created_at')->get();
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('id_siswa', function ($row) {
+                    if ($row->id_siswa) {
+                        return $row->siswa->nama;
+                    } else {
+                        return '-';
+                    }
+                })
+                ->editColumn('tanggal_absen', function ($row) {
+                    return Carbon::parse($row->tanggal_absen)->format('d-m-Y');
+                })
+                ->editColumn('jam_masuk', function ($row) {
+                    return Carbon::parse($row->jam_masuk)->format('H:i');
+                })
+                ->editColumn('jam_keluar', function ($row) {
+                    return Carbon::parse($row->jam_keluar)->format('H:i');
+                })
+                ->addColumn('semester', function ($row) {
+                    return $row->semester . ' - ' . $row->tahun_ajaran;
+                })
+                // ->addColumn('action', function ($row) {
+                //     $btn = '<div class="d-flex justify-content-start align-items-center">';
+                //     $btn .= '<a class="btn btn-outline-secondary btn-sm mx-1" title="Edit" onclick="edit(' . $row->id . ')"> <i class="fas fa-pencil-alt"></i> </a>';
+                //     $btn .= '<a class="btn btn-outline-secondary btn-sm text-danger" title="Hapus" onclick="hapus(' . $row->id . ')"> <i class="fas fa-trash-alt"></i> </a>';
+                //     $btn .= '</div>';
+                //     return $btn;
+                // })
+                // ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
 
     public function index(Request $request)
     {
@@ -48,6 +111,7 @@ class DataAbsensiSiswaController extends Controller
                     $actionBtn =
                         '
                     <a href="/rekap-absensi-siswa/absensi/' . $row->siswa->id . '" class="detail btn btn-primary btn-sm">Rekap Absensi</a>
+                    <a href="/rekap-absensi-siswa/per-semester/' . $row->siswa->id . '" class="detail btn btn-info btn-sm">Rekap / Semester</a>
                     
                     <button class="btn btn-sm btn-info btn-icon" aria-label="Button" onclick="edit(' . $row->id . ')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -91,6 +155,49 @@ class DataAbsensiSiswaController extends Controller
 
         // Lanjutkan proses absensi seperti biasa
         // ...
+    }
+
+    public function AbsensiSiswaPerSemester($id)
+    {
+        $data = DataSiswa::find($id);
+        return view('data_absensi_siswa.per_semester', compact('data'));
+    }
+
+    public function rekapAbsensiSiswa(Request $request, $id)
+    {
+        if ($request->ajax()) {
+
+            $data = DataAbsensiSiswa::where('id_siswa', $id);
+            $semesterFilter = $request->input('semester');
+            $tahunAjaranFilter = $request->input('tahun_ajaran');
+
+            if ($semesterFilter) {
+                $data->where('semester', $semesterFilter);
+            }
+
+            if ($tahunAjaranFilter) {
+                $data->where('tahun_ajaran', $tahunAjaranFilter);
+            }
+            $data = $data->latest('created_at')->get();
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->editColumn('tanggal_absen', function ($row) {
+                    return \Carbon\Carbon::parse($row->tanggal_absen)->translatedFormat('d-m-Y');
+                })
+                ->addColumn('hari', function ($row) {
+                    return \Carbon\Carbon::parse($row->tanggal_absen)->translatedFormat('l');
+                })
+                ->addColumn('id_siswa', function ($row) {
+                    if ($row->id_siswa) {
+                        return $row->siswa->nama;
+                    } else {
+                        return '-';
+                    }
+                })
+                ->make(true);
+        }
+        return view('data_absensi_siswa.per_semester');
     }
 
     public function filterAbsensi(Request $request)
@@ -185,8 +292,31 @@ class DataAbsensiSiswaController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        DataAbsensiSiswa::create($request->all());
-        return response()->json(['message' => 'Data berhasil disimpan'], 200);
+        $data_semester = TahunAjaran::where('is_active', true)->first();
+        $tahun_ajaran = $data_semester->tahun_ajaran;
+        $semester    = $data_semester->semester;
+
+
+        $save =  DataAbsensiSiswa::create($request->all() + ['tahun_ajaran' => $tahun_ajaran, 'semester' => $semester]);
+        // $save = DataAbsensiSiswa::create([
+        //     'id_siswa' => $idSiswa,
+        //     'id_fingerprint' => $request->input('id_fingerprint'),
+        //     'tanggal_absen' => $request->input('tanggal_absen'),
+        //     'kelas' => $request->input('kelas'),
+        //     'tanggal_absen' => $request->input('tanggal_absen'),
+        //     'jam_masuk' => $request->input('jam_masuk'),
+        //     'jam_keluar' => $request->input('jam_keluar'),
+        //     'mode_absen' => $request->input('mode_absen'),
+        //     'semester' => $semester,
+        //     'tahun_ajaran' => $tahun_ajaran,
+        //     'keterangan' => $request->input('keterangan'),
+        // ]);
+
+        if (!$save) {
+            return response()->json(['message' => 'Data gagal disimpan'], 500);
+        } else {
+            return response()->json(['message' => 'Data berhasil disimpan'], 200);
+        }
     }
 
     public function show(DataAbsensiSiswa $dataAbsensiSiswa, $id)

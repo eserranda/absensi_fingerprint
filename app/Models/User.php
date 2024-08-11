@@ -39,6 +39,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class, 'user_roles');
     }
 
+    public function roless()
+    {
+        return $this->belongsToMany(Role::class, 'user_role');
+    }
+
+
     public function guru()
     {
         return $this->belongsTo(DataGuru::class, 'id_guru');
@@ -51,5 +57,10 @@ class User extends Authenticatable
     public function username()
     {
         return 'username';
+    }
+
+    public function hasAnyRole(array $roles)
+    {
+        return $this->roles()->whereIn('name', $roles)->exists();
     }
 }

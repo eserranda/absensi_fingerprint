@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -39,13 +40,13 @@ class RoleController extends Controller
         return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Role $role)
+    public function getUserRoles($id)
     {
-        //
+        $user = User::with('roles')->findOrFail($id);
+        $roles = Role::all(['id', 'name']);
+        return response()->json(['user' => $user, 'roles' => $roles]);
     }
+
 
     /**
      * Show the form for editing the specified resource.

@@ -17,6 +17,8 @@ class AbsensiMatpel extends Model
         'kelas',
         'id_guru',
         'id_matpel',
+        'semester',
+        'tahun_ajaran',
         'keterangan',
     ];
 

@@ -40,7 +40,8 @@
 
             <div class="card-body border-bottom py-3">
                 <div class="table-responsive">
-                    <table class="table card-table table-vcenter text-nowrap datatable">
+                    <table class="table card-table table-vcenter text-nowrap datatable"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;" id="datatable">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -134,199 +135,53 @@
         </div>
     </div>
 
-
-    {{-- edit data  --}}
-    <div class="modal modal-blur fade" id="modal_edit_data" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-
-                    <h5 class="modal-title">Edit Data </h5>
-                    <button type="button" class="btn-close" onclick="closeModalEdit()"></button>
-
-                </div>
-                <form action="" method="POST" id="form_edit_data">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Nama Lengkap</label>
-                                    <input type="hidden" class="form-control" id="edit_id" name="edit_id">
-                                    <select class="form-select" id="edit_id_guru" name="edit_id_guru">
-
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">NUPTK</label>
-                                    <input type="text" class="form-control" id="edit_username" name="edit_username"
-                                        readonly>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="edit_email" name="edit_email">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-
-                            {{-- <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password">
-
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div> --}}
-                        </div>
-                        <div id="roles-container"></div>
-
-
-                        <div class="modal-footer">
-                            <button href="" class="btn btn-primary ms-auto" type="submit">
-                                Update
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-
+    @include('akun.guru.edit')
 
 
     @push('script')
         <script type="text/javascript">
             function edit(id) {
-                fetch('/akun/show/' + id, {
-                        method: 'GET',
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Gagal mengambil data siswa');
-                        }
-                        return response.json();
-                    })
-
+                fetch('/akun/show/' + id)
+                    .then(response => response.json())
                     .then(data => {
-                        const form = document.getElementById('form_edit_data');
-                        form.elements['edit_id'].value = data.data.id;
+                        document.getElementById('edit_id').value = data.id;
+                        document.getElementById('edit_username').value = data.username;
+                        document.getElementById('edit_id_guru').value = data.id_guru;
+                        document.getElementById('edit_email').value = data.email;
+                        var editIdSelect = document.getElementById('edit_id_guru');
 
-                        $('#modal_edit_data').modal('show');
+                        fetch('/guru/findOne/' + data.id_guru, {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Gagal mengambil data');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                updateOptionsAndSelect2(editIdSelect, data.id, data.nama);
+                            })
+                            .catch(error => console.error('Error fetching data:', error));
                     })
-
-                $("#edit_id_guru").select2({
-                    theme: "bootstrap-5",
-                    placeholder: "Pilih guru",
-                    minimumInputLength: 1,
-                    dropdownParent: $("#modal_edit_data"),
-                    ajax: {
-                        url: '/get_data_guru',
-                        dataType: 'json',
-                        processResults: function(data) {
-                            if (data && data.length > 0) {
-                                var results = $.map(data, function(item) {
-                                    return {
-                                        id: item.id,
-                                        text: item.nama
-                                    };
-                                });
-                                return {
-                                    results: results
-                                };
-                            }
-                        },
-                    }
-                });
+                    .catch(error => console.error(error));
+                // show modal edit
+                $('#editModal').modal('show');
             }
 
+            function updateOptionsAndSelect2(selectElement, id, name) {
+                // Hapus semua opsi yang ada di elemen <select>
+                $(selectElement).empty();
 
+                // Tambahkan opsi baru ke elemen <select>
+                var option = new Option(name, id, true, true);
+                $(selectElement).append(option);
 
-            // document.getElementById('form_edit_data').addEventListener('submit', async function(event) {
-            //     event.preventDefault();
-
-            //     try {
-            //         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-            //         const response = await fetch('/akun/update_data_matpel', {
-            //             method: 'POST',
-            //             body: new FormData(this),
-            //             headers: {
-            //                 'X-CSRF-TOKEN': csrfToken,
-            //             },
-            //         }).then(response => response.json());
-            //         if (response.errors) {
-
-            //             Object.keys(response.errors).forEach(fieldName => {
-            //                 const inputField = document.getElementById(fieldName);
-            //                 inputField.classList.add('is-invalid');
-            //                 inputField.nextElementSibling.textContent = response.errors[fieldName][0];
-            //             });
-
-            //             const validFields = document.querySelectorAll('.is-invalid');
-            //             validFields.forEach(validField => {
-            //                 const fieldName = validField.id;
-            //                 if (!response.errors[fieldName]) {
-            //                     validField.classList.remove('is-invalid');
-            //                     validField.nextElementSibling.textContent = '';
-            //                 }
-            //             });
-            //         } else {
-            //             console.log(response);
-            //             const invalidInputs = document.querySelectorAll('.is-invalid');
-            //             invalidInputs.forEach(invalidInput => {
-            //                 invalidInput.value = '';
-            //                 invalidInput.classList.remove('is-invalid');
-            //                 const errorNextSibling = invalidInput.nextElementSibling;
-            //                 if (errorNextSibling && errorNextSibling.classList.contains(
-            //                         'invalid-feedback')) {
-            //                     errorNextSibling.textContent = '';
-            //                 }
-            //             });
-            //             const form = document.getElementById('form_edit_data');
-
-            //             const rolesContainer = document.getElementById('roles-container');
-            //             rolesContainer.innerHTML = '';
-
-            //             form.reset();
-            //             $('#modal_edit_data').modal('hide');
-            //             Swal.fire(
-            //                 'Tersimpan!',
-            //                 'Data mata pelajaran berhasil diupdate.',
-            //                 'success'
-            //             )
-            //             $('.datatable').DataTable().ajax.reload();
-            //         }
-            //     } catch (error) {
-            //         console.error('Terjadi kesalahan:', error);
-            //         throw error;
-            //     }
-            // });
-
-            function closeModalEdit() {
-                const invalidInputs = document.querySelectorAll('.is-invalid');
-                invalidInputs.forEach(invalidInput => {
-                    invalidInput.value = '';
-                    invalidInput.classList.remove('is-invalid');
-                    const errorNextSibling = invalidInput.nextElementSibling;
-                    if (errorNextSibling && errorNextSibling.classList.contains(
-                            'invalid-feedback')) {
-                        errorNextSibling.textContent = '';
-                    }
-                });
-
-                const form = document.getElementById('form_edit_data_matpel');
-                const rolesContainer = document.getElementById('roles-container');
-                rolesContainer.innerHTML = '';
-                form.reset();
-                $('#modal_edit_data').modal('hide');
+                // Perbarui tampilan Select2
+                $(selectElement).trigger('change');
             }
 
             function handleValidationErrors(errors) {
@@ -410,7 +265,7 @@
                         minimumInputLength: 1,
                         dropdownParent: $("#modal_add_data"),
                         ajax: {
-                            url: '/get_data_guru',
+                            url: '/get_data_guru2',
                             dataType: 'json',
                             processResults: function(data) {
                                 if (data && data.length > 0) {

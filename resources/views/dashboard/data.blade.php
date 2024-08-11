@@ -73,7 +73,8 @@
                                 <p>Hallo <span class="fw-bold">{{ Auth::user()->guru->nama }}</span>,
                             @endif
                             Selamat datang anda login sebagai
-                            {{ Auth::user()->roles->pluck('name')->implode(', ') }}
+                            <span class="badge bg-warning text-light">
+                                {{ Auth::user()->roles->pluck('name')->implode(', ') }}</span>
                             </p>
                         </div>
                     </div>

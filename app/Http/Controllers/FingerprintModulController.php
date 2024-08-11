@@ -8,6 +8,7 @@ use App\Models\DataGuru;
 use App\Models\DataSiswa;
 use App\Models\JamAbsensi;
 use App\Models\Fingerprint;
+use App\Models\TahunAjaran;
 use Illuminate\Http\Request;
 use App\Models\AbsensiMatpel;
 use App\Models\FingerprintTmp;
@@ -456,6 +457,10 @@ class FingerprintModulController extends Controller
             $id_matpel = $idMatepel->id;
             $keterangan = "Hadir";
 
+            $data_semester = TahunAjaran::where('is_active', true)->first();
+            $tahun_ajaran = $data_semester->tahun_ajaran;
+            $semester    = $data_semester->semester;
+
             //  tambah data jika datanya belum ada
             $absensi = AbsensiMatpel::firstOrCreate(
                 [
@@ -467,6 +472,8 @@ class FingerprintModulController extends Controller
                 [
                     'hari' => $hari,
                     'id_guru' => $id_guru,
+                    'semester' => $semester,
+                    'tahun_ajaran' => $tahun_ajaran,
                     'keterangan' => $keterangan
                 ]
             );

@@ -65,14 +65,24 @@ class DataGuruController extends Controller
     {
         //
     }
+
+
     public function getDataGuru(Request $request)
     {
 
-        // $data = DataGuru::where('nama', 'LIKE', '%' . request('q') . '%')
-        //     ->orWhere('nuptk', 'LIKE', '%' . request('q') . '%')
-        //     ->get();
+        $search = $request->input('term'); // Dapatkan parameter pencarian dari Select2
 
-        // return response()->json(['data' => $data]);
+        // Ambil data dari database berdasarkan parameter pencarian
+        $guru = DataGuru::where('nama', 'LIKE', '%' . $search . '%')
+            ->select('id', 'nuptk', 'nama as text')
+            ->get();
+
+
+        return response()->json($guru);
+    }
+
+    public function getDataGuru2(Request $request)
+    {
 
         $data = [];
 
@@ -82,6 +92,12 @@ class DataGuruController extends Controller
                 ->get();
         }
 
+        return response()->json($data);
+    }
+
+    public function findOne($id)
+    {
+        $data = DataGuru::find($id);
         return response()->json($data);
     }
 

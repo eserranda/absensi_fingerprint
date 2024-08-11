@@ -45,7 +45,8 @@
 
             <div class="card-body border-bottom py-3">
                 <div class="table-responsive">
-                    <table class="table card-table table-vcenter text-nowrap datatable">
+                    <table class="table card-table table-vcenter text-nowrap datatable"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -91,7 +92,7 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label">Kelas</label>
-                                    <input type="text" class="form-control" id="kelas" name="kelas">
+                                    <input type="text" class="form-control" id="kelas" name="kelas" readonly>
                                     <div class="invalid-feedback"></div>
 
                                 </div>

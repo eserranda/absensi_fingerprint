@@ -11,6 +11,58 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+
+    function updateAkunGuru(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            'edit_id_guru' => 'required|string',
+            'edit_username' => 'required|string',
+            'edit_email' => 'required|email',
+            'edit_roles' => 'required|array',
+            'edit_roles.*.exists' => 'Role Tidak Valid',
+        ], [
+            'required' => ':field Data harus diisi.',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+
+        $id = $request->id;
+
+        $update = User::where('id', $id)->update([
+            'id_guru' => $request->edit_id_guru,
+            'username' => $request->edit_username,
+            'email' => $request->edit_email,
+        ]);
+
+        $idGuru = $request->input('edit_id_guru');
+        $rolesID = $request->get('edit_roles');
+
+        // Cari user berdasarkan id_guru
+        $guru = User::where('id_guru', $idGuru)->first();
+
+        if ($guru) {
+            $guru->roles()->sync($rolesID);
+        }
+
+        if ($update) {
+            return response()->json([
+                'success' => true,
+                'messages' => 'Program berhasil diubah'
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'messages' => 'Program gagal diubah'
+            ], 409);
+        }
+    }
+
+
+
     function dataUserGuru(Request $request)
     {
         if ($request->ajax()) {
@@ -319,12 +371,15 @@ class UserController extends Controller
 
     public function show(string $id)
     {
-        $idUser = User::where('id', $id)->first();
-        if ($idUser) {
-            return response()->json(['status' => true, 'data' => $idUser]);
-        } else {
-            return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
-        }
+        // $idUser = User::where('id', $id)->first();
+        // if ($idUser) {
+        //     return response()->json(['status' => true, 'data' => $idUser]);
+        // } else {
+        //     return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+        // }
+
+        $data = User::find($id);
+        return response()->json($data);
     }
 
 

@@ -24,11 +24,24 @@ use App\Http\Controllers\DataAbsensiSiswaController;
 use App\Http\Controllers\FingerprintModulController;
 use App\Http\Controllers\FingerprintSiswaController;
 use App\Http\Controllers\FingerprintStatusController;
+use App\Http\Controllers\TahunAjaranController;
 use App\Models\AbsensiMatpel;
 
 Route::get('/login', [AuthController::class, 'loginForm'])->name("login")->middleware('guest'); // Form login
 Route::post('/login', [AuthController::class, 'authenticate'])->name("login")->middleware('guest'); // Login
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth'); // Login
+
+Route::prefix('rekap-absensi')->controller(DataAbsensiSiswaController::class)->group(function () {
+    Route::get("/kehadiran", 'rekapKehadiranSiswaPerSemester');
+    Route::get("/getWithFilterKelas/{kelas}", 'getWithFilterKelas');
+})->middleware('auth');
+
+Route::prefix('tahun-ajaran')->controller(TahunAjaranController::class)->group(function () {
+    Route::get("", 'index')->name("tahun-ajaran.data");
+    Route::POST('/store', 'store')->name("tahun-ajaran.store")->middleware('auth');
+    Route::POST('/active/{id}', 'updateActiveStatus');
+    Route::delete('/delete/{id}', 'destroy');
+})->middleware('auth');
 
 
 Route::prefix('rekap-absensi-guru')->controller(DataAbsensiGuruController::class)->group(function () {
@@ -49,6 +62,9 @@ Route::prefix('rekap-absensi-siswa')->controller(DataAbsensiSiswaController::cla
     Route::POST('/store', 'store')->name("data_absensi_siswa.store")->middleware('auth');
     Route::POST('/filter-bulan', 'filterAbsensi')->name("rekap-absensi-siswa.filter-bulan")->middleware('auth');
     Route::delete('/delete/{id}', 'destroy')->name("hapus_rekap_absensi_siswa")->middleware('auth');
+
+    Route::get("/per-semester/{id}", 'AbsensiSiswaPerSemester')->name("rekap-absensi-siswa.per-semester")->middleware('auth');
+    Route::get("/rekap-per-semester/{id}", 'rekapAbsensiSiswa')->name("rekap-absensi-siswa.rekap-absensi-siswa")->middleware('auth');
 
     Route::get('/edit/{id}', 'edit')->name("data_absensi_siswa.edit");
     Route::POST('/update', 'update')->name("data_absensi_siswa.update")->middleware('auth');
@@ -71,6 +87,7 @@ Route::prefix('absensi-matpel')->controller(AbsensiMatpelController::class)->gro
 
 Route::prefix('role')->controller(RoleController::class)->group(function () {
     Route::get('', 'index')->name("data_role.data")->middleware('auth');
+    Route::get('/getUserRoles/{id}', 'getUserRoles')->middleware('auth');
     Route::POST('/store', 'store')->name("save_role")->middleware('auth');
     Route::delete('/delete/{id}', 'destroy')->name("delete_role")->middleware('auth');
 });
@@ -87,6 +104,7 @@ Route::prefix('akun')->controller(UserController::class)->group(function () {
     Route::get('/data_user_guru', 'dataUserGuru')->name("data_user.guru")->middleware('auth');
     Route::get('/get_roles', 'roles')->name("data_user.roles")->middleware('auth');
     Route::get('/show/{id}', 'show')->name("data_user.ids")->middleware('auth');
+    Route::post('/update_akun_guru', 'updateAkunGuru')->middleware('auth');
 
     Route::delete('/delete/{id}', 'destroy')->name("delete_users")->middleware('auth');
 });
@@ -124,7 +142,9 @@ Route::controller(DataGuruController::class)->group(function () {
     Route::POST('/update_data_guru', 'update')->name("update_data_guru")->middleware('auth');
     Route::delete('/data_guru/delete/{id}', 'destroy')->name("hapus_data_guru")->middleware('auth');
     Route::get('/get_data_guru', 'getDataGuru')->name("get_data_guru")->middleware('auth');
+    Route::get('/get_data_guru2', 'getDataGuru2')->middleware('auth');
     Route::get('/get_nuptk_guru/{id}', 'getNUPTKGuru')->name("get_nuptk_guru")->middleware('auth');
+    Route::get('/guru/findOne/{id}', 'findOne')->middleware('auth');
 });
 
 Route::controller(DataSiswaController::class)->group(function () {

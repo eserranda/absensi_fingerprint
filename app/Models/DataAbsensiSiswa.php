@@ -17,6 +17,8 @@ class DataAbsensiSiswa extends Model
         'tanggal_absen',
         'jam_masuk',
         'jam_keluar',
+        'semester',
+        'tahun_ajaran',
         'keterangan',
     ];
 

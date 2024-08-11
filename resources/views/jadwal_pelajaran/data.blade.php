@@ -18,7 +18,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="btn-actions col-6">
-                    <label class="col-form-label mx-4">KELAS</label>
+                    <label class="col-form-label mx-1">KELAS</label>
                     <div class="col-3">
                         <select class="form-select" id="filterKelas">
                             <option value="X IPS 1">X IPS 1</option>

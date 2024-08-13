@@ -427,7 +427,7 @@
 
                 $('#modal_add_data').modal('hide');
                 const form = document.getElementById('form_data_matpel');
-                form.reset();
+                // form.reset();
                 $('#modal_add_data').modal('hide');
             }
 

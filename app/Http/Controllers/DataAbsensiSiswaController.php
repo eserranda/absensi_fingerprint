@@ -115,18 +115,29 @@ class DataAbsensiSiswaController extends Controller
                         return '-';
                     }
                 })
-                ->editColumn('tanggal_absen', function ($row) {
-                    return Carbon::parse($row->tanggal_absen)->format('d-m-Y');
-                })
-                ->editColumn('jam_masuk', function ($row) {
-                    return Carbon::parse($row->jam_masuk)->format('H:i');
-                })
-                ->editColumn('jam_keluar', function ($row) {
-                    return Carbon::parse($row->jam_keluar)->format('H:i');
-                })
                 ->addColumn('semester', function ($row) {
                     return $row->semester . ' - ' . $row->tahun_ajaran;
                 })
+                ->addColumn('hadir', function ($row) {
+                    return $row->where('id_siswa', $row->id_siswa)->where('keterangan', 'Hadir')->count();
+                })
+                ->addColumn('sakit', function ($row) {
+                    return $row->where('id_siswa', $row->id_siswa)->where('keterangan', 'Sakit')->count();
+                })
+                ->addColumn('terlambat', function ($row) {
+                    return $row->where('id_siswa', $row->id_siswa)->where('keterangan', 'Terlambat')->count();
+                })
+                ->addColumn('tanpa_keterangan', function ($row) {
+                    return $row->where('id_siswa', $row->id_siswa)->where('keterangan', 'Tanpa Keterangan')->count();
+                })
+                ->addColumn('izin', function ($row) {
+                    return $row->where('id_siswa', $row->id_siswa)->where('keterangan', 'Izin')->count();
+                })
+                ->addColumn('total', function ($row) {
+                    return $row->where('id_siswa', $row->id_siswa)->count();
+                })
+
+
                 ->make(true);
         }
     }

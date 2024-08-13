@@ -74,11 +74,13 @@
                                 <th>#</th>
                                 <th>Nama</th>
                                 <th>Kelas</th>
-                                <th>Tanggal</th>
-                                <th>Jam Masuk</th>
-                                <th>Jam Keluar</th>
                                 <th>Semester</th>
-                                <th>Ket</th>
+                                <th>Hadir</th>
+                                <th>Sakit</th>
+                                <th>Terlambat</th>
+                                <th>Izin</th>
+                                <th>Tanpa keterangan</th>
+                                <th>Total Kehadiran</th>
                                 {{-- <th class="w-1">Lihat Absensi</th> --}}
                             </tr>
                         </thead>
@@ -112,24 +114,33 @@
                         name: 'kelas'
                     },
                     {
-                        data: 'tanggal_absen',
-                        name: 'tanggal_absen'
-                    },
-                    {
-                        data: 'jam_masuk',
-                        name: 'jam_masuk'
-                    },
-                    {
-                        data: 'jam_keluar',
-                        name: 'jam_keluar'
-                    },
-                    {
                         data: 'semester',
                         name: 'semester'
                     },
                     {
-                        data: 'keterangan',
-                        name: 'keterangan'
+                        data: 'hadir',
+                        name: 'hadir'
+                    },
+                    {
+                        data: 'sakit',
+                        name: 'sakit'
+                    },
+                    {
+                        data: 'terlambat',
+                        name: 'terlambat'
+                    },
+                    {
+                        data: 'izin',
+                        name: 'izin'
+                    },
+
+                    {
+                        data: 'tanpa_keterangan',
+                        name: 'tanpa_keterangan'
+                    },
+                    {
+                        data: 'total',
+                        name: 'total'
                     },
                     // {
                     //     data: 'action',
@@ -145,14 +156,14 @@
                         extend: 'excel',
                         className: 'btn btn-secondary',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                         }
                     },
                     {
                         extend: 'print',
                         className: 'btn btn-secondary',
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                         }
                     }
                 ]

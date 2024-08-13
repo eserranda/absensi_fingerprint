@@ -77,6 +77,7 @@
                         <thead>
                             <tr>
                                 <th>No</th>
+                                <th>Nama Siswa</th>
                                 <th>Kelas</th>
                                 <th>Semester</th>
                                 <th>Matpel</th>
@@ -109,6 +110,10 @@
                             data: 'DT_RowIndex',
                             name: '#',
                             searchable: false
+                        },
+                        {
+                            data: 'id_siswa',
+                            name: 'id_siswa',
                         },
                         {
                             data: 'kelas',

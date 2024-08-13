@@ -103,11 +103,19 @@ class DataAbsensiSiswaController extends Controller
             if ($tahunAjaran) {
                 $query->where('tahun_ajaran', $tahunAjaran);
             }
-            // Eksekusi query dan ambil data
-            $data = $query->select('id_siswa', 'kelas', 'semester', 'tahun_ajaran',)
+
+            // Preload counts for different attendance statuses
+            $data = $query->select('id_siswa', 'kelas', 'semester', 'tahun_ajaran')
+                ->selectRaw('SUM(CASE WHEN keterangan = "Hadir" THEN 1 ELSE 0 END) as total_hadir')
+                ->selectRaw('SUM(CASE WHEN keterangan = "Sakit" THEN 1 ELSE 0 END) as total_sakit')
+                ->selectRaw('SUM(CASE WHEN keterangan = "Terlambat" THEN 1 ELSE 0 END) as total_terlambat')
+                ->selectRaw('SUM(CASE WHEN keterangan = "Tanpa Keterangan" THEN 1 ELSE 0 END) as total_tanpa_keterangan')
+                ->selectRaw('SUM(CASE WHEN keterangan = "Izin" THEN 1 ELSE 0 END) as total_izin')
+                ->selectRaw('COUNT(*) as total')
                 ->groupBy('id_siswa', 'kelas', 'semester', 'tahun_ajaran')
                 ->orderBy('created_at', 'desc')
                 ->get();
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('id_siswa', function ($row) {
@@ -121,26 +129,27 @@ class DataAbsensiSiswaController extends Controller
                     return $row->semester . ' - ' . $row->tahun_ajaran;
                 })
                 ->addColumn('hadir', function ($row) {
-                    return $row->where('id_siswa', $row->id_siswa)->where('keterangan', 'Hadir')->count();
+                    return $row->total_hadir;
                 })
                 ->addColumn('sakit', function ($row) {
-                    return $row->where('id_siswa', $row->id_siswa)->where('keterangan', 'Sakit')->count();
+                    return $row->total_sakit;
                 })
                 ->addColumn('terlambat', function ($row) {
-                    return $row->where('id_siswa', $row->id_siswa)->where('keterangan', 'Terlambat')->count();
+                    return $row->total_terlambat;
                 })
                 ->addColumn('tanpa_keterangan', function ($row) {
-                    return $row->where('id_siswa', $row->id_siswa)->where('keterangan', 'Tanpa Keterangan')->count();
+                    return $row->total_tanpa_keterangan;
                 })
                 ->addColumn('izin', function ($row) {
-                    return $row->where('id_siswa', $row->id_siswa)->where('keterangan', 'Izin')->count();
+                    return $row->total_izin;
                 })
                 ->addColumn('total', function ($row) {
-                    return $row->where('id_siswa', $row->id_siswa)->count();
+                    return $row->total;
                 })
                 ->make(true);
         }
     }
+
 
     public function index(Request $request)
     {
@@ -148,16 +157,18 @@ class DataAbsensiSiswaController extends Controller
             $filterTanggal = $request->input('tanggal');
 
             $query = DataAbsensiSiswa::query();
+
             if ($filterTanggal) {
                 $query->whereDate('tanggal_absen', $filterTanggal);
-            } else {
-                $timezone = 'Asia/Makassar';
-                $now = Carbon::now();
-                $now->setTimezone($timezone);
-                $filterTanggal = $now->toDateString();
+            } 
+            // else {
+            //     $timezone = 'Asia/Makassar';
+            //     $now = Carbon::now();
+            //     $now->setTimezone($timezone);
+            //     $filterTanggal = $now->toDateString();
 
-                $query->whereDate('tanggal_absen', $filterTanggal);
-            }
+            //     $query->whereDate('tanggal_absen', $filterTanggal);
+            // }
 
             $filterTanggal = $query->latest('created_at')->get();
             return DataTables::of($filterTanggal)

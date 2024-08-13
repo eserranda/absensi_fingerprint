@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JadwalPelajaran;
 use App\Models\Matpel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -45,10 +46,24 @@ class MatpelController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function getIDGuru($id_matpel)
     {
-        //
+        $data = JadwalPelajaran::where('id_matpel', $id_matpel)->with('data_guru')->first();
+
+        if ($data) {
+            return response()->json([
+                'status' => true,
+                'data' => [
+                    'id_guru' => $data->id_guru,
+                    'nama_guru' => $data->data_guru->nama // Pastikan relasi 'guru' benar
+                ]
+            ]);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Data tidak ditemukan']);
+        }
     }
+
+
 
 
     public function store(Request $request)

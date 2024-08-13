@@ -87,8 +87,8 @@ Route::prefix('absensi-matpel')->controller(AbsensiMatpelController::class)->gro
     Route::get('', 'index')->name("absensi-matpel.data")->middleware('auth');
     Route::delete('/delete/{id}', 'destroy')->name("delete_absensi_matpel")->middleware('auth');
 
-    // Route::POST('/store', 'store')->name("save_role")->middleware('auth');
-});
+    Route::POST('/store', 'store');
+})->middleware('auth');
 
 Route::prefix('role')->controller(RoleController::class)->group(function () {
     Route::get('', 'index')->name("data_role.data")->middleware('auth');
@@ -122,6 +122,7 @@ Route::controller(MatpelController::class)->group(function () {
     Route::POST('/update_data_matpel', 'update')->name("update_data_matpel")->middleware('auth');
     Route::delete('/data_matpel/delete/{id}', 'destroy')->name("hapus_data_matpel")->middleware('auth');
     Route::get('/get_data_matpel', 'getDataMatpel')->name("get_data_matpel")->middleware('auth');
+    Route::get('/matpel/get_id_guru/{id_matpel}', 'getIDGuru');
 });
 
 Route::controller(AbsensiController::class)->group(function () {

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\TahunAjaran;
 use Illuminate\Http\Request;
 use App\Models\AbsensiMatpel;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class AbsensiMatpelController extends Controller
 {
@@ -61,12 +63,7 @@ class AbsensiMatpelController extends Controller
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
                     
-                    <button class="btn btn-sm btn-info btn-icon" aria-label="Button" onclick="edit(' . $row->id . ')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                    </svg>
-                    </button>
+                  
 
                     <button class="btn btn-sm btn-danger btn-icon" aria-label="Button" onclick="hapus(' . $row->id . ')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
@@ -85,7 +82,47 @@ class AbsensiMatpelController extends Controller
 
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'kelas' => 'required',
+            'tanggal' => 'required',
+            'id_guru' => 'required',
+            'id_siswa' => 'required',
+            'id_matpel' => 'required',
+            'keterangan' => 'required',
+        ], [
+            'required' => ':attribute harus diisi',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+        $hari = Carbon::parse($request->get('tanggal'))->locale('id')->dayName;
+
+        $data_semester = TahunAjaran::where('is_active', true)->first();
+        $tahun_ajaran = $data_semester->tahun_ajaran;
+        $semester    = $data_semester->semester;
+
+        $save = AbsensiMatpel::create([
+            'tanggal' => $request->get('tanggal'),
+            'hari' => $hari,
+            'id_siswa' => $request->get('id_siswa'),
+            'kelas' => $request->get('kelas'),
+            'id_guru' => $request->get('id_guru'),
+            'id_matpel' => $request->get('id_matpel'),
+            'semester' => $semester,
+            'tahun_ajaran' => $tahun_ajaran,
+            'keterangan' => $request->get('keterangan'),
+
+        ]);
+
+        if ($save) {
+            return response()->json(['status' => true, 'message' => 'Data berhasil disimpan'], 200);
+        } else {
+            return response()->json(['status' => false, 'message' => 'Data Absensi Matpel Gagal Disimpan'], 500);
+        }
     }
 
     /**

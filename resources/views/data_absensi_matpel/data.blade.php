@@ -54,11 +54,16 @@
                             <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
                         </svg>
                     </button>
+
+                    <a class="btn btn-primary" id="add_data">
+                        Tambah Data
+                    </a>
                 </div>
             </div>
             <div class="card-body border-bottom py-3 ">
                 <div class="table-responsive">
-                    <table class="table card-table table-vcenter text-nowrap datatable">
+                    <table class="table card-table table-vcenter text-nowrap datatable"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -81,89 +86,13 @@
         </div>
     </div>
 
-    {{-- Tambah data  --}}
-    <div class="modal modal-blur fade" id="modal_add_data" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data </h5>
-                    <button type="button" class="btn-close" onclick="closeModalAdd()"></button>
-                </div>
-                <form action="" method="POST" id="form_data_kelas">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Nama Kelas</label>
-                                    <input type="text" class="form-control" id="nama_kelas" name="nama_kelas">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Nama Wali</label>
-                                    <select class="form-select" id="id_guru" name="id_guru">
-
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button href="" class="btn btn-primary ms-auto" type="submit">
-                            Simpan
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    {{-- edit data  --}}
-    <div class="modal modal-blur fade" id="modal_edit_data" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data </h5>
-                    <button type="button" class="btn-close" onclick="closeModalEdit()"></button>
-                </div>
-                <form action="" method="POST" id="form_edit_data">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Nama Kelas</label>
-                                    <input type="hidden" class="form-control" id="edit_id" name="edit_id">
-                                    <input type="text" class="form-control" id="edit_nama_kelas"
-                                        name="edit_nama_kelas">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Nama Wali</label>
-                                    <select class="form-select" id="edit_id_guru" name="edit_id_guru">
-
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" tabindex="2" class="btn btn-primary"
-                            onclick="updateData()">Update</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
+    @include('data_absensi_matpel.add')
     @push('script')
         <script>
+            document.getElementById('add_data').addEventListener('click', function() {
+                $('#modal_add_data').modal('show');
+            });
+
             // function closeModalEdit() {
             //     const invalidInputs = document.querySelectorAll('.is-invalid');
             //     invalidInputs.forEach(invalidInput => {

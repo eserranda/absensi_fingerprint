@@ -128,7 +128,7 @@
                       });
                   } else {
                       console.log(data.message);
-                      form.reset();
+                      //   form.reset();
                       $('#modal_add_data').modal('hide');
                       Swal.fire(
                           'Tersimpan!',

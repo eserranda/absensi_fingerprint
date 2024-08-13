@@ -65,13 +65,13 @@ class DataAbsensiSiswaController extends Controller
             }
             // Eksekusi query dan ambil data
             // $data = $query->latest('created_at')->get();
-            $data = $query->select('id_siswa', 'kelas', 'semester', 'tahun_ajaran')
+            $data = $query->select('id_siswa', 'id_matpel', 'id_guru',  'kelas', 'semester', 'tahun_ajaran')
                 ->selectRaw('SUM(CASE WHEN keterangan = "Hadir" THEN 1 ELSE 0 END) as total_hadir')
                 ->selectRaw('SUM(CASE WHEN keterangan = "Sakit" THEN 1 ELSE 0 END) as total_sakit')
                 ->selectRaw('SUM(CASE WHEN keterangan = "Izin" THEN 1 ELSE 0 END) as total_izin')
                 ->selectRaw('SUM(CASE WHEN keterangan = "Tanpa Keterangan" THEN 1 ELSE 0 END) as total_tanpa_keterangan')
                 ->selectRaw('COUNT(*) as total')
-                ->groupBy('id_siswa', 'kelas', 'semester', 'tahun_ajaran')
+                ->groupBy('id_siswa', 'id_matpel', 'id_guru', 'kelas', 'semester', 'tahun_ajaran')
                 ->orderBy('created_at', 'desc')
                 ->get();
 

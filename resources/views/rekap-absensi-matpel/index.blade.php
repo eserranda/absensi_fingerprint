@@ -85,8 +85,8 @@
                                 <th>Hadir</th>
                                 <th>Sakit</th>
                                 <th>Izin</th>
-                                <th>Tanpa Keterangan</th>
-                                <th>Total Kehadiran</th>
+                                <th>Tanpa Ket.</th>
+                                <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -160,14 +160,14 @@
                             extend: 'excel',
                             className: 'btn btn-secondary',
                             exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6]
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
                             }
                         },
                         {
                             extend: 'print',
                             className: 'btn btn-secondary',
                             exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6]
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
                             }
                         }
                     ]
@@ -180,12 +180,12 @@
 
                     // Jika keduanya kosong, tampilkan peringatan
                     if (!selectedSemester && !selectedTahunAjaran && !selectedKelas) {
-                        alert('Pilih Semester atau Tahun Ajaran terlebih dahulu');
+                        alert('Pilih Kelas, Semester atau Tahun Ajaran terlebih dahulu');
                         return;
                     }
 
                     // Membuat URL dengan parameter yang valid
-                    let url = '/rekap-absensi/getWithFilterKelas?';
+                    let url = '/rekap-absensi/getWithFilterMatpel?';
 
                     if (selectedSemester) {
                         url += 'semester=' + encodeURIComponent(selectedSemester);
@@ -215,7 +215,8 @@
                 $('#reload').on('click', function() {
                     $('#filterSemester').val('');
                     $('#filterTahunAjaran').val('');
-                    myDataTable.ajax.url('/rekap-absensi/getWithFilterKelas').load();
+                    $('#filterKelas').val('');
+                    myDataTable.ajax.url('/rekap-absensi/getWithFilterMatpel').load();
                 });
             });
         </script>

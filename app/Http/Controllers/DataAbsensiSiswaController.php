@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Kelas;
 use App\Models\DataGuru;
 use App\Models\DataSiswa;
 use App\Models\TahunAjaran;
 use Illuminate\Http\Request;
+use App\Models\AbsensiMatpel;
+use App\Models\JadwalPelajaran;
 use Illuminate\Validation\Rule;
 use App\Models\DataAbsensiSiswa;
 use App\Models\FingerprintSiswa;
-use App\Models\Kelas;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -26,6 +28,66 @@ class DataAbsensiSiswaController extends Controller
         return view('rekap-absensi-kehadiran.index', compact('kelas'));
     }
 
+    public function rekapAbsesniMatpelSiswaPerSemester(Request $request)
+    {
+        $id_guru = Auth::user()->id_guru;
+        // $hari = Carbon::now()->isoFormat('dddd');
+
+        $hari = "Jumat";
+        $matpel = JadwalPelajaran::where('id_guru', $id_guru)
+            ->where('hari', $hari)
+            ->first();
+
+        return view('rekap-absensi-matpel.index', compact('matpel'));
+    }
+
+
+    public function getWithFilterMatpel(Request $request)
+    {
+        if ($request->ajax()) {
+            $id_guru = Auth::user()->id_guru;
+
+            $semester = $request->input('semester');
+            $tahunAjaran = $request->input('tahun_ajaran');
+
+            // Query dasar
+            $query = AbsensiMatpel::where('id_guru', $id_guru);
+
+            // dd($query);
+
+            if ($semester) {
+                $query->where('semester', $semester);
+            }
+            if ($tahunAjaran) {
+                $query->where('tahun_ajaran', $tahunAjaran);
+            }
+            // Eksekusi query dan ambil data
+            $data = $query->latest('created_at')->get();
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('id_siswa', function ($row) {
+                    if ($row->id_siswa) {
+                        return $row->siswa->nama;
+                    } else {
+                        return '-';
+                    }
+                })
+                ->editColumn('tanggal', function ($row) {
+                    return Carbon::parse($row->tanggal_absen)->format('d-m-Y');
+                })
+                ->editColumn('id_matpel', function ($row) {
+                    return $row->matpel->nama_matpel;
+                })
+                ->editColumn('id_guru', function ($row) {
+                    return $row->guru->nama;
+                })
+                ->addColumn('semester', function ($row) {
+                    return $row->semester . ' - ' . $row->tahun_ajaran;
+                })
+                ->make(true);
+        }
+    }
 
     public function getWithFilterKelas(Request $request, $kelas)
     {
@@ -65,14 +127,6 @@ class DataAbsensiSiswaController extends Controller
                 ->addColumn('semester', function ($row) {
                     return $row->semester . ' - ' . $row->tahun_ajaran;
                 })
-                // ->addColumn('action', function ($row) {
-                //     $btn = '<div class="d-flex justify-content-start align-items-center">';
-                //     $btn .= '<a class="btn btn-outline-secondary btn-sm mx-1" title="Edit" onclick="edit(' . $row->id . ')"> <i class="fas fa-pencil-alt"></i> </a>';
-                //     $btn .= '<a class="btn btn-outline-secondary btn-sm text-danger" title="Hapus" onclick="hapus(' . $row->id . ')"> <i class="fas fa-trash-alt"></i> </a>';
-                //     $btn .= '</div>';
-                //     return $btn;
-                // })
-                // ->rawColumns(['action'])
                 ->make(true);
         }
     }

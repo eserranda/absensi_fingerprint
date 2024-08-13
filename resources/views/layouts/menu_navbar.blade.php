@@ -100,11 +100,8 @@
                         </a>
                     </li>
 
-                    @if (Auth::check() &&
-                            Auth::user()->roles->contains(function ($role) {
-                                return $role->name === 'wali_kelas';
-                            }))
-                        {{-- @if (Auth::check() && Auth::user()->roles->contains(fn($role) => in_array($role->name, ['wali_kelas']))) --}}
+
+                    @if (Auth::user()->roles->contains('name', 'wali_kelas') || Auth::user()->roles->contains('name', 'guru'))
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                                 data-bs-auto-close="outside" role="button" aria-expanded="false">
@@ -129,13 +126,15 @@
                             <div class="dropdown-menu">
                                 <div class="dropdown-menu-columns">
                                     <div class="dropdown-menu-column">
-                                        <a class="dropdown-item" href="/rekap-absensi/kehadiran">
-                                            Rekap Absensi Kehadiran
-                                        </a>
+                                        @if (Auth::user()->roles->contains('name', 'wali_kelas'))
+                                            <a class="dropdown-item" href="/rekap-absensi/kehadiran">
+                                                Rekap Absensi Kehadiran
+                                            </a>
+                                        @endif
+
                                         <a class="dropdown-item" href="/rekap-absensi/matpel">
                                             Rekap Absensi Mata Pelajaran
                                         </a>
-
                                     </div>
                                 </div>
                             </div>

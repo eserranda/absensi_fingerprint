@@ -157,6 +157,7 @@
                     }
                 ]
             });
+
             $('#search').on('click', function() {
                 var selectedSemester = $('#filterSemester').val();
                 var selectedTahunAjaran = $('#filterTahunAjaran').val();

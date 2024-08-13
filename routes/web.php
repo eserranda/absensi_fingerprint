@@ -34,6 +34,11 @@ Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth'); //
 Route::prefix('rekap-absensi')->controller(DataAbsensiSiswaController::class)->group(function () {
     Route::get("/kehadiran", 'rekapKehadiranSiswaPerSemester');
     Route::get("/getWithFilterKelas/{kelas}", 'getWithFilterKelas');
+    // rekap absensi matpel per semester
+
+
+    Route::get("/matpel", 'rekapAbsesniMatpelSiswaPerSemester');
+    Route::get("/getWithFilterMatpel", 'getWithFilterMatpel');
 })->middleware('auth');
 
 Route::prefix('tahun-ajaran')->controller(TahunAjaranController::class)->group(function () {

@@ -27,9 +27,9 @@ class DashboardController extends Controller
             $data = User::where('id', Auth::user()->id)->first();
             $idGuru = $data->guru->id;
 
-            $now = Carbon::now();
-            $hari = $now->isoFormat('dddd');
-            // $hari = "Jumat";
+            // $now = Carbon::now();
+            // $hari = $now->isoFormat('dddd');
+            $hari = "Jumat";
 
             $dataMatpel = JadwalPelajaran::where('hari', $hari)
                 ->where('id_guru', $idGuru)

@@ -648,7 +648,7 @@
                 $("#edit_id_guru").select2({
                     theme: "bootstrap-5",
                     placeholder: "Pilih guru",
-                    minimumInputLength: 1,
+                    // minimumInputLength: 1,
                     dropdownParent: $("#modal_edit_data"),
                     ajax: {
                         url: '/get_data_guru',

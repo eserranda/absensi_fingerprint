@@ -31,12 +31,11 @@ class DataAbsensiSiswaController extends Controller
     public function rekapAbsesniMatpelSiswaPerSemester(Request $request)
     {
         $id_guru = Auth::user()->id_guru;
-        // $hari = Carbon::now()->isoFormat('dddd');
 
-        $hari = "Jumat";
         $matpel = JadwalPelajaran::where('id_guru', $id_guru)
-            ->where('hari', $hari)
-            ->first();
+            ->select('id_guru', 'id_matpel', 'kelas')
+            ->groupBy('id_guru', 'id_matpel', 'kelas')
+            ->get();
 
         return view('rekap-absensi-matpel.index', compact('matpel'));
     }
@@ -47,6 +46,7 @@ class DataAbsensiSiswaController extends Controller
         if ($request->ajax()) {
             $id_guru = Auth::user()->id_guru;
 
+            $kelas = $request->input('kelas');
             $semester = $request->input('semester');
             $tahunAjaran = $request->input('tahun_ajaran');
 
@@ -54,7 +54,9 @@ class DataAbsensiSiswaController extends Controller
             $query = AbsensiMatpel::where('id_guru', $id_guru);
 
             // dd($query);
-
+            if ($kelas) {
+                $query->where('kelas', $kelas);
+            }
             if ($semester) {
                 $query->where('semester', $semester);
             }

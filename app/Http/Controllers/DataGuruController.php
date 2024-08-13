@@ -69,16 +69,25 @@ class DataGuruController extends Controller
 
     public function getDataGuru(Request $request)
     {
+        $data = [];
 
-        $search = $request->input('term'); // Dapatkan parameter pencarian dari Select2
+        if ($request->filled('q')) {
+            $data = DataGuru::select("nama", "id")
+                ->where('nama', 'LIKE', '%' . $request->get('q') . '%')
+                ->get();
+        }
 
-        // Ambil data dari database berdasarkan parameter pencarian
-        $guru = DataGuru::where('nama', 'LIKE', '%' . $search . '%')
-            ->select('id', 'nuptk', 'nama as text')
-            ->get();
+        return response()->json($data);
+
+        // $search = $request->input('term'); // Dapatkan parameter pencarian dari Select2
+
+        // // Ambil data dari database berdasarkan parameter pencarian
+        // $guru = DataGuru::where('nama', 'LIKE', '%' . $search . '%')
+        //     ->select('id', 'nuptk', 'nama as text')
+        //     ->get();
 
 
-        return response()->json($guru);
+        // return response()->json($guru);
     }
 
     public function getDataGuru2(Request $request)

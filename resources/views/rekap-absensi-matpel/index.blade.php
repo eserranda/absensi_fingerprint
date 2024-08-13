@@ -18,7 +18,16 @@
             <div class="card-header">
                 <div class="btn-list">
                     <div class="btn-actions col-12">
-                        <div class="col-6">
+                        <div class="col-3">
+                            <select class="form-select" id="filterKelas">
+                                <option value="" selected disabled>Pilih Kelas</option>
+                                @foreach ($matpel as $data)
+                                    <option value="{{ $data->kelas }}">{{ $data->kelas }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-6 mx-2">
                             <select class="form-select" id="filterSemester">
                                 <option value="" selected disabled>Pilih Semester</option>
                                 @foreach (App\Models\TahunAjaran::get() as $data)
@@ -27,7 +36,7 @@
                             </select>
                         </div>
 
-                        <div class="col-7 mx-2">
+                        <div class="col-7">
                             <select class="form-select" id="filterTahunAjaran">
                                 <option value="" selected disabled>Pilih Tahun Ajaran</option>
                                 @foreach (App\Models\TahunAjaran::get() as $data)
@@ -36,7 +45,7 @@
                             </select>
                         </div>
 
-                        <a class="btn btn-icon" aria-label="Button" id="search">
+                        <a class="btn btn-icon mx-2" aria-label="Button" id="search">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -61,11 +70,8 @@
                 </div>
             </div>
             <div class="card-body border-bottom py-3 ">
-                @if ($matpel)
-                    <h3> Rekap Absensi Siswa kelas {{ $matpel->data_matpel->nama_matpel }} Per Semester </h3>
-                @else
-                    {{ '' }}
-                @endif
+                {{-- <h3> Rekap Absensi Siswa kelas {{ $matpel->data_matpel->nama_matpel }} Per Semester </h3> --}}
+
                 <div class="table-responsive">
                     <table class="table card-table table-vcenter text-nowrap datatable">
                         <thead>
@@ -148,11 +154,12 @@
                 });
 
                 $('#search').on('click', function() {
+                    var selectedKelas = $('#filterKelas').val();
                     var selectedSemester = $('#filterSemester').val();
                     var selectedTahunAjaran = $('#filterTahunAjaran').val();
 
                     // Jika keduanya kosong, tampilkan peringatan
-                    if (!selectedSemester && !selectedTahunAjaran) {
+                    if (!selectedSemester && !selectedTahunAjaran && !selectedKelas) {
                         alert('Pilih Semester atau Tahun Ajaran terlebih dahulu');
                         return;
                     }
@@ -170,6 +177,14 @@
                             url += '&';
                         }
                         url += 'tahun_ajaran=' + encodeURIComponent(selectedTahunAjaran);
+                    }
+
+                    if (selectedKelas) {
+                        // Tambahkan & jika ada semester atau tahun ajaran di URL
+                        if (selectedSemester || selectedTahunAjaran) {
+                            url += '&';
+                        }
+                        url += 'kelas=' + encodeURIComponent(selectedKelas);
                     }
 
                     // Memuat ulang dataTable dengan URL baru

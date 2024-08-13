@@ -146,7 +146,7 @@ Route::controller(DataGuruController::class)->group(function () {
     Route::get('/data_guru/getID/{id}', 'getID')->name("getid_data_guru")->middleware('auth');
     Route::POST('/update_data_guru', 'update')->name("update_data_guru")->middleware('auth');
     Route::delete('/data_guru/delete/{id}', 'destroy')->name("hapus_data_guru")->middleware('auth');
-    Route::get('/get_data_guru', 'getDataGuru')->name("get_data_guru")->middleware('auth');
+    Route::get('/get_data_guru', 'getDataGuru')->name("get_data_guru");
     Route::get('/get_data_guru2', 'getDataGuru2')->middleware('auth');
     Route::get('/get_nuptk_guru/{id}', 'getNUPTKGuru')->name("get_nuptk_guru")->middleware('auth');
     Route::get('/guru/findOne/{id}', 'findOne')->middleware('auth');

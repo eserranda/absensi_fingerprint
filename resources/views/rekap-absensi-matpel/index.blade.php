@@ -77,12 +77,15 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Tanggal</th>
-                                <th>Nama Siswa</th>
                                 <th>Kelas</th>
                                 <th>Semester</th>
+                                <th>Matpel</th>
                                 <th>Guru/Pengajar</th>
-                                <th>Semester</th>
+                                <th>Hadir</th>
+                                <th>Sakit</th>
+                                <th>Izin</th>
+                                <th>Tanpa Keterangan</th>
+                                <th>Total Kehadiran</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -108,28 +111,40 @@
                             searchable: false
                         },
                         {
-                            data: 'tanggal',
-                            name: 'tanggal',
-                        },
-                        {
-                            data: 'id_siswa',
-                            name: 'id_siswa',
-                        },
-                        {
                             data: 'kelas',
                             name: 'kelas',
                         },
                         {
+                            data: 'semester',
+                            name: 'semester',
+                        },
+                        {
                             data: 'id_matpel',
-                            name: 'id_matpel'
+                            name: 'id_matpel',
                         },
                         {
                             data: 'id_guru',
-                            name: 'id_guru'
+                            name: 'id_guru',
                         },
                         {
-                            data: 'semester',
-                            name: 'semester'
+                            data: 'hadir',
+                            name: 'hadir'
+                        },
+                        {
+                            data: 'sakit',
+                            name: 'sakit'
+                        },
+                        {
+                            data: 'izin',
+                            name: 'izin'
+                        },
+                        {
+                            data: 'tanpa_keterangan',
+                            name: 'tanpa_keterangan'
+                        },
+                        {
+                            data: 'total',
+                            name: 'total'
                         },
 
                     ],

@@ -64,7 +64,16 @@ class DataAbsensiSiswaController extends Controller
                 $query->where('tahun_ajaran', $tahunAjaran);
             }
             // Eksekusi query dan ambil data
-            $data = $query->latest('created_at')->get();
+            // $data = $query->latest('created_at')->get();
+            $data = $query->select('id_siswa', 'kelas', 'semester', 'tahun_ajaran')
+                ->selectRaw('SUM(CASE WHEN keterangan = "Hadir" THEN 1 ELSE 0 END) as total_hadir')
+                ->selectRaw('SUM(CASE WHEN keterangan = "Sakit" THEN 1 ELSE 0 END) as total_sakit')
+                ->selectRaw('SUM(CASE WHEN keterangan = "Izin" THEN 1 ELSE 0 END) as total_izin')
+                ->selectRaw('SUM(CASE WHEN keterangan = "Tanpa Keterangan" THEN 1 ELSE 0 END) as total_tanpa_keterangan')
+                ->selectRaw('COUNT(*) as total')
+                ->groupBy('id_siswa', 'kelas', 'semester', 'tahun_ajaran')
+                ->orderBy('created_at', 'desc')
+                ->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -75,17 +84,37 @@ class DataAbsensiSiswaController extends Controller
                         return '-';
                     }
                 })
-                ->editColumn('tanggal', function ($row) {
-                    return Carbon::parse($row->tanggal_absen)->format('d-m-Y');
+                ->addColumn('id_matpel', function ($row) {
+                    if ($row->id_matpel) {
+                        return $row->matpel->nama_matpel;
+                    } else {
+                        return '-';
+                    }
                 })
-                ->editColumn('id_matpel', function ($row) {
-                    return $row->matpel->nama_matpel;
-                })
-                ->editColumn('id_guru', function ($row) {
-                    return $row->guru->nama;
+                ->addColumn('id_guru', function ($row) {
+                    if ($row->id_guru) {
+                        return $row->guru->nama;
+                    } else {
+                        return '-';
+                    }
                 })
                 ->addColumn('semester', function ($row) {
                     return $row->semester . ' - ' . $row->tahun_ajaran;
+                })
+                ->addColumn('hadir', function ($row) {
+                    return $row->total_hadir;
+                })
+                ->addColumn('sakit', function ($row) {
+                    return $row->total_sakit;
+                })
+                ->addColumn('tanpa_keterangan', function ($row) {
+                    return $row->total_tanpa_keterangan;
+                })
+                ->addColumn('izin', function ($row) {
+                    return $row->total_izin;
+                })
+                ->addColumn('total', function ($row) {
+                    return $row->total;
                 })
                 ->make(true);
         }

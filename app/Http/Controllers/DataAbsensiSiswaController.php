@@ -104,8 +104,10 @@ class DataAbsensiSiswaController extends Controller
                 $query->where('tahun_ajaran', $tahunAjaran);
             }
             // Eksekusi query dan ambil data
-            $data = $query->latest('created_at')->get();
-
+            $data = $query->select('id_siswa', 'kelas', 'semester', 'tahun_ajaran',)
+                ->groupBy('id_siswa', 'kelas', 'semester', 'tahun_ajaran')
+                ->orderBy('created_at', 'desc')
+                ->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('id_siswa', function ($row) {
@@ -136,8 +138,6 @@ class DataAbsensiSiswaController extends Controller
                 ->addColumn('total', function ($row) {
                     return $row->where('id_siswa', $row->id_siswa)->count();
                 })
-
-
                 ->make(true);
         }
     }

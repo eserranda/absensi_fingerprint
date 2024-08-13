@@ -160,7 +160,7 @@ class DataAbsensiSiswaController extends Controller
 
             if ($filterTanggal) {
                 $query->whereDate('tanggal_absen', $filterTanggal);
-            } 
+            }
             // else {
             //     $timezone = 'Asia/Makassar';
             //     $now = Carbon::now();
@@ -179,6 +179,9 @@ class DataAbsensiSiswaController extends Controller
                     } else {
                         return '-';
                     }
+                })
+                ->addColumn('semester', function ($row) {
+                    return $row->semester . ' - ' . $row->tahun_ajaran;
                 })
                 ->editColumn('tanggal_absen', function ($row) {
                     return date('d-m-Y', strtotime($row->tanggal_absen));

@@ -56,6 +56,7 @@
                                 <th>Tanggal</th>
                                 <th>Jam Masuk</th>
                                 <th>Jam Keluar</th>
+                                <th>Semester</th>
                                 <th>Ket</th>
                                 <th class="w-1">Lihat Absensi</th>
                             </tr>
@@ -509,6 +510,10 @@
                         {
                             data: 'jam_keluar',
                             name: 'jam_keluar'
+                        },
+                        {
+                            data: 'semester',
+                            name: 'semester'
                         },
                         {
                             data: 'keterangan',

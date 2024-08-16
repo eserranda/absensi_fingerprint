@@ -2,6 +2,7 @@
 
 use App\Models\JamAbsensi;
 use GuzzleHttp\Middleware;
+use App\Models\AbsensiMatpel;
 use App\Models\FingerprintGuru;
 use App\Models\DataAbsensiSiswa;
 use App\Models\FingerprintSiswa;
@@ -12,11 +13,13 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MatpelController;
 use App\Http\Controllers\AbsensiController;
-use App\Http\Controllers\AbsensiMatpelController;
 use App\Http\Controllers\DataGuruController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataSiswaController;
 use App\Http\Controllers\JamAbsensiController;
+use App\Http\Controllers\TahunAjaranController;
+use App\Http\Controllers\AbsensiMatpelController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\DataAbsensiGuruController;
 use App\Http\Controllers\FingerprintGuruController;
 use App\Http\Controllers\JadwalPelajaranController;
@@ -24,12 +27,17 @@ use App\Http\Controllers\DataAbsensiSiswaController;
 use App\Http\Controllers\FingerprintModulController;
 use App\Http\Controllers\FingerprintSiswaController;
 use App\Http\Controllers\FingerprintStatusController;
-use App\Http\Controllers\TahunAjaranController;
-use App\Models\AbsensiMatpel;
 
 Route::get('/login', [AuthController::class, 'loginForm'])->name("login")->middleware('guest'); // Form login
 Route::post('/login', [AuthController::class, 'authenticate'])->name("login")->middleware('guest'); // Login
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth'); // Login
+
+
+Route::get('/forgot-password', [ResetPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/forgot-password', [ResetPasswordController::class, 'resetPassword'])->name('password.email');
+Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/password/reset', [ResetPasswordController::class, 'updatePassword'])->name('password.update');
+
 
 Route::prefix('rekap-absensi')->controller(DataAbsensiSiswaController::class)->group(function () {
     Route::get("/kehadiran", 'rekapKehadiranSiswaPerSemester');

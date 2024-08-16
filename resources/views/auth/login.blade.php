@@ -53,10 +53,14 @@
                         <div class="card card-md">
                             <div class="card-body">
                                 <h2 class="h2 text-center mb-4">Login </h2>
+                                @if (session('status'))
+                                    <div class="alert alert-success" role="alert">
+                                        {{ session('status') }}
+                                    </div>
+                                @endif
                                 <form method="POST" action="{{ route('login') }}">
                                     @csrf
-
-                                    <div class="mb-3">
+                                    <div class="mb-2">
                                         <label class="form-label">Email Or NUPTK</label>
                                         <input id="username" type="text"
                                             class="form-control @error('username') is-invalid @enderror" name="username"
@@ -92,7 +96,13 @@
                                         </button>
                                     </div>
                                 </form>
-
+                                <div class="row mt-4 justify-content-end">
+                                    <div class="col-sm-12">
+                                        <a href="/forgot-password" class="text-muted"><i class="mdi mdi-lock"></i>
+                                            Lupa password?
+                                        </a>
+                                    </div>
+                                </div>
 
                             </div>
 

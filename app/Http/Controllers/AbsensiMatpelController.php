@@ -19,13 +19,16 @@ class AbsensiMatpelController extends Controller
             $kelasFilter = $request->input('kelas');
             $filterTanggal = $request->input('tanggal');
 
-            $idGuru = Auth::user()->roles->contains('name', 'guru');
-
-            if ($idGuru) {
+            if (Auth::user()->roles->contains('name', 'guru')) {
+                $id_guru = Auth::user()->id_guru;
                 $id_guru = Auth::user()->id_guru;
                 $query = AbsensiMatpel::where('id_guru', $id_guru);
-            } else {
+            } else if (Auth::user()->roles->contains('name', 'admin')) {
                 $query = AbsensiMatpel::query();
+            } else {
+                // ini hanya agar datanya tidak ditampilkan jika dia adalah wali kelas yang tidak mengajar, heheh
+                $id_siswa = Auth::user()->id_siswa;
+                $query = AbsensiMatpel::where('id_siswa', $id_siswa);
             }
 
             if ($kelasFilter) {

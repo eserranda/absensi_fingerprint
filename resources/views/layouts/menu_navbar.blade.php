@@ -131,9 +131,45 @@
                                                 Rekap Absensi Kehadiran
                                             </a>
                                         @endif
-
                                         <a class="dropdown-item" href="/rekap-absensi/matpel">
                                             Rekap Absensi Mata Pelajaran
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
+                                data-bs-auto-close="outside" role="button" aria-expanded="false">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="icon icon-tabler icons-tabler-outline icon-tabler-list-check">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M3.5 5.5l1.5 1.5l2.5 -2.5" />
+                                        <path d="M3.5 11.5l1.5 1.5l2.5 -2.5" />
+                                        <path d="M3.5 17.5l1.5 1.5l2.5 -2.5" />
+                                        <path d="M11 6l9 0" />
+                                        <path d="M11 12l9 0" />
+                                        <path d="M11 18l9 0" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-title">
+                                    Absensi Siswa
+                                </span>
+                            </a>
+                            <div class="dropdown-menu">
+                                <div class="dropdown-menu-columns">
+                                    <div class="dropdown-menu-column">
+                                        @if (Auth::user()->roles->contains('name', 'wali_kelas'))
+                                            <a class="dropdown-item" href="/rekap-absensi-siswa">
+                                                Absensi Kehadiran
+                                            </a>
+                                        @endif
+                                        <a class="dropdown-item" href="/absensi-matpel">
+                                            Absensi Mata Pelajaran
                                         </a>
                                     </div>
                                 </div>
@@ -174,7 +210,13 @@
                                         <a class="dropdown-item" href="/rekap-absensi-siswa">
                                             Peserta Didik
                                         </a>
-
+                                        <hr class="dropdown-divider my-0">
+                                        <a class="dropdown-item" href="/rekap-absensi-siswa/rekap-kehadiran">
+                                            Rekap Absensi Kehadiran
+                                        </a>
+                                        <a class="dropdown-item" href="/rekap-absensi/matpel">
+                                            Rekap Absensi Mata Pelajaran
+                                        </a>
                                     </div>
                                 </div>
                             </div>

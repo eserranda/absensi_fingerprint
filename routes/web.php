@@ -82,6 +82,8 @@ Route::prefix('rekap-absensi-siswa')->controller(DataAbsensiSiswaController::cla
     Route::get('/edit/{id}', 'edit')->name("data_absensi_siswa.edit");
     Route::POST('/update', 'update')->name("data_absensi_siswa.update")->middleware('auth');
 
+    Route::get('/rekap-kehadiran', 'rekapKehadiran');
+
 
     // Route::get('/data-absensi/{id}', 'absensi')->name("rekap-absensi-siswa.data-absensi")->middleware('auth');
     // Route::get('/count-absensi/{id}', 'countAbsensi')->name("rekap-absensi-siswa.count-absensi")->middleware('auth');

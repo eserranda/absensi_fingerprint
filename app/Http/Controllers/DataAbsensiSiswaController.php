@@ -20,6 +20,75 @@ use Illuminate\Support\Facades\Validator;
 class DataAbsensiSiswaController extends Controller
 {
 
+    public function rekapKehadiran(Request $request)
+    {
+        if ($request->ajax()) {
+            $semester = $request->input('semester');
+            $tahunAjaran = $request->input('tahun_ajaran');
+            $kelas = $request->input('kelas');
+
+            // Query dasar
+            $query = DataAbsensiSiswa::query();
+            if ($semester) {
+                $query->where('semester', $semester);
+            }
+            if ($tahunAjaran) {
+                $query->where('tahun_ajaran', $tahunAjaran);
+            }
+            if ($kelas) {
+                $query->where('kelas', $kelas);
+            }
+
+
+
+            // Preload counts for different attendance statuses
+            $data = $query->select('id_siswa', 'kelas', 'semester', 'tahun_ajaran')
+                ->selectRaw('SUM(CASE WHEN keterangan = "Hadir" THEN 1 ELSE 0 END) as total_hadir')
+                ->selectRaw('SUM(CASE WHEN keterangan = "Sakit" THEN 1 ELSE 0 END) as total_sakit')
+                ->selectRaw('SUM(CASE WHEN keterangan = "Terlambat" THEN 1 ELSE 0 END) as total_terlambat')
+                ->selectRaw('SUM(CASE WHEN keterangan = "Tanpa Keterangan" THEN 1 ELSE 0 END) as total_tanpa_keterangan')
+                ->selectRaw('SUM(CASE WHEN keterangan = "Izin" THEN 1 ELSE 0 END) as total_izin')
+                ->selectRaw('COUNT(*) as total')
+                ->groupBy('id_siswa', 'kelas', 'semester', 'tahun_ajaran')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('id_siswa', function ($row) {
+                    if ($row->id_siswa) {
+                        return $row->siswa->nama;
+                    } else {
+                        return '-';
+                    }
+                })
+                ->addColumn('semester', function ($row) {
+                    return $row->semester . ' - ' . $row->tahun_ajaran;
+                })
+                ->addColumn('hadir', function ($row) {
+                    return $row->total_hadir;
+                })
+                ->addColumn('sakit', function ($row) {
+                    return $row->total_sakit;
+                })
+                ->addColumn('terlambat', function ($row) {
+                    return $row->total_terlambat;
+                })
+                ->addColumn('tanpa_keterangan', function ($row) {
+                    return $row->total_tanpa_keterangan;
+                })
+                ->addColumn('izin', function ($row) {
+                    return $row->total_izin;
+                })
+                ->addColumn('total', function ($row) {
+                    return $row->total;
+                })
+                ->make(true);
+        }
+
+        return view('data_absensi_siswa.rekap_kehadiran');
+    }
+
     public function rekapKehadiranSiswaPerSemester(Request $request)
     {
         $id_guru = Auth::user()->id_guru;
@@ -44,14 +113,23 @@ class DataAbsensiSiswaController extends Controller
     public function getWithFilterMatpel(Request $request)
     {
         if ($request->ajax()) {
-            $id_guru = Auth::user()->id_guru;
 
             $kelas = $request->input('kelas');
             $semester = $request->input('semester');
             $tahunAjaran = $request->input('tahun_ajaran');
 
             // Query dasar
-            $query = AbsensiMatpel::where('id_guru', $id_guru);
+            if (Auth::user()->roles->contains('name', 'guru')) {
+                $id_guru = auth()->user()->id_guru;
+                $query = AbsensiMatpel::where('id_guru', $id_guru);
+            } else if (Auth::user()->roles->contains('name', 'admin')) {
+                $query = AbsensiMatpel::query();
+            } else {
+                // ini hanya agar datanya tidak ditampilkan jika dia adalah wali kelas yang tidak mengajar, heheh
+                $id_siswa = Auth::user()->id_siswa;
+                $query = AbsensiMatpel::where('id_siswa', $id_siswa);
+            }
+
 
             // dd($query);
             if ($kelas) {
@@ -185,6 +263,7 @@ class DataAbsensiSiswaController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
+
             $filterTanggal = $request->input('tanggal');
 
             $query = DataAbsensiSiswa::query();
@@ -192,17 +271,16 @@ class DataAbsensiSiswaController extends Controller
             if ($filterTanggal) {
                 $query->whereDate('tanggal_absen', $filterTanggal);
             }
-            // else {
-            //     $timezone = 'Asia/Makassar';
-            //     $now = Carbon::now();
-            //     $now->setTimezone($timezone);
-            //     $filterTanggal = $now->toDateString();
 
-            //     $query->whereDate('tanggal_absen', $filterTanggal);
-            // }
+            if (Auth::user()->roles->contains('name', 'wali_kelas')) {
+                $id_guru = Auth::user()->id_guru;
+                $data = Kelas::where('id_guru', $id_guru)->first();
+                $kelas = $data->nama_kelas;
+                $query->where('kelas', $kelas);
+            }
 
-            $filterTanggal = $query->latest('created_at')->get();
-            return DataTables::of($filterTanggal)
+            $data = $query->latest('created_at')->get();
+            return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('id_siswa', function ($row) {
                     if ($row->id_siswa) {

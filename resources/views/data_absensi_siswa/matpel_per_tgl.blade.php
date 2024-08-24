@@ -42,8 +42,7 @@
                     <table class="table table-bordered border-primary  text-nowrap">
                         <thead>
                             <tr>
-                                {{-- <th>No</th> --}}
-                                <th>Judul 1 </th>
+                                <th>No</th>
                                 <th>NIM</th>
                                 <th>Nama </th>
                                 @foreach ($dates as $date)

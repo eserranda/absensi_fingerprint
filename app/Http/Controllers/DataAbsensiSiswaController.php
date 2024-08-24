@@ -20,6 +20,70 @@ use Illuminate\Support\Facades\Validator;
 class DataAbsensiSiswaController extends Controller
 {
 
+    public function matpelPerTgl()
+    {
+        if (Auth::user()->roles->contains('name', 'guru')) {
+            $id_guru = auth()->user()->id_guru;
+            // Mengambil absensi berdasarkan id_guru
+
+            $matpel = AbsensiMatpel::where('id_guru', $id_guru)
+                ->first();
+
+            $absensi = AbsensiMatpel::where('id_guru', $id_guru)
+                ->with('siswa')
+                ->orderBy('tanggal')
+                ->get()
+                ->groupBy('id_siswa');
+
+            // Mengambil daftar tanggal unik dari absensi yang sama (dalam tabel AbsensiMatpel)
+            $dates = AbsensiMatpel::where('id_guru', $id_guru)
+                ->select('tanggal')
+                ->distinct()
+                ->orderBy('tanggal')
+                ->pluck('tanggal')
+                ->toArray();
+
+            return view('data_absensi_siswa.matpel_per_tgl', compact('absensi', 'dates', 'matpel'));
+        }
+    }
+    public function perTgl()
+    {
+        if (Auth::user()->roles->contains('name', 'wali_kelas')) {
+            $id_guru = Auth::user()->id_guru;
+            $data_kelas = Kelas::where('id_guru', $id_guru)->first();
+            $kelas = $data_kelas->nama_kelas;
+
+            $absensi = DataAbsensiSiswa::where('kelas', $kelas)
+                ->with('siswa')
+                ->orderBy('tanggal_absen')
+                ->get()
+                ->groupBy('id_siswa');
+
+            $dates = DataAbsensiSiswa::where('kelas', $kelas)
+                ->select('tanggal_absen')
+                ->distinct()
+                ->orderBy('tanggal_absen')
+                ->pluck('tanggal_absen')
+                ->toArray();
+
+            return view('data_absensi_siswa.kehadiran_per_tgl', compact('absensi', 'dates', 'data_kelas'));
+        }
+
+
+        // $absensi = DataAbsensiSiswa::with('siswa')
+        //     ->orderBy('tanggal_absen')
+        //     ->get()
+        //     ->groupBy('id_siswa');
+
+        // $dates = DataAbsensiSiswa::select('tanggal_absen')
+        //     ->distinct()
+        //     ->orderBy('tanggal_absen')
+        //     ->pluck('tanggal_absen')
+        //     ->toArray();
+
+        // return view('data_absensi_siswa.kehadiran_per_tgl', compact('absensi', 'dates'));
+    }
+
     public function rekapKehadiran(Request $request)
     {
         if ($request->ajax()) {
@@ -99,14 +163,17 @@ class DataAbsensiSiswaController extends Controller
 
     public function rekapAbsesniMatpelSiswaPerSemester(Request $request)
     {
-        $id_guru = Auth::user()->id_guru;
+        if (Auth::user()->roles->contains('name', 'guru')) {
+            $id_guru = Auth::user()->id_guru;
 
-        $matpel = JadwalPelajaran::where('id_guru', $id_guru)
-            ->select('id_guru', 'id_matpel', 'kelas')
-            ->groupBy('id_guru', 'id_matpel', 'kelas')
-            ->get();
-
-        return view('rekap-absensi-matpel.index', compact('matpel'));
+            $matpel = JadwalPelajaran::where('id_guru', $id_guru)
+                ->select('id_guru', 'id_matpel', 'kelas')
+                ->groupBy('id_guru', 'id_matpel', 'kelas')
+                ->get();
+            return view('rekap-absensi-matpel.index', compact('matpel'));
+        } else {
+            return view('rekap-absensi-matpel.index');
+        }
     }
 
 

@@ -130,9 +130,15 @@
                                             <a class="dropdown-item" href="/rekap-absensi/kehadiran">
                                                 Rekap Absensi Kehadiran
                                             </a>
+                                            <a class="dropdown-item" href="/rekap-absensi/per-tgl">
+                                                Absensi Kehadiran Per Tanggal
+                                            </a>
                                         @endif
                                         <a class="dropdown-item" href="/rekap-absensi/matpel">
                                             Rekap Absensi Mata Pelajaran
+                                        </a>
+                                        <a class="dropdown-item" href="/rekap-absensi/matpel-per-tgl">
+                                            Absensi Matpel Per Tanggal
                                         </a>
                                     </div>
                                 </div>
@@ -171,6 +177,7 @@
                                         <a class="dropdown-item" href="/absensi-matpel">
                                             Absensi Mata Pelajaran
                                         </a>
+
                                     </div>
                                 </div>
                             </div>

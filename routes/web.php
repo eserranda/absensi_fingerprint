@@ -44,6 +44,8 @@ Route::prefix('rekap-absensi')->controller(DataAbsensiSiswaController::class)->g
     Route::get("/getWithFilterKelas/{kelas}", 'getWithFilterKelas');
     // rekap absensi matpel per semester
 
+    Route::get("/per-tgl", 'perTgl');
+    Route::get("/matpel-per-tgl", 'matpelPerTgl');
 
     Route::get("/matpel", 'rekapAbsesniMatpelSiswaPerSemester');
     Route::get("/getWithFilterMatpel", 'getWithFilterMatpel');
